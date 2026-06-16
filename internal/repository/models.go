@@ -5,51 +5,51 @@
 package repository
 
 type BiogMain struct {
-	CPersonid            interface{} `json:"c_personid"`
+	CPersonid            int64       `json:"c_personid"`
 	CName                *string     `json:"c_name"`
 	CNameChn             *string     `json:"c_name_chn"`
-	CIndexYear           interface{} `json:"c_index_year"`
+	CIndexYear           *int16      `json:"c_index_year"`
 	CIndexYearTypeCode   *string     `json:"c_index_year_type_code"`
 	CIndexYearSourceID   interface{} `json:"c_index_year_source_id"`
-	CFemale              interface{} `json:"c_female"`
+	CFemale              *int16      `json:"c_female"`
 	CIndexAddrID         interface{} `json:"c_index_addr_id"`
-	CIndexAddrTypeCode   interface{} `json:"c_index_addr_type_code"`
-	CEthnicityCode       interface{} `json:"c_ethnicity_code"`
-	CHouseholdStatusCode interface{} `json:"c_household_status_code"`
+	CIndexAddrTypeCode   *int16      `json:"c_index_addr_type_code"`
+	CEthnicityCode       *int16      `json:"c_ethnicity_code"`
+	CHouseholdStatusCode *int16      `json:"c_household_status_code"`
 	CTribe               *string     `json:"c_tribe"`
-	CBirthyear           interface{} `json:"c_birthyear"`
-	CByNhCode            interface{} `json:"c_by_nh_code"`
-	CByNhYear            interface{} `json:"c_by_nh_year"`
-	CByRange             interface{} `json:"c_by_range"`
-	CDeathyear           interface{} `json:"c_deathyear"`
-	CDyNhCode            interface{} `json:"c_dy_nh_code"`
-	CDyNhYear            interface{} `json:"c_dy_nh_year"`
-	CDyRange             interface{} `json:"c_dy_range"`
-	CDeathAge            interface{} `json:"c_death_age"`
-	CDeathAgeRange       interface{} `json:"c_death_age_range"`
-	CFlEarliestYear      interface{} `json:"c_fl_earliest_year"`
-	CFlEyNhCode          interface{} `json:"c_fl_ey_nh_code"`
-	CFlEyNhYear          interface{} `json:"c_fl_ey_nh_year"`
+	CBirthyear           *int16      `json:"c_birthyear"`
+	CByNhCode            *int16      `json:"c_by_nh_code"`
+	CByNhYear            *int16      `json:"c_by_nh_year"`
+	CByRange             *int16      `json:"c_by_range"`
+	CDeathyear           *int16      `json:"c_deathyear"`
+	CDyNhCode            *int16      `json:"c_dy_nh_code"`
+	CDyNhYear            *int16      `json:"c_dy_nh_year"`
+	CDyRange             *int16      `json:"c_dy_range"`
+	CDeathAge            *int16      `json:"c_death_age"`
+	CDeathAgeRange       *int16      `json:"c_death_age_range"`
+	CFlEarliestYear      *int16      `json:"c_fl_earliest_year"`
+	CFlEyNhCode          *int16      `json:"c_fl_ey_nh_code"`
+	CFlEyNhYear          *int16      `json:"c_fl_ey_nh_year"`
 	CFlEyNotes           *string     `json:"c_fl_ey_notes"`
-	CFlLatestYear        interface{} `json:"c_fl_latest_year"`
-	CFlLyNhCode          interface{} `json:"c_fl_ly_nh_code"`
-	CFlLyNhYear          interface{} `json:"c_fl_ly_nh_year"`
+	CFlLatestYear        *int16      `json:"c_fl_latest_year"`
+	CFlLyNhCode          *int16      `json:"c_fl_ly_nh_code"`
+	CFlLyNhYear          *int16      `json:"c_fl_ly_nh_year"`
 	CFlLyNotes           *string     `json:"c_fl_ly_notes"`
 	CSurname             *string     `json:"c_surname"`
 	CSurnameChn          *string     `json:"c_surname_chn"`
 	CMingzi              *string     `json:"c_mingzi"`
 	CMingziChn           *string     `json:"c_mingzi_chn"`
-	CDy                  interface{} `json:"c_dy"`
-	CChoronymCode        interface{} `json:"c_choronym_code"`
+	CDy                  *int16      `json:"c_dy"`
+	CChoronymCode        *int16      `json:"c_choronym_code"`
 	CNotes               *string     `json:"c_notes"`
-	CByIntercalary       interface{} `json:"c_by_intercalary"`
-	CDyIntercalary       interface{} `json:"c_dy_intercalary"`
-	CByMonth             interface{} `json:"c_by_month"`
-	CDyMonth             interface{} `json:"c_dy_month"`
-	CByDay               interface{} `json:"c_by_day"`
-	CDyDay               interface{} `json:"c_dy_day"`
-	CByDayGz             interface{} `json:"c_by_day_gz"`
-	CDyDayGz             interface{} `json:"c_dy_day_gz"`
+	CByIntercalary       *int16      `json:"c_by_intercalary"`
+	CDyIntercalary       *int16      `json:"c_dy_intercalary"`
+	CByMonth             *int16      `json:"c_by_month"`
+	CDyMonth             *int16      `json:"c_dy_month"`
+	CByDay               *int16      `json:"c_by_day"`
+	CDyDay               *int16      `json:"c_dy_day"`
+	CByDayGz             *int16      `json:"c_by_day_gz"`
+	CDyDayGz             *int16      `json:"c_dy_day_gz"`
 	CSurnameProper       *string     `json:"c_surname_proper"`
 	CMingziProper        *string     `json:"c_mingzi_proper"`
 	CNameProper          *string     `json:"c_name_proper"`
@@ -60,4 +60,49 @@ type BiogMain struct {
 	CModifiedBy          *string     `json:"c_modified_by"`
 	CCreatedDate         *string     `json:"c_created_date"`
 	CModifiedDate        *string     `json:"c_modified_date"`
+}
+
+type ChoronymCode struct {
+	CChoronymCode interface{} `json:"c_choronym_code"`
+	CChoronymDesc *string     `json:"c_choronym_desc"`
+	CChoronymChn  *string     `json:"c_choronym_chn"`
+}
+
+type Dynasty struct {
+	CDy         interface{} `json:"c_dy"`
+	CDynasty    *string     `json:"c_dynasty"`
+	CDynastyChn *string     `json:"c_dynasty_chn"`
+	CStart      interface{} `json:"c_start"`
+	CEnd        interface{} `json:"c_end"`
+	CSort       *int16      `json:"c_sort"`
+}
+
+type KinDatum struct {
+	CPersonid     interface{} `json:"c_personid"`
+	CKinID        interface{} `json:"c_kin_id"`
+	CKinCode      interface{} `json:"c_kin_code"`
+	CSource       interface{} `json:"c_source"`
+	CPages        *string     `json:"c_pages"`
+	CNotes        *string     `json:"c_notes"`
+	CAutogenNotes *string     `json:"c_autogen_notes"`
+	CCreatedBy    *string     `json:"c_created_by"`
+	CModifiedBy   *string     `json:"c_modified_by"`
+	CCreatedDate  *string     `json:"c_created_date"`
+	CModifiedDate *string     `json:"c_modified_date"`
+}
+
+type KinshipCode struct {
+	CKincode          interface{} `json:"c_kincode"`
+	CKinPair1         interface{} `json:"c_kin_pair1"`
+	CKinPair2         interface{} `json:"c_kin_pair2"`
+	CKinPairNotes     *string     `json:"c_kin_pair_notes"`
+	CKinrelChn        string      `json:"c_kinrel_chn"`
+	CKinrel           string      `json:"c_kinrel"`
+	CKinrelAlt        *string     `json:"c_kinrel_alt"`
+	CPickSorting      *int16      `json:"c_pick_sorting"`
+	CUpstep           interface{} `json:"c_upstep"`
+	CDwnstep          interface{} `json:"c_dwnstep"`
+	CMarstep          interface{} `json:"c_marstep"`
+	CColstep          interface{} `json:"c_colstep"`
+	CKinrelSimplified string      `json:"c_kinrel_simplified"`
 }

@@ -10,19 +10,53 @@ import (
 )
 
 const getPersonByID = `-- name: GetPersonByID :one
-select c_personid, c_name_chn
-from BIOG_MAIN
-where c_personid = ?
+select 
+bm.c_personid,
+bm.c_name,
+bm.c_name_chn,
+bm.c_mingzi,
+bm.c_female,
+bm.c_birthyear,
+bm.c_deathyear,
+d.c_dynasty,
+d.c_dynasty_chn,
+cc.c_choronym_desc,
+cc.c_choronym_chn 
+from BIOG_MAIN bm 
+join DYNASTIES d on bm.c_dy = d.c_dy 
+join CHORONYM_CODES cc on bm.c_choronym_code = cc.c_choronym_code 
+where bm.c_personid = ?
 `
 
 type GetPersonByIDRow struct {
-	CPersonid interface{} `json:"c_personid"`
-	CNameChn  *string     `json:"c_name_chn"`
+	CPersonid     int64   `json:"c_personid"`
+	CName         *string `json:"c_name"`
+	CNameChn      *string `json:"c_name_chn"`
+	CMingzi       *string `json:"c_mingzi"`
+	CFemale       *int16  `json:"c_female"`
+	CBirthyear    *int16  `json:"c_birthyear"`
+	CDeathyear    *int16  `json:"c_deathyear"`
+	CDynasty      *string `json:"c_dynasty"`
+	CDynastyChn   *string `json:"c_dynasty_chn"`
+	CChoronymDesc *string `json:"c_choronym_desc"`
+	CChoronymChn  *string `json:"c_choronym_chn"`
 }
 
-func (q *Queries) GetPersonByID(ctx context.Context, cPersonid interface{}) (GetPersonByIDRow, error) {
+func (q *Queries) GetPersonByID(ctx context.Context, cPersonid int64) (GetPersonByIDRow, error) {
 	row := q.db.QueryRowContext(ctx, getPersonByID, cPersonid)
 	var i GetPersonByIDRow
-	err := row.Scan(&i.CPersonid, &i.CNameChn)
+	err := row.Scan(
+		&i.CPersonid,
+		&i.CName,
+		&i.CNameChn,
+		&i.CMingzi,
+		&i.CFemale,
+		&i.CBirthyear,
+		&i.CDeathyear,
+		&i.CDynasty,
+		&i.CDynastyChn,
+		&i.CChoronymDesc,
+		&i.CChoronymChn,
+	)
 	return i, err
 }

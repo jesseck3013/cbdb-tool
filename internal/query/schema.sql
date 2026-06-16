@@ -1,5 +1,5 @@
 CREATE TABLE BIOG_MAIN (
-    "c_personid" INTEGER(11) NOT NULL,
+    "c_personid" INTEGER NOT NULL,
     "c_name" varchar(255) DEFAULT NULL /* Hanyu Pinyin full name; auto-generated: c_surname + " " + c_mingzi */,
     "c_name_chn" varchar(255) DEFAULT NULL /* Chinese full name; auto-generated: c_surname_chn + c_mingzi_chn (no space) */,
     "c_index_year" smallint(6) DEFAULT NULL,
@@ -55,4 +55,53 @@ CREATE TABLE BIOG_MAIN (
     "c_created_date" TEXT DEFAULT NULL,
     "c_modified_date" TEXT DEFAULT NULL,
     PRIMARY KEY ("c_personid")
+);
+
+CREATE TABLE KIN_DATA (
+    "c_personid" INTEGER(11) NOT NULL,
+    "c_kin_id" INTEGER(11) NOT NULL,
+    "c_kin_code" smallint(6) NOT NULL,
+    "c_source" INTEGER(11) DEFAULT NULL,
+    "c_pages" varchar(255) DEFAULT NULL,
+    "c_notes" TEXT DEFAULT NULL,
+    "c_autogen_notes" TEXT DEFAULT NULL,
+    "c_created_by" varchar(255) DEFAULT NULL,
+    "c_modified_by" varchar(255) DEFAULT NULL,
+    "c_created_date" TEXT DEFAULT NULL,
+    "c_modified_date" TEXT DEFAULT NULL,
+    PRIMARY KEY ("c_kin_code", "c_kin_id", "c_personid")
+);
+
+CREATE TABLE KINSHIP_CODES (
+    "c_kincode" smallint(6) NOT NULL,
+    "c_kin_pair1" smallint(6) NOT NULL DEFAULT 0,
+    "c_kin_pair2" smallint(6) NOT NULL DEFAULT 0,
+    "c_kin_pair_notes" varchar(255) DEFAULT NULL,
+    "c_kinrel_chn" varchar(255) NOT NULL DEFAULT '',
+    "c_kinrel" varchar(255) NOT NULL DEFAULT '',
+    "c_kinrel_alt" varchar(255) DEFAULT NULL,
+    "c_pick_sorting" smallint(6) DEFAULT NULL,
+    "c_upstep" smallint(6) NOT NULL DEFAULT 0,
+    "c_dwnstep" smallint(6) NOT NULL DEFAULT 0,
+    "c_marstep" smallint(6) NOT NULL DEFAULT 0,
+    "c_colstep" smallint(6) NOT NULL DEFAULT 0,
+    "c_kinrel_simplified" varchar(255) NOT NULL DEFAULT '',
+    PRIMARY KEY ("c_kincode")
+);
+
+CREATE TABLE DYNASTIES (
+    "c_dy" smallint(6) NOT NULL,
+    "c_dynasty" varchar(255) DEFAULT NULL,
+    "c_dynasty_chn" varchar(255) DEFAULT NULL,
+    "c_start" smallint(6) NOT NULL DEFAULT 0,
+    "c_end" smallint(6) NOT NULL DEFAULT 0,
+    "c_sort" smallint(6) DEFAULT NULL,
+    PRIMARY KEY ("c_dy")
+);
+
+CREATE TABLE CHORONYM_CODES (
+    "c_choronym_code" smallint(6) NOT NULL,
+    "c_choronym_desc" varchar(255) DEFAULT NULL,
+    "c_choronym_chn" varchar(255) DEFAULT NULL,
+    PRIMARY KEY ("c_choronym_code")
 );
