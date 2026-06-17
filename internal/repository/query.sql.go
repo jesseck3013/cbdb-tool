@@ -9,6 +9,254 @@ import (
 	"context"
 )
 
+const getAltnamesByPersonID = `-- name: GetAltnamesByPersonID :many
+select 
+ad.c_alt_name ,
+ad.c_alt_name_chn ,
+ac.c_name_type_desc,
+ac.c_name_type_desc_chn 
+from 
+ALTNAME_DATA ad 
+join ALTNAME_CODES ac on ad.c_alt_name_type_code = ac.c_name_type_code 
+where ad.c_personid = ?
+`
+
+type GetAltnamesByPersonIDRow struct {
+	CAltName         *string `json:"c_alt_name"`
+	CAltNameChn      string  `json:"c_alt_name_chn"`
+	CNameTypeDesc    *string `json:"c_name_type_desc"`
+	CNameTypeDescChn *string `json:"c_name_type_desc_chn"`
+}
+
+func (q *Queries) GetAltnamesByPersonID(ctx context.Context, cPersonid interface{}) ([]GetAltnamesByPersonIDRow, error) {
+	rows, err := q.db.QueryContext(ctx, getAltnamesByPersonID, cPersonid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetAltnamesByPersonIDRow
+	for rows.Next() {
+		var i GetAltnamesByPersonIDRow
+		if err := rows.Scan(
+			&i.CAltName,
+			&i.CAltNameChn,
+			&i.CNameTypeDesc,
+			&i.CNameTypeDescChn,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getAssociationByPersonID = `-- name: GetAssociationByPersonID :many
+SELECT
+ad.c_assoc_id ,
+bm.c_name_chn,
+ad.c_assoc_first_year,
+ad.c_assoc_last_year,
+ac.c_assoc_desc_chn,
+ac.c_assoc_pair,
+ad.c_notes,
+ad.c_pages,
+tc.c_title_chn,
+t.c_assoc_type_desc,
+t.c_assoc_type_desc_chn,
+t.c_assoc_type_short_desc
+FROM 
+ASSOC_DATA ad 
+LEFT JOIN BIOG_MAIN bm on ad.c_assoc_id = bm.c_personid 
+LEFT JOIN ASSOC_CODES ac on ad.c_assoc_code  = ac.c_assoc_code 
+LEFT JOIN TEXT_CODES tc  on ad.c_source = tc.c_textid 
+LEFT JOIN ASSOC_CODE_TYPE_REL actr on actr.c_assoc_code = ac.c_assoc_code 
+LEFT JOIN ASSOC_TYPES t on t.c_assoc_type_code = actr.c_assoc_type_code 
+WHERE ad.c_personid = 1762
+`
+
+type GetAssociationByPersonIDRow struct {
+	CAssocID            interface{} `json:"c_assoc_id"`
+	CNameChn            *string     `json:"c_name_chn"`
+	CAssocFirstYear     interface{} `json:"c_assoc_first_year"`
+	CAssocLastYear      *int16      `json:"c_assoc_last_year"`
+	CAssocDescChn       *string     `json:"c_assoc_desc_chn"`
+	CAssocPair          *int16      `json:"c_assoc_pair"`
+	CNotes              *string     `json:"c_notes"`
+	CPages              *string     `json:"c_pages"`
+	CTitleChn           *string     `json:"c_title_chn"`
+	CAssocTypeDesc      *string     `json:"c_assoc_type_desc"`
+	CAssocTypeDescChn   *string     `json:"c_assoc_type_desc_chn"`
+	CAssocTypeShortDesc *string     `json:"c_assoc_type_short_desc"`
+}
+
+func (q *Queries) GetAssociationByPersonID(ctx context.Context) ([]GetAssociationByPersonIDRow, error) {
+	rows, err := q.db.QueryContext(ctx, getAssociationByPersonID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetAssociationByPersonIDRow
+	for rows.Next() {
+		var i GetAssociationByPersonIDRow
+		if err := rows.Scan(
+			&i.CAssocID,
+			&i.CNameChn,
+			&i.CAssocFirstYear,
+			&i.CAssocLastYear,
+			&i.CAssocDescChn,
+			&i.CAssocPair,
+			&i.CNotes,
+			&i.CPages,
+			&i.CTitleChn,
+			&i.CAssocTypeDesc,
+			&i.CAssocTypeDescChn,
+			&i.CAssocTypeShortDesc,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getEntryByPersonID = `-- name: GetEntryByPersonID :many
+SELECT
+ed.c_age,
+ed.c_year,
+et.c_entry_type_desc,
+ec.c_entry_desc_chn,
+et.c_entry_type_level,
+et.c_entry_type_desc_chn,
+ed.c_exam_rank
+FROM
+ENTRY_DATA ed 
+join ENTRY_CODES ec on ec.c_entry_code  = ed.c_entry_code 
+join ENTRY_CODE_TYPE_REL ectr on ectr.c_entry_code = ec.c_entry_code 
+join ENTRY_TYPES et on et.c_entry_type = ectr.c_entry_type 
+where ed.c_personid = ?
+`
+
+type GetEntryByPersonIDRow struct {
+	CAge              *int16      `json:"c_age"`
+	CYear             interface{} `json:"c_year"`
+	CEntryTypeDesc    string      `json:"c_entry_type_desc"`
+	CEntryDescChn     string      `json:"c_entry_desc_chn"`
+	CEntryTypeLevel   *int16      `json:"c_entry_type_level"`
+	CEntryTypeDescChn string      `json:"c_entry_type_desc_chn"`
+	CExamRank         *string     `json:"c_exam_rank"`
+}
+
+// join NIAN_HAO nh on nh.c_nianhao_id = ed.c_entry_nh_id
+func (q *Queries) GetEntryByPersonID(ctx context.Context, cPersonid interface{}) ([]GetEntryByPersonIDRow, error) {
+	rows, err := q.db.QueryContext(ctx, getEntryByPersonID, cPersonid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetEntryByPersonIDRow
+	for rows.Next() {
+		var i GetEntryByPersonIDRow
+		if err := rows.Scan(
+			&i.CAge,
+			&i.CYear,
+			&i.CEntryTypeDesc,
+			&i.CEntryDescChn,
+			&i.CEntryTypeLevel,
+			&i.CEntryTypeDescChn,
+			&i.CExamRank,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getInstitutionByPersonID = `-- name: GetInstitutionByPersonID :many
+SELECT 
+sinc.c_inst_name_hz,
+sinc.c_inst_name_py,
+bic.c_bi_role_desc,
+bic.c_bi_role_chn,
+bid.c_bi_begin_year,
+bid.c_bi_end_year,
+tc.c_title,
+tc.c_title_chn,
+bid.c_pages
+FROM
+BIOG_INST_DATA bid 
+LEFT JOIN BIOG_MAIN bm on bm.c_personid = bid.c_personid 
+LEFT JOIN SOCIAL_INSTITUTION_NAME_CODES sinc on bid.c_inst_name_code = sinc.c_inst_name_code 
+LEFT JOIN SOCIAL_INSTITUTION_CODES sic on sic.c_inst_code = bid.c_inst_code
+LEFT JOIN BIOG_INST_CODES bic on bic.c_bi_role_code = bid.c_bi_role_code 
+LEFT JOIN TEXT_CODES tc on tc.c_textid  = bid.c_source 
+where bid.c_personid = 8043
+`
+
+type GetInstitutionByPersonIDRow struct {
+	CInstNameHz  *string `json:"c_inst_name_hz"`
+	CInstNamePy  *string `json:"c_inst_name_py"`
+	CBiRoleDesc  *string `json:"c_bi_role_desc"`
+	CBiRoleChn   *string `json:"c_bi_role_chn"`
+	CBiBeginYear *int16  `json:"c_bi_begin_year"`
+	CBiEndYear   *int16  `json:"c_bi_end_year"`
+	CTitle       *string `json:"c_title"`
+	CTitleChn    *string `json:"c_title_chn"`
+	CPages       *string `json:"c_pages"`
+}
+
+// LEFT JOIN SOCIAL_INSTITUTION_ADDR sia on sia.c_inst_code = bid.c_inst_code
+func (q *Queries) GetInstitutionByPersonID(ctx context.Context) ([]GetInstitutionByPersonIDRow, error) {
+	rows, err := q.db.QueryContext(ctx, getInstitutionByPersonID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetInstitutionByPersonIDRow
+	for rows.Next() {
+		var i GetInstitutionByPersonIDRow
+		if err := rows.Scan(
+			&i.CInstNameHz,
+			&i.CInstNamePy,
+			&i.CBiRoleDesc,
+			&i.CBiRoleChn,
+			&i.CBiBeginYear,
+			&i.CBiEndYear,
+			&i.CTitle,
+			&i.CTitleChn,
+			&i.CPages,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getPersonByID = `-- name: GetPersonByID :one
 select 
 bm.c_personid,
@@ -23,8 +271,8 @@ d.c_dynasty_chn,
 cc.c_choronym_desc,
 cc.c_choronym_chn 
 from BIOG_MAIN bm 
-join DYNASTIES d on bm.c_dy = d.c_dy 
-join CHORONYM_CODES cc on bm.c_choronym_code = cc.c_choronym_code 
+left join DYNASTIES d on bm.c_dy = d.c_dy 
+left join CHORONYM_CODES cc on bm.c_choronym_code = cc.c_choronym_code 
 where bm.c_personid = ?
 `
 
@@ -59,4 +307,201 @@ func (q *Queries) GetPersonByID(ctx context.Context, cPersonid int64) (GetPerson
 		&i.CChoronymChn,
 	)
 	return i, err
+}
+
+const getPersonKinShipByPersonID = `-- name: GetPersonKinShipByPersonID :many
+select 
+kd.c_kin_id,
+kc.c_kinrel, 
+kc.c_kinrel_alt, 
+kc.c_kinrel_chn, 
+bm2.c_name_chn 
+from BIOG_MAIN bm
+join KIN_DATA kd on bm.c_personid = kd.c_personid
+join KINSHIP_CODES kc on kd.c_kin_code = kc.c_kincode 
+join BIOG_MAIN bm2 on kd.c_kin_id  = bm2.c_personid 
+where bm.c_personid = ?
+`
+
+type GetPersonKinShipByPersonIDRow struct {
+	CKinID     interface{} `json:"c_kin_id"`
+	CKinrel    string      `json:"c_kinrel"`
+	CKinrelAlt *string     `json:"c_kinrel_alt"`
+	CKinrelChn string      `json:"c_kinrel_chn"`
+	CNameChn   *string     `json:"c_name_chn"`
+}
+
+func (q *Queries) GetPersonKinShipByPersonID(ctx context.Context, cPersonid int64) ([]GetPersonKinShipByPersonIDRow, error) {
+	rows, err := q.db.QueryContext(ctx, getPersonKinShipByPersonID, cPersonid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetPersonKinShipByPersonIDRow
+	for rows.Next() {
+		var i GetPersonKinShipByPersonIDRow
+		if err := rows.Scan(
+			&i.CKinID,
+			&i.CKinrel,
+			&i.CKinrelAlt,
+			&i.CKinrelChn,
+			&i.CNameChn,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getPostingByPersonID = `-- name: GetPostingByPersonID :many
+SELECT 
+ac.c_appt_desc,
+ac.c_appt_desc_chn,
+oc2.c_office_chn,
+oc2.c_office_chn_alt,
+ptod.c_firstyear,
+ptod.c_lastyear,
+tc.c_title_chn 
+FROM 
+POSTING_DATA pd 
+join POSTED_TO_OFFICE_DATA ptod on pd.c_posting_id = ptod.c_posting_id 
+join APPOINTMENT_CODES ac on ac.c_appt_code = ptod.c_appt_code 
+LEFT join OFFICE_CATEGORIES oc on oc.c_office_category_id = ptod.c_office_category_id 
+join OFFICE_CODES oc2 on oc2.c_office_id = ptod.c_office_id 
+LEFT JOIN TEXT_CODES tc on ptod.c_source = tc.c_textid 
+where pd.c_personid = ?
+`
+
+type GetPostingByPersonIDRow struct {
+	CApptDesc     *string `json:"c_appt_desc"`
+	CApptDescChn  *string `json:"c_appt_desc_chn"`
+	COfficeChn    *string `json:"c_office_chn"`
+	COfficeChnAlt *string `json:"c_office_chn_alt"`
+	CFirstyear    *int16  `json:"c_firstyear"`
+	CLastyear     *int16  `json:"c_lastyear"`
+	CTitleChn     *string `json:"c_title_chn"`
+}
+
+func (q *Queries) GetPostingByPersonID(ctx context.Context, cPersonid interface{}) ([]GetPostingByPersonIDRow, error) {
+	rows, err := q.db.QueryContext(ctx, getPostingByPersonID, cPersonid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetPostingByPersonIDRow
+	for rows.Next() {
+		var i GetPostingByPersonIDRow
+		if err := rows.Scan(
+			&i.CApptDesc,
+			&i.CApptDescChn,
+			&i.COfficeChn,
+			&i.COfficeChnAlt,
+			&i.CFirstyear,
+			&i.CLastyear,
+			&i.CTitleChn,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getStatusByPersonID = `-- name: GetStatusByPersonID :many
+SELECT 
+sc.c_status_desc ,
+sc.c_status_desc_chn 
+FROM
+STATUS_DATA sd 
+join STATUS_CODES sc on sd.c_status_code = sc.c_status_code 
+where sd.c_personid = ?
+`
+
+type GetStatusByPersonIDRow struct {
+	CStatusDesc    string `json:"c_status_desc"`
+	CStatusDescChn string `json:"c_status_desc_chn"`
+}
+
+func (q *Queries) GetStatusByPersonID(ctx context.Context, cPersonid interface{}) ([]GetStatusByPersonIDRow, error) {
+	rows, err := q.db.QueryContext(ctx, getStatusByPersonID, cPersonid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetStatusByPersonIDRow
+	for rows.Next() {
+		var i GetStatusByPersonIDRow
+		if err := rows.Scan(&i.CStatusDesc, &i.CStatusDescChn); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getTextByPersonID = `-- name: GetTextByPersonID :many
+SELECT
+tc.c_title_chn,
+tc.c_text_year,
+tc.c_source,
+tc2.c_title_chn 
+FROM
+BIOG_TEXT_DATA btd 
+JOIN TEXT_CODES tc on tc.c_textid  = btd.c_textid 
+LEFT JOIN TEXT_CODES tc2 on tc.c_source = tc2.c_textid 
+WHERE btd.c_personid = ?
+`
+
+type GetTextByPersonIDRow struct {
+	CTitleChn   *string     `json:"c_title_chn"`
+	CTextYear   *int16      `json:"c_text_year"`
+	CSource     interface{} `json:"c_source"`
+	CTitleChn_2 *string     `json:"c_title_chn_2"`
+}
+
+func (q *Queries) GetTextByPersonID(ctx context.Context, cPersonid interface{}) ([]GetTextByPersonIDRow, error) {
+	rows, err := q.db.QueryContext(ctx, getTextByPersonID, cPersonid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetTextByPersonIDRow
+	for rows.Next() {
+		var i GetTextByPersonIDRow
+		if err := rows.Scan(
+			&i.CTitleChn,
+			&i.CTextYear,
+			&i.CSource,
+			&i.CTitleChn_2,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

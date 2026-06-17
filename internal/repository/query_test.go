@@ -8,19 +8,24 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-func TestGetPersonByID(t *testing.T) {
-	// 1. The variable is named 'db'
-	db, err := sql.Open("sqlite", "../../data/cbdb.sqlite3")
+const DB_PATH = "../../data/cbdb.sqlite3"
+
+func ConnectDB(t *testing.T, path string) *Queries {
+	db, err := sql.Open("sqlite", path)
 	if err != nil {
 		t.Fatalf("Failed to open DB: %v", err)
 	}
-	defer db.Close()
 
-	// 2. New() belongs to the current package 'repository', so you call it directly.
-	// You pass the 'db' variable cleanly without any shadowing conflicts.
-	queries := New(db)
+	t.Cleanup(func() {
+		db.Close()
+	})
 
-	person, err := queries.GetPersonByID(context.Background(), 1762)
+	return New(db)
+}
+
+func TestGetPersonByID(t *testing.T) {
+	query := ConnectDB(t, DB_PATH)
+	person, err := query.GetPersonByID(context.Background(), 1762)
 
 	if err != nil {
 		t.Fatalf("Query failed: %v", err)

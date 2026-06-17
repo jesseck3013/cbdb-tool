@@ -4,6 +4,136 @@
 
 package repository
 
+type AltnameCode struct {
+	CNameTypeCode    interface{} `json:"c_name_type_code"`
+	CNameTypeDesc    *string     `json:"c_name_type_desc"`
+	CNameTypeDescChn *string     `json:"c_name_type_desc_chn"`
+}
+
+type AltnameDatum struct {
+	CPersonid        interface{} `json:"c_personid"`
+	CAltName         *string     `json:"c_alt_name"`
+	CAltNameChn      string      `json:"c_alt_name_chn"`
+	CAltNameTypeCode interface{} `json:"c_alt_name_type_code"`
+	CSequence        *int16      `json:"c_sequence"`
+	CSource          interface{} `json:"c_source"`
+	CPages           *string     `json:"c_pages"`
+	CNotes           *string     `json:"c_notes"`
+	CCreatedBy       *string     `json:"c_created_by"`
+	CModifiedBy      *string     `json:"c_modified_by"`
+	CCreatedDate     *string     `json:"c_created_date"`
+	CModifiedDate    *string     `json:"c_modified_date"`
+}
+
+type AppointmentCode struct {
+	CApptCode       interface{} `json:"c_appt_code"`
+	CApptDescChn    *string     `json:"c_appt_desc_chn"`
+	CApptDesc       *string     `json:"c_appt_desc"`
+	CApptDescChnAlt *string     `json:"c_appt_desc_chn_alt"`
+	CApptDescAlt    *string     `json:"c_appt_desc_alt"`
+	CNotes          *string     `json:"c_notes"`
+}
+
+type AssocCode struct {
+	CAssocCode     interface{} `json:"c_assoc_code"`
+	CAssocPair     *int16      `json:"c_assoc_pair"`
+	CAssocPair2    *int16      `json:"c_assoc_pair2"`
+	CAssocDesc     *string     `json:"c_assoc_desc"`
+	CAssocDescChn  *string     `json:"c_assoc_desc_chn"`
+	CAssocRoleType *string     `json:"c_assoc_role_type"`
+	CSortorder     *int16      `json:"c_sortorder"`
+	CExample       *string     `json:"c_example"`
+}
+
+type AssocCodeTypeRel struct {
+	CAssocCode     interface{} `json:"c_assoc_code"`
+	CAssocTypeCode string      `json:"c_assoc_type_code"`
+}
+
+type AssocDatum struct {
+	CAssocCode          interface{} `json:"c_assoc_code"`
+	CPersonid           interface{} `json:"c_personid"`
+	CKinCode            interface{} `json:"c_kin_code"`
+	CKinID              interface{} `json:"c_kin_id"`
+	CAssocID            interface{} `json:"c_assoc_id"`
+	CAssocKinCode       interface{} `json:"c_assoc_kin_code"`
+	CAssocKinID         interface{} `json:"c_assoc_kin_id"`
+	CTertiaryPersonid   interface{} `json:"c_tertiary_personid"`
+	CTertiaryTypeNotes  *string     `json:"c_tertiary_type_notes"`
+	CAssocCount         interface{} `json:"c_assoc_count"`
+	CSequence           *int16      `json:"c_sequence"`
+	CAssocFirstYear     interface{} `json:"c_assoc_first_year"`
+	CAssocLastYear      *int16      `json:"c_assoc_last_year"`
+	CSource             interface{} `json:"c_source"`
+	CPages              *string     `json:"c_pages"`
+	CNotes              *string     `json:"c_notes"`
+	CAssocFyNhCode      *int16      `json:"c_assoc_fy_nh_code"`
+	CAssocFyNhYear      *int16      `json:"c_assoc_fy_nh_year"`
+	CAssocFyRange       *int16      `json:"c_assoc_fy_range"`
+	CAssocLyNhCode      *int16      `json:"c_assoc_ly_nh_code"`
+	CAssocLyNhYear      *int16      `json:"c_assoc_ly_nh_year"`
+	CAssocLyRange       *int16      `json:"c_assoc_ly_range"`
+	CAddrID             interface{} `json:"c_addr_id"`
+	CLitgenreCode       *int16      `json:"c_litgenre_code"`
+	COccasionCode       *int16      `json:"c_occasion_code"`
+	CTopicCode          *int16      `json:"c_topic_code"`
+	CInstCode           *int16      `json:"c_inst_code"`
+	CInstNameCode       *int16      `json:"c_inst_name_code"`
+	CTextTitle          string      `json:"c_text_title"`
+	CAssocClaimerID     interface{} `json:"c_assoc_claimer_id"`
+	CAssocFyIntercalary *int16      `json:"c_assoc_fy_intercalary"`
+	CAssocFyMonth       *int16      `json:"c_assoc_fy_month"`
+	CAssocFyDay         *int16      `json:"c_assoc_fy_day"`
+	CAssocFyDayGz       *int16      `json:"c_assoc_fy_day_gz"`
+	CAssocLyIntercalary *int16      `json:"c_assoc_ly_intercalary"`
+	CAssocLyMonth       *int16      `json:"c_assoc_ly_month"`
+	CAssocLyDay         *int16      `json:"c_assoc_ly_day"`
+	CAssocLyDayGz       *int16      `json:"c_assoc_ly_day_gz"`
+	CCreatedBy          *string     `json:"c_created_by"`
+	CModifiedBy         *string     `json:"c_modified_by"`
+	CCreatedDate        *string     `json:"c_created_date"`
+	CModifiedDate       *string     `json:"c_modified_date"`
+}
+
+type AssocType struct {
+	CAssocTypeCode      string  `json:"c_assoc_type_code"`
+	CAssocTypeDesc      *string `json:"c_assoc_type_desc"`
+	CAssocTypeDescChn   *string `json:"c_assoc_type_desc_chn"`
+	CAssocTypeParentID  *string `json:"c_assoc_type_parent_id"`
+	CAssocTypeLevel     *int16  `json:"c_assoc_type_level"`
+	CAssocTypeSortorder *int16  `json:"c_assoc_type_sortorder"`
+	CAssocTypeShortDesc *string `json:"c_assoc_type_short_desc"`
+}
+
+type BiogInstCode struct {
+	CBiRoleCode interface{} `json:"c_bi_role_code"`
+	CBiRoleDesc *string     `json:"c_bi_role_desc"`
+	CBiRoleChn  *string     `json:"c_bi_role_chn"`
+	CNotes      *string     `json:"c_notes"`
+}
+
+type BiogInstDatum struct {
+	CPersonid     interface{} `json:"c_personid"`
+	CInstNameCode interface{} `json:"c_inst_name_code"`
+	CInstCode     interface{} `json:"c_inst_code"`
+	CBiRoleCode   interface{} `json:"c_bi_role_code"`
+	CBiBeginYear  *int16      `json:"c_bi_begin_year"`
+	CBiByNhCode   *int16      `json:"c_bi_by_nh_code"`
+	CBiByNhYear   *int16      `json:"c_bi_by_nh_year"`
+	CBiByRange    *int16      `json:"c_bi_by_range"`
+	CBiEndYear    *int16      `json:"c_bi_end_year"`
+	CBiEyNhCode   *int16      `json:"c_bi_ey_nh_code"`
+	CBiEyNhYear   *int16      `json:"c_bi_ey_nh_year"`
+	CBiEyRange    *int16      `json:"c_bi_ey_range"`
+	CSource       interface{} `json:"c_source"`
+	CPages        *string     `json:"c_pages"`
+	CNotes        *string     `json:"c_notes"`
+	CCreatedBy    *string     `json:"c_created_by"`
+	CModifiedBy   *string     `json:"c_modified_by"`
+	CCreatedDate  *string     `json:"c_created_date"`
+	CModifiedDate *string     `json:"c_modified_date"`
+}
+
 type BiogMain struct {
 	CPersonid            int64       `json:"c_personid"`
 	CName                *string     `json:"c_name"`
@@ -62,6 +192,23 @@ type BiogMain struct {
 	CModifiedDate        *string     `json:"c_modified_date"`
 }
 
+type BiogTextDatum struct {
+	CTextid       interface{} `json:"c_textid"`
+	CPersonid     interface{} `json:"c_personid"`
+	CRoleID       interface{} `json:"c_role_id"`
+	CYear         *int16      `json:"c_year"`
+	CNhCode       *int16      `json:"c_nh_code"`
+	CNhYear       *int16      `json:"c_nh_year"`
+	CRangeCode    *int16      `json:"c_range_code"`
+	CSource       interface{} `json:"c_source"`
+	CPages        *string     `json:"c_pages"`
+	CNotes        *string     `json:"c_notes"`
+	CCreatedBy    *string     `json:"c_created_by"`
+	CModifiedBy   *string     `json:"c_modified_by"`
+	CCreatedDate  *string     `json:"c_created_date"`
+	CModifiedDate *string     `json:"c_modified_date"`
+}
+
 type ChoronymCode struct {
 	CChoronymCode interface{} `json:"c_choronym_code"`
 	CChoronymDesc *string     `json:"c_choronym_desc"`
@@ -75,6 +222,57 @@ type Dynasty struct {
 	CStart      interface{} `json:"c_start"`
 	CEnd        interface{} `json:"c_end"`
 	CSort       *int16      `json:"c_sort"`
+}
+
+type EntryCode struct {
+	CEntryCode    interface{} `json:"c_entry_code"`
+	CEntryDesc    string      `json:"c_entry_desc"`
+	CEntryDescChn string      `json:"c_entry_desc_chn"`
+}
+
+type EntryCodeTypeRel struct {
+	CEntryCode interface{} `json:"c_entry_code"`
+	CEntryType string      `json:"c_entry_type"`
+}
+
+type EntryDatum struct {
+	CPersonid           interface{} `json:"c_personid"`
+	CEntryCode          interface{} `json:"c_entry_code"`
+	CSequence           interface{} `json:"c_sequence"`
+	CExamRank           *string     `json:"c_exam_rank"`
+	CKinCode            interface{} `json:"c_kin_code"`
+	CKinID              interface{} `json:"c_kin_id"`
+	CAssocCode          interface{} `json:"c_assoc_code"`
+	CAssocID            interface{} `json:"c_assoc_id"`
+	CYear               interface{} `json:"c_year"`
+	CAge                *int16      `json:"c_age"`
+	CEntryNhID          *int16      `json:"c_entry_nh_id"`
+	CEntryNhYear        *int16      `json:"c_entry_nh_year"`
+	CEntryDy            *int16      `json:"c_entry_dy"`
+	CEntryRange         *int16      `json:"c_entry_range"`
+	CInstCode           interface{} `json:"c_inst_code"`
+	CInstNameCode       interface{} `json:"c_inst_name_code"`
+	CExamField          *string     `json:"c_exam_field"`
+	CEntryAddrID        interface{} `json:"c_entry_addr_id"`
+	CParentalStatusCode *int16      `json:"c_parental_status_code"`
+	CAttemptCount       *int16      `json:"c_attempt_count"`
+	CSource             interface{} `json:"c_source"`
+	CPages              *string     `json:"c_pages"`
+	CNotes              *string     `json:"c_notes"`
+	CPostingNotes       *string     `json:"c_posting_notes"`
+	CCreatedBy          *string     `json:"c_created_by"`
+	CModifiedBy         *string     `json:"c_modified_by"`
+	CCreatedDate        *string     `json:"c_created_date"`
+	CModifiedDate       *string     `json:"c_modified_date"`
+}
+
+type EntryType struct {
+	CEntryType          string  `json:"c_entry_type"`
+	CEntryTypeDesc      string  `json:"c_entry_type_desc"`
+	CEntryTypeDescChn   string  `json:"c_entry_type_desc_chn"`
+	CEntryTypeParentID  *string `json:"c_entry_type_parent_id"`
+	CEntryTypeLevel     *int16  `json:"c_entry_type_level"`
+	CEntryTypeSortorder *int16  `json:"c_entry_type_sortorder"`
 }
 
 type KinDatum struct {
@@ -105,4 +303,154 @@ type KinshipCode struct {
 	CMarstep          interface{} `json:"c_marstep"`
 	CColstep          interface{} `json:"c_colstep"`
 	CKinrelSimplified string      `json:"c_kinrel_simplified"`
+}
+
+type OfficeCategory struct {
+	COfficeCategoryID interface{} `json:"c_office_category_id"`
+	CCategoryDesc     *string     `json:"c_category_desc"`
+	CCategoryDescChn  *string     `json:"c_category_desc_chn"`
+	CNotes            *string     `json:"c_notes"`
+}
+
+type OfficeCode struct {
+	COfficeID        interface{} `json:"c_office_id"`
+	CDy              interface{} `json:"c_dy"`
+	COfficePinyin    *string     `json:"c_office_pinyin"`
+	COfficeChn       *string     `json:"c_office_chn"`
+	COfficePinyinAlt *string     `json:"c_office_pinyin_alt"`
+	COfficeChnAlt    *string     `json:"c_office_chn_alt"`
+	COfficeTrans     *string     `json:"c_office_trans"`
+	COfficeTransAlt  *string     `json:"c_office_trans_alt"`
+	CSource          interface{} `json:"c_source"`
+	CPages           *string     `json:"c_pages"`
+	CNotes           *string     `json:"c_notes"`
+}
+
+type PostedToOfficeDatum struct {
+	CPersonid         interface{} `json:"c_personid"`
+	COfficeID         interface{} `json:"c_office_id"`
+	CPostingID        interface{} `json:"c_posting_id"`
+	CSequence         *int16      `json:"c_sequence"`
+	CFirstyear        *int16      `json:"c_firstyear"`
+	CFyNhCode         *int16      `json:"c_fy_nh_code"`
+	CFyNhYear         *int16      `json:"c_fy_nh_year"`
+	CFyRange          *int16      `json:"c_fy_range"`
+	CLastyear         *int16      `json:"c_lastyear"`
+	CLyNhCode         *int16      `json:"c_ly_nh_code"`
+	CLyNhYear         *int16      `json:"c_ly_nh_year"`
+	CLyRange          *int16      `json:"c_ly_range"`
+	CApptCode         interface{} `json:"c_appt_code"`
+	CAssumeOfficeCode *int16      `json:"c_assume_office_code"`
+	CInstCode         *int16      `json:"c_inst_code"`
+	CInstNameCode     *int16      `json:"c_inst_name_code"`
+	CSource           interface{} `json:"c_source"`
+	CPages            *string     `json:"c_pages"`
+	CNotes            *string     `json:"c_notes"`
+	COfficeIDBackup   interface{} `json:"c_office_id_backup"`
+	COfficeCategoryID *int16      `json:"c_office_category_id"`
+	CFyIntercalary    *int16      `json:"c_fy_intercalary"`
+	CFyMonth          *int16      `json:"c_fy_month"`
+	CLyIntercalary    *int16      `json:"c_ly_intercalary"`
+	CLyMonth          *int16      `json:"c_ly_month"`
+	CFyDay            *int16      `json:"c_fy_day"`
+	CLyDay            *int16      `json:"c_ly_day"`
+	CFyDayGz          *int16      `json:"c_fy_day_gz"`
+	CLyDayGz          *int16      `json:"c_ly_day_gz"`
+	CDy               *int16      `json:"c_dy"`
+	CCreatedBy        *string     `json:"c_created_by"`
+	CModifiedBy       *string     `json:"c_modified_by"`
+	CCreatedDate      *string     `json:"c_created_date"`
+	CModifiedDate     *string     `json:"c_modified_date"`
+}
+
+type PostingDatum struct {
+	CPersonid     interface{} `json:"c_personid"`
+	CPostingID    interface{} `json:"c_posting_id"`
+	CCreatedBy    *string     `json:"c_created_by"`
+	CCreatedDate  *string     `json:"c_created_date"`
+	CModifiedBy   *string     `json:"c_modified_by"`
+	CModifiedDate *string     `json:"c_modified_date"`
+}
+
+type SocialInstitutionCode struct {
+	CInstNameCode       interface{} `json:"c_inst_name_code"`
+	CInstCode           interface{} `json:"c_inst_code"`
+	CInstTypeCode       *int16      `json:"c_inst_type_code"`
+	CInstBeginYear      *int16      `json:"c_inst_begin_year"`
+	CByNianhaoCode      *int16      `json:"c_by_nianhao_code"`
+	CByNianhaoYear      *int16      `json:"c_by_nianhao_year"`
+	CByYearRange        *int16      `json:"c_by_year_range"`
+	CInstBeginDy        *int16      `json:"c_inst_begin_dy"`
+	CInstFloruitDy      *int16      `json:"c_inst_floruit_dy"`
+	CInstFirstKnownYear *int16      `json:"c_inst_first_known_year"`
+	CInstEndYear        *int16      `json:"c_inst_end_year"`
+	CEyNianhaoCode      *int16      `json:"c_ey_nianhao_code"`
+	CEyNianhaoYear      *int16      `json:"c_ey_nianhao_year"`
+	CEyYearRange        *int16      `json:"c_ey_year_range"`
+	CInstEndDy          *int16      `json:"c_inst_end_dy"`
+	CInstLastKnownYear  *int16      `json:"c_inst_last_known_year"`
+	CSource             interface{} `json:"c_source"`
+	CPages              *string     `json:"c_pages"`
+	CNotes              *string     `json:"c_notes"`
+}
+
+type SocialInstitutionNameCode struct {
+	CInstNameCode interface{} `json:"c_inst_name_code"`
+	CInstNameHz   string      `json:"c_inst_name_hz"`
+	CInstNamePy   string      `json:"c_inst_name_py"`
+}
+
+type StatusCode struct {
+	CStatusCode    interface{} `json:"c_status_code"`
+	CStatusDesc    string      `json:"c_status_desc"`
+	CStatusDescChn string      `json:"c_status_desc_chn"`
+}
+
+type StatusDatum struct {
+	CPersonid     interface{} `json:"c_personid"`
+	CSequence     interface{} `json:"c_sequence"`
+	CStatusCode   interface{} `json:"c_status_code"`
+	CFirstyear    *int16      `json:"c_firstyear"`
+	CFyNhCode     *int16      `json:"c_fy_nh_code"`
+	CFyNhYear     *int16      `json:"c_fy_nh_year"`
+	CFyRange      *int16      `json:"c_fy_range"`
+	CLastyear     *int16      `json:"c_lastyear"`
+	CLyNhCode     *int16      `json:"c_ly_nh_code"`
+	CLyNhYear     *int16      `json:"c_ly_nh_year"`
+	CLyRange      *int16      `json:"c_ly_range"`
+	CSupplement   *string     `json:"c_supplement"`
+	CSource       interface{} `json:"c_source"`
+	CPages        *string     `json:"c_pages"`
+	CNotes        *string     `json:"c_notes"`
+	CCreatedBy    *string     `json:"c_created_by"`
+	CModifiedBy   *string     `json:"c_modified_by"`
+	CCreatedDate  *string     `json:"c_created_date"`
+	CModifiedDate *string     `json:"c_modified_date"`
+}
+
+type TextCode struct {
+	CTextid        interface{} `json:"c_textid"`
+	CTitleChn      *string     `json:"c_title_chn"`
+	CTitle         *string     `json:"c_title"`
+	CTitleTrans    *string     `json:"c_title_trans"`
+	CTextTypeID    *string     `json:"c_text_type_id"`
+	CTextYear      *int16      `json:"c_text_year"`
+	CTextNhCode    *int16      `json:"c_text_nh_code"`
+	CTextNhYear    *int16      `json:"c_text_nh_year"`
+	CTextRangeCode *int16      `json:"c_text_range_code"`
+	CBiblCatCode   *int16      `json:"c_bibl_cat_code"`
+	CExtant        *int16      `json:"c_extant"`
+	CTextCountry   *int16      `json:"c_text_country"`
+	CTextDy        *int16      `json:"c_text_dy"`
+	CSource        interface{} `json:"c_source"`
+	CPages         *string     `json:"c_pages"`
+	CUrlApi        *string     `json:"c_url_api"`
+	CUrlApiCoda    *string     `json:"c_url_api_coda"`
+	CUrlHomepage   *string     `json:"c_url_homepage"`
+	CNotes         *string     `json:"c_notes"`
+	CTitleAltChn   *string     `json:"c_title_alt_chn"`
+	CCreatedBy     *string     `json:"c_created_by"`
+	CModifiedBy    *string     `json:"c_modified_by"`
+	CCreatedDate   *string     `json:"c_created_date"`
+	CModifiedDate  *string     `json:"c_modified_date"`
 }
