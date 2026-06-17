@@ -4,9 +4,9 @@ CREATE TABLE BIOG_MAIN (
     "c_name_chn" varchar(255) DEFAULT NULL /* Chinese full name; auto-generated: c_surname_chn + c_mingzi_chn (no space) */,
     "c_index_year" smallint(6) DEFAULT NULL,
     "c_index_year_type_code" varchar(255) DEFAULT NULL,
-    "c_index_year_source_id" INTEGER(11) DEFAULT NULL,
+    "c_index_year_source_id" INTEGER DEFAULT NULL,
     "c_female" smallint(6) DEFAULT NULL,
-    "c_index_addr_id" INTEGER(11) DEFAULT 0,
+    "c_index_addr_id" INTEGER DEFAULT 0,
     "c_index_addr_type_code" smallint(6) DEFAULT NULL,
     "c_ethnicity_code" smallint(6) DEFAULT NULL,
     "c_household_status_code" smallint(6) DEFAULT NULL,
@@ -58,10 +58,10 @@ CREATE TABLE BIOG_MAIN (
 );
 
 CREATE TABLE KIN_DATA (
-    "c_personid" INTEGER(11) NOT NULL,
-    "c_kin_id" INTEGER(11) NOT NULL,
+    "c_personid" INTEGER NOT NULL,
+    "c_kin_id" INTEGER NOT NULL,
     "c_kin_code" smallint(6) NOT NULL,
-    "c_source" INTEGER(11) DEFAULT NULL,
+    "c_source" INTEGER DEFAULT NULL,
     "c_pages" varchar(255) DEFAULT NULL,
     "c_notes" TEXT DEFAULT NULL,
     "c_autogen_notes" TEXT DEFAULT NULL,
@@ -107,12 +107,12 @@ CREATE TABLE CHORONYM_CODES (
 );
 
 CREATE TABLE ALTNAME_DATA (
-    "c_personid" INTEGER(11) NOT NULL,
+    "c_personid" INTEGER NOT NULL,
     "c_alt_name" varchar(255) DEFAULT NULL,
     "c_alt_name_chn" varchar(255) NOT NULL,
     "c_alt_name_type_code" smallint(6) NOT NULL,
     "c_sequence" smallint(6) DEFAULT 0,
-    "c_source" INTEGER(11) DEFAULT NULL,
+    "c_source" INTEGER DEFAULT NULL,
     "c_pages" varchar(255) DEFAULT NULL,
     "c_notes" TEXT DEFAULT NULL,
     "c_created_by" varchar(255) DEFAULT NULL,
@@ -130,7 +130,7 @@ CREATE TABLE ALTNAME_CODES (
 );
 
 CREATE TABLE STATUS_DATA (
-    "c_personid" INTEGER(11) NOT NULL,
+    "c_personid" INTEGER NOT NULL,
     "c_sequence" smallint(6) NOT NULL,
     "c_status_code" smallint(6) NOT NULL,
     "c_firstyear" smallint(6) DEFAULT NULL,
@@ -142,7 +142,7 @@ CREATE TABLE STATUS_DATA (
     "c_ly_nh_year" smallint(6) DEFAULT NULL,
     "c_ly_range" smallint(6) DEFAULT NULL,
     "c_supplement" varchar(255) DEFAULT NULL,
-    "c_source" INTEGER(11) DEFAULT NULL,
+    "c_source" INTEGER DEFAULT NULL,
     "c_pages" varchar(255) DEFAULT NULL,
     "c_notes" TEXT DEFAULT NULL,
     "c_created_by" varchar(255) DEFAULT NULL,
@@ -160,14 +160,14 @@ CREATE TABLE STATUS_CODES (
 );
 
 CREATE TABLE ENTRY_DATA (
-    "c_personid" INTEGER(11) NOT NULL,
+    "c_personid" INTEGER NOT NULL,
     "c_entry_code" smallint(6) NOT NULL,
     "c_sequence" smallint(6) NOT NULL,
     "c_exam_rank" varchar(255) DEFAULT NULL,
     "c_kin_code" smallint(6) NOT NULL,
-    "c_kin_id" INTEGER(11) NOT NULL,
+    "c_kin_id" INTEGER NOT NULL,
     "c_assoc_code" smallint(6) NOT NULL,
-    "c_assoc_id" INTEGER(11) NOT NULL,
+    "c_assoc_id" INTEGER NOT NULL,
     "c_year" smallint(6) NOT NULL,
     "c_age" smallint(6) DEFAULT NULL,
     "c_entry_nh_id" smallint(6) DEFAULT NULL,
@@ -177,10 +177,10 @@ CREATE TABLE ENTRY_DATA (
     "c_inst_code" smallint(6) NOT NULL DEFAULT 0,
     "c_inst_name_code" smallint(6) NOT NULL DEFAULT 0,
     "c_exam_field" varchar(255) DEFAULT NULL,
-    "c_entry_addr_id" INTEGER(11) DEFAULT NULL,
+    "c_entry_addr_id" INTEGER DEFAULT NULL,
     "c_parental_status_code" smallint(6) DEFAULT NULL,
     "c_attempt_count" smallint(6) DEFAULT NULL,
-    "c_source" INTEGER(11) DEFAULT NULL,
+    "c_source" INTEGER DEFAULT NULL,
     "c_pages" varchar(255) DEFAULT NULL,
     "c_notes" TEXT DEFAULT NULL,
     "c_posting_notes" varchar(255) DEFAULT NULL,
@@ -215,8 +215,8 @@ CREATE TABLE ENTRY_TYPES (
 );
 
 CREATE TABLE POSTING_DATA (
-    "c_personid" INTEGER(11) DEFAULT NULL,
-    "c_posting_id" INTEGER(11) NOT NULL,
+    "c_personid" INTEGER DEFAULT NULL,
+    "c_posting_id" INTEGER NOT NULL,
     "c_created_by" varchar(255) DEFAULT NULL,
     "c_created_date" TEXT DEFAULT NULL,
     "c_modified_by" varchar(255) DEFAULT NULL,
@@ -225,9 +225,9 @@ CREATE TABLE POSTING_DATA (
 );
 
 CREATE TABLE POSTED_TO_OFFICE_DATA (
-    "c_personid" INTEGER(11) DEFAULT NULL,
-    "c_office_id" INTEGER(11) NOT NULL,
-    "c_posting_id" INTEGER(11) NOT NULL,
+    "c_personid" INTEGER DEFAULT NULL,
+    "c_office_id" INTEGER NOT NULL,
+    "c_posting_id" INTEGER NOT NULL,
     "c_sequence" smallint(6) DEFAULT NULL,
     "c_firstyear" smallint(6) DEFAULT NULL,
     "c_fy_nh_code" smallint(6) DEFAULT NULL,
@@ -241,10 +241,10 @@ CREATE TABLE POSTED_TO_OFFICE_DATA (
     "c_assume_office_code" smallint(6) DEFAULT NULL,
     "c_inst_code" smallint(6) DEFAULT 0,
     "c_inst_name_code" smallint(6) DEFAULT 0,
-    "c_source" INTEGER(11) DEFAULT NULL,
+    "c_source" INTEGER DEFAULT NULL,
     "c_pages" varchar(255) DEFAULT NULL,
     "c_notes" TEXT DEFAULT NULL,
-    "c_office_id_backup" INTEGER(11) DEFAULT NULL,
+    "c_office_id_backup" INTEGER DEFAULT NULL,
     "c_office_category_id" smallint(6) DEFAULT NULL,
     "c_fy_intercalary" smallint(6) DEFAULT NULL,
     "c_fy_month" smallint(6) DEFAULT NULL,
@@ -281,7 +281,7 @@ CREATE TABLE OFFICE_CATEGORIES (
 );
 
 CREATE TABLE OFFICE_CODES (
-    "c_office_id" INTEGER(11) NOT NULL,
+    "c_office_id" INTEGER NOT NULL,
     "c_dy" smallint(6) NOT NULL DEFAULT 0,
     "c_office_pinyin" varchar(255) DEFAULT NULL,
     "c_office_chn" varchar(255) DEFAULT NULL,
@@ -289,14 +289,14 @@ CREATE TABLE OFFICE_CODES (
     "c_office_chn_alt" varchar(255) DEFAULT NULL,
     "c_office_trans" varchar(255) DEFAULT NULL,
     "c_office_trans_alt" varchar(255) DEFAULT NULL,
-    "c_source" INTEGER(11) DEFAULT NULL,
+    "c_source" INTEGER DEFAULT NULL,
     "c_pages" varchar(255) DEFAULT NULL,
     "c_notes" TEXT DEFAULT NULL,
     PRIMARY KEY ("c_office_id")
 );
 
 CREATE TABLE TEXT_CODES (
-    "c_textid" INTEGER(11) NOT NULL,
+    "c_textid" INTEGER NOT NULL,
     "c_title_chn" varchar(255) DEFAULT NULL,
     "c_title" varchar(255) DEFAULT NULL,
     "c_title_trans" varchar(255) DEFAULT NULL,
@@ -309,7 +309,7 @@ CREATE TABLE TEXT_CODES (
     "c_extant" smallint(6) DEFAULT NULL,
     "c_text_country" smallint(6) DEFAULT NULL,
     "c_text_dy" smallint(6) DEFAULT NULL,
-    "c_source" INTEGER(11) DEFAULT NULL,
+    "c_source" INTEGER DEFAULT NULL,
     "c_pages" varchar(255) DEFAULT NULL,
     "c_url_api" varchar(255) DEFAULT NULL,
     "c_url_api_coda" varchar(255) DEFAULT NULL,
@@ -325,14 +325,14 @@ CREATE TABLE TEXT_CODES (
 
 
 CREATE TABLE BIOG_TEXT_DATA (
-    "c_textid" INTEGER(11) NOT NULL,
-    "c_personid" INTEGER(11) NOT NULL,
+    "c_textid" INTEGER NOT NULL,
+    "c_personid" INTEGER NOT NULL,
     "c_role_id" smallint(6) NOT NULL,
     "c_year" smallint(6) DEFAULT NULL,
     "c_nh_code" smallint(6) DEFAULT NULL,
     "c_nh_year" smallint(6) DEFAULT NULL,
     "c_range_code" smallint(6) DEFAULT NULL,
-    "c_source" INTEGER(11) DEFAULT NULL,
+    "c_source" INTEGER DEFAULT NULL,
     "c_pages" varchar(255) DEFAULT NULL,
     "c_notes" TEXT DEFAULT NULL,
     "c_created_by" varchar(255) DEFAULT NULL,
@@ -344,19 +344,19 @@ CREATE TABLE BIOG_TEXT_DATA (
 
 CREATE TABLE ASSOC_DATA (
     "c_assoc_code" smallint(6) NOT NULL,
-    "c_personid" INTEGER(11) NOT NULL,
+    "c_personid" INTEGER NOT NULL,
     "c_kin_code" smallint(6) NOT NULL,
-    "c_kin_id" INTEGER(11) NOT NULL,
-    "c_assoc_id" INTEGER(11) NOT NULL,
+    "c_kin_id" INTEGER NOT NULL,
+    "c_assoc_id" INTEGER NOT NULL,
     "c_assoc_kin_code" smallint(6) NOT NULL,
-    "c_assoc_kin_id" INTEGER(11) NOT NULL,
-    "c_tertiary_personid" INTEGER(11) DEFAULT NULL,
+    "c_assoc_kin_id" INTEGER NOT NULL,
+    "c_tertiary_personid" INTEGER DEFAULT NULL,
     "c_tertiary_type_notes" TEXT DEFAULT NULL,
     "c_assoc_count" smallint(6) NOT NULL DEFAULT 1,
     "c_sequence" smallint(6) DEFAULT 0,
     "c_assoc_first_year" smallint(6) NOT NULL DEFAULT -9999,
     "c_assoc_last_year" smallint(6) DEFAULT NULL,
-    "c_source" INTEGER(11) DEFAULT NULL,
+    "c_source" INTEGER DEFAULT NULL,
     "c_pages" varchar(255) DEFAULT NULL,
     "c_notes" TEXT DEFAULT NULL,
     "c_assoc_fy_nh_code" smallint(6) DEFAULT NULL,
@@ -365,14 +365,14 @@ CREATE TABLE ASSOC_DATA (
     "c_assoc_ly_nh_code" smallint(6) DEFAULT NULL,
     "c_assoc_ly_nh_year" smallint(6) DEFAULT NULL,
     "c_assoc_ly_range" smallint(6) DEFAULT NULL,
-    "c_addr_id" INTEGER(11) DEFAULT NULL,
+    "c_addr_id" INTEGER DEFAULT NULL,
     "c_litgenre_code" smallint(6) DEFAULT NULL,
     "c_occasion_code" smallint(6) DEFAULT NULL,
     "c_topic_code" smallint(6) DEFAULT NULL,
     "c_inst_code" smallint(6) DEFAULT 0,
     "c_inst_name_code" smallint(6) DEFAULT 0,
     "c_text_title" varchar(255) NOT NULL DEFAULT '',
-    "c_assoc_claimer_id" INTEGER(11) DEFAULT NULL,
+    "c_assoc_claimer_id" INTEGER DEFAULT NULL,
     "c_assoc_fy_intercalary" smallint(6) DEFAULT NULL,
     "c_assoc_fy_month" smallint(6) DEFAULT NULL,
     "c_assoc_fy_day" smallint(6) DEFAULT NULL,
@@ -418,7 +418,7 @@ CREATE TABLE ASSOC_TYPES (
 );
 
 CREATE TABLE BIOG_INST_DATA (
-    "c_personid" INTEGER(11) NOT NULL,
+    "c_personid" INTEGER NOT NULL,
     "c_inst_name_code" smallint(6) NOT NULL,
     "c_inst_code" smallint(6) NOT NULL,
     "c_bi_role_code" smallint(6) NOT NULL,
@@ -430,7 +430,7 @@ CREATE TABLE BIOG_INST_DATA (
     "c_bi_ey_nh_code" smallint(6) DEFAULT NULL,
     "c_bi_ey_nh_year" smallint(6) DEFAULT NULL,
     "c_bi_ey_range" smallint(6) DEFAULT NULL,
-    "c_source" INTEGER(11) DEFAULT NULL,
+    "c_source" INTEGER DEFAULT NULL,
     "c_pages" varchar(255) DEFAULT NULL,
     "c_notes" TEXT DEFAULT NULL,
     "c_created_by" varchar(255) DEFAULT NULL,
@@ -464,7 +464,7 @@ CREATE TABLE SOCIAL_INSTITUTION_CODES (
     "c_ey_year_range" smallint(6) DEFAULT NULL,
     "c_inst_end_dy" smallint(6) DEFAULT NULL,
     "c_inst_last_known_year" smallint(6) DEFAULT NULL,
-    "c_source" INTEGER(11) DEFAULT NULL,
+    "c_source" INTEGER DEFAULT NULL,
     "c_pages" varchar(255) DEFAULT NULL,
     "c_notes" TEXT DEFAULT NULL,
     PRIMARY KEY ("c_inst_code", "c_inst_name_code")

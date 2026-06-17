@@ -28,7 +28,7 @@ type GetAltnamesByPersonIDRow struct {
 	CNameTypeDescChn *string `json:"c_name_type_desc_chn"`
 }
 
-func (q *Queries) GetAltnamesByPersonID(ctx context.Context, cPersonid interface{}) ([]GetAltnamesByPersonIDRow, error) {
+func (q *Queries) GetAltnamesByPersonID(ctx context.Context, cPersonid int64) ([]GetAltnamesByPersonIDRow, error) {
 	rows, err := q.db.QueryContext(ctx, getAltnamesByPersonID, cPersonid)
 	if err != nil {
 		return nil, err
@@ -81,7 +81,7 @@ WHERE ad.c_personid = 1762
 `
 
 type GetAssociationByPersonIDRow struct {
-	CAssocID            interface{} `json:"c_assoc_id"`
+	CAssocID            int64       `json:"c_assoc_id"`
 	CNameChn            *string     `json:"c_name_chn"`
 	CAssocFirstYear     interface{} `json:"c_assoc_first_year"`
 	CAssocLastYear      *int16      `json:"c_assoc_last_year"`
@@ -159,7 +159,7 @@ type GetEntryByPersonIDRow struct {
 }
 
 // join NIAN_HAO nh on nh.c_nianhao_id = ed.c_entry_nh_id
-func (q *Queries) GetEntryByPersonID(ctx context.Context, cPersonid interface{}) ([]GetEntryByPersonIDRow, error) {
+func (q *Queries) GetEntryByPersonID(ctx context.Context, cPersonid int64) ([]GetEntryByPersonIDRow, error) {
 	rows, err := q.db.QueryContext(ctx, getEntryByPersonID, cPersonid)
 	if err != nil {
 		return nil, err
@@ -324,11 +324,11 @@ where bm.c_personid = ?
 `
 
 type GetPersonKinShipByPersonIDRow struct {
-	CKinID     interface{} `json:"c_kin_id"`
-	CKinrel    string      `json:"c_kinrel"`
-	CKinrelAlt *string     `json:"c_kinrel_alt"`
-	CKinrelChn string      `json:"c_kinrel_chn"`
-	CNameChn   *string     `json:"c_name_chn"`
+	CKinID     int64   `json:"c_kin_id"`
+	CKinrel    string  `json:"c_kinrel"`
+	CKinrelAlt *string `json:"c_kinrel_alt"`
+	CKinrelChn string  `json:"c_kinrel_chn"`
+	CNameChn   *string `json:"c_name_chn"`
 }
 
 func (q *Queries) GetPersonKinShipByPersonID(ctx context.Context, cPersonid int64) ([]GetPersonKinShipByPersonIDRow, error) {
@@ -389,7 +389,7 @@ type GetPostingByPersonIDRow struct {
 	CTitleChn     *string `json:"c_title_chn"`
 }
 
-func (q *Queries) GetPostingByPersonID(ctx context.Context, cPersonid interface{}) ([]GetPostingByPersonIDRow, error) {
+func (q *Queries) GetPostingByPersonID(ctx context.Context, cPersonid *int64) ([]GetPostingByPersonIDRow, error) {
 	rows, err := q.db.QueryContext(ctx, getPostingByPersonID, cPersonid)
 	if err != nil {
 		return nil, err
@@ -435,7 +435,7 @@ type GetStatusByPersonIDRow struct {
 	CStatusDescChn string `json:"c_status_desc_chn"`
 }
 
-func (q *Queries) GetStatusByPersonID(ctx context.Context, cPersonid interface{}) ([]GetStatusByPersonIDRow, error) {
+func (q *Queries) GetStatusByPersonID(ctx context.Context, cPersonid int64) ([]GetStatusByPersonIDRow, error) {
 	rows, err := q.db.QueryContext(ctx, getStatusByPersonID, cPersonid)
 	if err != nil {
 		return nil, err
@@ -472,13 +472,13 @@ WHERE btd.c_personid = ?
 `
 
 type GetTextByPersonIDRow struct {
-	CTitleChn   *string     `json:"c_title_chn"`
-	CTextYear   *int16      `json:"c_text_year"`
-	CSource     interface{} `json:"c_source"`
-	CTitleChn_2 *string     `json:"c_title_chn_2"`
+	CTitleChn   *string `json:"c_title_chn"`
+	CTextYear   *int16  `json:"c_text_year"`
+	CSource     *int64  `json:"c_source"`
+	CTitleChn_2 *string `json:"c_title_chn_2"`
 }
 
-func (q *Queries) GetTextByPersonID(ctx context.Context, cPersonid interface{}) ([]GetTextByPersonIDRow, error) {
+func (q *Queries) GetTextByPersonID(ctx context.Context, cPersonid int64) ([]GetTextByPersonIDRow, error) {
 	rows, err := q.db.QueryContext(ctx, getTextByPersonID, cPersonid)
 	if err != nil {
 		return nil, err
