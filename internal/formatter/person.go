@@ -132,6 +132,7 @@ func PrintPerson(person *model.Person) {
 	printPlaces(person.Places)
 	printEntries(person.Entries)
 	printPostings(person.Postings)
+	printInstitutions(person.Institutions)
 
 }
 
@@ -257,5 +258,21 @@ func printPostings(postings []repository.GetPostingByPersonIDRow) {
 	}
 
 	t := newTable([]string{"Office", "Type", "Period"}, rows)
+	lipgloss.Println(t)
+}
+
+func printInstitutions(insts []repository.GetInstitutionByPersonIDRow) {
+	rows := [][]string{}
+
+	for _, v := range insts {
+		rows = append(rows,
+			[]string{
+				joinTwoLang(safeValue(v.CInstNameHz), safeValue(v.CInstNamePy)),
+				joinTwoLang(safeValue(v.CBiRoleChn), safeValue(v.CBiRoleDesc)),
+				joinTwoYear(safeValue(v.CBiBeginYear), safeValue(v.CBiEndYear)),
+			})
+	}
+
+	t := newTable([]string{"Institution", "Role", "Period"}, rows)
 	lipgloss.Println(t)
 }

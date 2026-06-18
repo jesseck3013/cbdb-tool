@@ -142,7 +142,8 @@ LEFT JOIN SOCIAL_INSTITUTION_CODES sic on sic.c_inst_code = bid.c_inst_code
 --LEFT JOIN SOCIAL_INSTITUTION_ADDR sia on sia.c_inst_code = bid.c_inst_code
 LEFT JOIN BIOG_INST_CODES bic on bic.c_bi_role_code = bid.c_bi_role_code 
 LEFT JOIN TEXT_CODES tc on tc.c_textid  = bid.c_source 
-where bid.c_personid = ?;
+where bid.c_personid = ?
+ORDER BY bid.c_bi_begin_year;;
 
 -- name: GetPlaceByPersonID :many
 SELECT
