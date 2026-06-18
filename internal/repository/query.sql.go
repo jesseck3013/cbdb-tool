@@ -375,8 +375,7 @@ bad.c_notes,
 ac.x_coord,
 ac.y_coord,
 tc.c_title_chn,
-bad.c_pages,
-abd.c_addr_id, abd.c_belongs_to, abd.c_firstyear, abd.c_lastyear, abd.c_source, abd.c_pages, abd.c_notes, abd.c_created_by, abd.c_created_date, abd.c_modified_by, abd.c_modified_date
+bad.c_pages
 FROM
 BIOG_ADDR_DATA bad 
 LEFT JOIN ADDR_CODES ac on ac.c_addr_id = bad.c_addr_id 
@@ -388,29 +387,18 @@ ORDER BY bad.c_firstyear
 `
 
 type GetPlaceByPersonIDRow struct {
-	CName         *string  `json:"c_name"`
-	CNameChn      *string  `json:"c_name_chn"`
-	CAddrDesc     *string  `json:"c_addr_desc"`
-	CAddrDescChn  *string  `json:"c_addr_desc_chn"`
-	CAdminType    *string  `json:"c_admin_type"`
-	CFirstyear    *int16   `json:"c_firstyear"`
-	CLastyear     *int16   `json:"c_lastyear"`
-	CNotes        *string  `json:"c_notes"`
-	XCoord        *float64 `json:"x_coord"`
-	YCoord        *float64 `json:"y_coord"`
-	CTitleChn     *string  `json:"c_title_chn"`
-	CPages        *string  `json:"c_pages"`
-	CAddrID       *int64   `json:"c_addr_id"`
-	CBelongsTo    *int64   `json:"c_belongs_to"`
-	CFirstyear_2  *int16   `json:"c_firstyear_2"`
-	CLastyear_2   *int16   `json:"c_lastyear_2"`
-	CSource       *int64   `json:"c_source"`
-	CPages_2      *string  `json:"c_pages_2"`
-	CNotes_2      *string  `json:"c_notes_2"`
-	CCreatedBy    *string  `json:"c_created_by"`
-	CCreatedDate  *string  `json:"c_created_date"`
-	CModifiedBy   *string  `json:"c_modified_by"`
-	CModifiedDate *string  `json:"c_modified_date"`
+	CName        *string  `json:"c_name"`
+	CNameChn     *string  `json:"c_name_chn"`
+	CAddrDesc    *string  `json:"c_addr_desc"`
+	CAddrDescChn *string  `json:"c_addr_desc_chn"`
+	CAdminType   *string  `json:"c_admin_type"`
+	CFirstyear   *int16   `json:"c_firstyear"`
+	CLastyear    *int16   `json:"c_lastyear"`
+	CNotes       *string  `json:"c_notes"`
+	XCoord       *float64 `json:"x_coord"`
+	YCoord       *float64 `json:"y_coord"`
+	CTitleChn    *string  `json:"c_title_chn"`
+	CPages       *string  `json:"c_pages"`
 }
 
 func (q *Queries) GetPlaceByPersonID(ctx context.Context, cPersonid int64) ([]GetPlaceByPersonIDRow, error) {
@@ -435,17 +423,6 @@ func (q *Queries) GetPlaceByPersonID(ctx context.Context, cPersonid int64) ([]Ge
 			&i.YCoord,
 			&i.CTitleChn,
 			&i.CPages,
-			&i.CAddrID,
-			&i.CBelongsTo,
-			&i.CFirstyear_2,
-			&i.CLastyear_2,
-			&i.CSource,
-			&i.CPages_2,
-			&i.CNotes_2,
-			&i.CCreatedBy,
-			&i.CCreatedDate,
-			&i.CModifiedBy,
-			&i.CModifiedDate,
 		); err != nil {
 			return nil, err
 		}

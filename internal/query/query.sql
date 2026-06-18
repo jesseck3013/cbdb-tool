@@ -156,8 +156,7 @@ bad.c_notes,
 ac.x_coord,
 ac.y_coord,
 tc.c_title_chn,
-bad.c_pages,
-abd.*
+bad.c_pages
 FROM
 BIOG_ADDR_DATA bad 
 LEFT JOIN ADDR_CODES ac on ac.c_addr_id = bad.c_addr_id 
