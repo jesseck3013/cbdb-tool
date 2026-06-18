@@ -33,9 +33,10 @@ kd.c_kin_id,
 kc.c_kinrel, 
 kc.c_kinrel_alt, 
 kc.c_kinrel_chn, 
+bm.c_name,
 bm.c_name_chn 
 from KIN_DATA kd
-join BIOG_MAIN bm on bm.c_personid = kd.c_personid
+join BIOG_MAIN bm on bm.c_personid = kd.c_kin_id 
 join KINSHIP_CODES kc on kd.c_kin_code = kc.c_kincode 
 where kd.c_personid = ?;
 

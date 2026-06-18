@@ -70,7 +70,7 @@ var (
 	// Style for valid data values
 	valueStyle = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("255")).
-			Align(lipgloss.Center)
+			Align(lipgloss.Left)
 
 	// Style specifically for missing database points
 	emptyValueStyle = lipgloss.NewStyle().
@@ -120,6 +120,7 @@ func printBasicInfo(info repository.GetPersonByIDRow) {
 func PrintPerson(person *model.Person) {
 	printBasicInfo(person.BasicInfo)
 	printAltNames(person.AltNames)
+	printKinship(person.KinShip)
 }
 
 func newTable(headers []string, rows [][]string) *table.Table {
@@ -144,11 +145,26 @@ func printAltNames(names []repository.GetAltnamesByPersonIDRow) {
 	for _, name := range names {
 		rows = append(rows,
 			[]string{
-				joinTwoLang(name.CAltNameChn, safeValue(name.CAltName)),
 				joinTwoLang(safeValue(name.CNameTypeDescChn), safeValue(name.CNameTypeDesc)),
+				joinTwoLang(name.CAltNameChn, safeValue(name.CAltName)),
 			})
 	}
 
-	t := newTable([]string{"Alternative Name", "Type"}, rows)
+	t := newTable([]string{"Type", "Alternative Name"}, rows)
+	lipgloss.Println(t)
+}
+
+func printKinship(kinships []repository.GetPersonKinShipByPersonIDRow) {
+	rows := [][]string{}
+
+	for _, kinship := range kinships {
+		rows = append(rows,
+			[]string{
+				joinTwoLang(kinship.CKinrelChn, kinship.CKinrel),
+				joinTwoLang(safeValue(kinship.CNameChn), safeValue(kinship.CName)),
+			})
+	}
+
+	t := newTable([]string{"Kinship Type", "Name"}, rows)
 	lipgloss.Println(t)
 }
