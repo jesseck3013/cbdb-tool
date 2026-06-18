@@ -128,7 +128,7 @@ func PrintPerson(person *model.Person) {
 	printAltNames(person.AltNames)
 	printStatus(person.Status)
 	printKinships(person.KinShips)
-	//printAssociations(person.Associations)
+	printAssociations(removeDupliate(person.Associations))
 	printPlaces(person.Places)
 	printEntries(person.Entries)
 	printPostings(person.Postings)
@@ -188,7 +188,7 @@ func printAssociations(associations []repository.GetAssociationByPersonIDRow) {
 	for _, association := range associations {
 		rows = append(rows,
 			[]string{
-				joinTwoLang(safeValue(association.CAssocTypeDescChn), safeValue(association.CAssocTypeDesc)),
+				joinTwoLang(safeValue(association.CAssocTypeDescChn), safeValue(association.CAssocTypeShortDesc)),
 				joinTwoLang(safeValue(association.CNameChn), safeValue(association.CNameChn)),
 			})
 	}
@@ -275,4 +275,20 @@ func printInstitutions(insts []repository.GetInstitutionByPersonIDRow) {
 
 	t := newTable([]string{"Institution", "Role", "Period"}, rows)
 	lipgloss.Println(t)
+}
+
+// TODO: build a generic version
+func removeDupliate(s []repository.GetAssociationByPersonIDRow) []repository.GetAssociationByPersonIDRow {
+	set := make(map[int64]*repository.GetAssociationByPersonIDRow)
+	for _, v := range s {
+		set[v.CAssocID] = &v
+	}
+
+	res := make([]repository.GetAssociationByPersonIDRow, 0)
+
+	for _, v := range set {
+		res = append(res, *v)
+	}
+
+	return res
 }

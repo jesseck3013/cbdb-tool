@@ -102,7 +102,8 @@ WHERE btd.c_personid = ?;
 
 -- name: GetAssociationByPersonID :many
 SELECT
-ad.c_assoc_id ,
+ad.c_assoc_id,
+ad.c_text_title,
 bm.c_name_chn,
 ad.c_assoc_first_year,
 ad.c_assoc_last_year,

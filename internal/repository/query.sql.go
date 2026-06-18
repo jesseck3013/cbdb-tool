@@ -58,7 +58,8 @@ func (q *Queries) GetAltnamesByPersonID(ctx context.Context, cPersonid int64) ([
 
 const getAssociationByPersonID = `-- name: GetAssociationByPersonID :many
 SELECT
-ad.c_assoc_id ,
+ad.c_assoc_id,
+ad.c_text_title,
 bm.c_name_chn,
 ad.c_assoc_first_year,
 ad.c_assoc_last_year,
@@ -82,6 +83,7 @@ WHERE ad.c_personid = ?
 
 type GetAssociationByPersonIDRow struct {
 	CAssocID            int64   `json:"c_assoc_id"`
+	CTextTitle          string  `json:"c_text_title"`
 	CNameChn            *string `json:"c_name_chn"`
 	CAssocFirstYear     int16   `json:"c_assoc_first_year"`
 	CAssocLastYear      *int16  `json:"c_assoc_last_year"`
@@ -106,6 +108,7 @@ func (q *Queries) GetAssociationByPersonID(ctx context.Context, cPersonid int64)
 		var i GetAssociationByPersonIDRow
 		if err := rows.Scan(
 			&i.CAssocID,
+			&i.CTextTitle,
 			&i.CNameChn,
 			&i.CAssocFirstYear,
 			&i.CAssocLastYear,
