@@ -85,7 +85,8 @@ join APPOINTMENT_CODES ac on ac.c_appt_code = ptod.c_appt_code
 LEFT join OFFICE_CATEGORIES oc on oc.c_office_category_id = ptod.c_office_category_id 
 join OFFICE_CODES oc2 on oc2.c_office_id = ptod.c_office_id 
 LEFT JOIN TEXT_CODES tc on ptod.c_source = tc.c_textid 
-where pd.c_personid = CAST(sqlc.arg(person_id) AS INTEGER);
+where pd.c_personid = CAST(sqlc.arg(person_id) AS INTEGER)
+ORDER BY ptod.c_firstyear;
 
 -- name: GetTextByPersonID :many
 SELECT

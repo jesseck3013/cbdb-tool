@@ -457,6 +457,7 @@ LEFT join OFFICE_CATEGORIES oc on oc.c_office_category_id = ptod.c_office_catego
 join OFFICE_CODES oc2 on oc2.c_office_id = ptod.c_office_id 
 LEFT JOIN TEXT_CODES tc on ptod.c_source = tc.c_textid 
 where pd.c_personid = CAST(?1 AS INTEGER)
+ORDER BY ptod.c_firstyear
 `
 
 type GetPostingByPersonIDRow struct {
