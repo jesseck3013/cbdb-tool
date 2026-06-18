@@ -77,7 +77,7 @@ LEFT JOIN ASSOC_CODES ac on ad.c_assoc_code  = ac.c_assoc_code
 LEFT JOIN TEXT_CODES tc  on ad.c_source = tc.c_textid 
 LEFT JOIN ASSOC_CODE_TYPE_REL actr on actr.c_assoc_code = ac.c_assoc_code 
 LEFT JOIN ASSOC_TYPES t on t.c_assoc_type_code = actr.c_assoc_type_code 
-WHERE ad.c_personid = 1762
+WHERE ad.c_personid = ?
 `
 
 type GetAssociationByPersonIDRow struct {
@@ -95,8 +95,8 @@ type GetAssociationByPersonIDRow struct {
 	CAssocTypeShortDesc *string     `json:"c_assoc_type_short_desc"`
 }
 
-func (q *Queries) GetAssociationByPersonID(ctx context.Context) ([]GetAssociationByPersonIDRow, error) {
-	rows, err := q.db.QueryContext(ctx, getAssociationByPersonID)
+func (q *Queries) GetAssociationByPersonID(ctx context.Context, cPersonid int64) ([]GetAssociationByPersonIDRow, error) {
+	rows, err := q.db.QueryContext(ctx, getAssociationByPersonID, cPersonid)
 	if err != nil {
 		return nil, err
 	}
@@ -208,7 +208,7 @@ LEFT JOIN SOCIAL_INSTITUTION_NAME_CODES sinc on bid.c_inst_name_code = sinc.c_in
 LEFT JOIN SOCIAL_INSTITUTION_CODES sic on sic.c_inst_code = bid.c_inst_code
 LEFT JOIN BIOG_INST_CODES bic on bic.c_bi_role_code = bid.c_bi_role_code 
 LEFT JOIN TEXT_CODES tc on tc.c_textid  = bid.c_source 
-where bid.c_personid = 8043
+where bid.c_personid = ?
 `
 
 type GetInstitutionByPersonIDRow struct {
@@ -224,8 +224,8 @@ type GetInstitutionByPersonIDRow struct {
 }
 
 // LEFT JOIN SOCIAL_INSTITUTION_ADDR sia on sia.c_inst_code = bid.c_inst_code
-func (q *Queries) GetInstitutionByPersonID(ctx context.Context) ([]GetInstitutionByPersonIDRow, error) {
-	rows, err := q.db.QueryContext(ctx, getInstitutionByPersonID)
+func (q *Queries) GetInstitutionByPersonID(ctx context.Context, cPersonid int64) ([]GetInstitutionByPersonIDRow, error) {
+	rows, err := q.db.QueryContext(ctx, getInstitutionByPersonID, cPersonid)
 	if err != nil {
 		return nil, err
 	}
@@ -315,12 +315,11 @@ kd.c_kin_id,
 kc.c_kinrel, 
 kc.c_kinrel_alt, 
 kc.c_kinrel_chn, 
-bm2.c_name_chn 
-from BIOG_MAIN bm
-join KIN_DATA kd on bm.c_personid = kd.c_personid
+bm.c_name_chn 
+from KIN_DATA kd
+join BIOG_MAIN bm on bm.c_personid = kd.c_personid
 join KINSHIP_CODES kc on kd.c_kin_code = kc.c_kincode 
-join BIOG_MAIN bm2 on kd.c_kin_id  = bm2.c_personid 
-where bm.c_personid = ?
+where kd.c_personid = ?
 `
 
 type GetPersonKinShipByPersonIDRow struct {
@@ -361,6 +360,9 @@ func (q *Queries) GetPersonKinShipByPersonID(ctx context.Context, cPersonid int6
 }
 
 const getPostingByPersonID = `-- name: GetPostingByPersonID :many
+WITH ptod AS (
+	SELECT c_personid, c_office_id, c_posting_id, c_sequence, c_firstyear, c_fy_nh_code, c_fy_nh_year, c_fy_range, c_lastyear, c_ly_nh_code, c_ly_nh_year, c_ly_range, c_appt_code, c_assume_office_code, c_inst_code, c_inst_name_code, c_source, c_pages, c_notes, c_office_id_backup, c_office_category_id, c_fy_intercalary, c_fy_month, c_ly_intercalary, c_ly_month, c_fy_day, c_ly_day, c_fy_day_gz, c_ly_day_gz, c_dy, c_created_by, c_modified_by, c_created_date, c_modified_date FROM POSTED_TO_OFFICE_DATA WHERE c_personid = CAST(?1 AS INTEGER)
+)
 SELECT 
 ac.c_appt_desc,
 ac.c_appt_desc_chn,
@@ -371,12 +373,12 @@ ptod.c_lastyear,
 tc.c_title_chn 
 FROM 
 POSTING_DATA pd 
-join POSTED_TO_OFFICE_DATA ptod on pd.c_posting_id = ptod.c_posting_id 
+join ptod on ptod.c_posting_id = pd.c_posting_id
 join APPOINTMENT_CODES ac on ac.c_appt_code = ptod.c_appt_code 
 LEFT join OFFICE_CATEGORIES oc on oc.c_office_category_id = ptod.c_office_category_id 
 join OFFICE_CODES oc2 on oc2.c_office_id = ptod.c_office_id 
 LEFT JOIN TEXT_CODES tc on ptod.c_source = tc.c_textid 
-where pd.c_personid = ?
+where pd.c_personid = CAST(?1 AS INTEGER)
 `
 
 type GetPostingByPersonIDRow struct {
@@ -389,8 +391,8 @@ type GetPostingByPersonIDRow struct {
 	CTitleChn     *string `json:"c_title_chn"`
 }
 
-func (q *Queries) GetPostingByPersonID(ctx context.Context, cPersonid *int64) ([]GetPostingByPersonIDRow, error) {
-	rows, err := q.db.QueryContext(ctx, getPostingByPersonID, cPersonid)
+func (q *Queries) GetPostingByPersonID(ctx context.Context, personID int64) ([]GetPostingByPersonIDRow, error) {
+	rows, err := q.db.QueryContext(ctx, getPostingByPersonID, personID)
 	if err != nil {
 		return nil, err
 	}

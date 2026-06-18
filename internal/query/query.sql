@@ -33,12 +33,11 @@ kd.c_kin_id,
 kc.c_kinrel, 
 kc.c_kinrel_alt, 
 kc.c_kinrel_chn, 
-bm2.c_name_chn 
-from BIOG_MAIN bm
-join KIN_DATA kd on bm.c_personid = kd.c_personid
+bm.c_name_chn 
+from KIN_DATA kd
+join BIOG_MAIN bm on bm.c_personid = kd.c_personid
 join KINSHIP_CODES kc on kd.c_kin_code = kc.c_kincode 
-join BIOG_MAIN bm2 on kd.c_kin_id  = bm2.c_personid 
-where bm.c_personid = ?;
+where kd.c_personid = ?;
 
 -- name: GetStatusByPersonID :many
 SELECT 
@@ -67,6 +66,9 @@ join ENTRY_TYPES et on et.c_entry_type = ectr.c_entry_type
 where ed.c_personid = ?;
 
 -- name: GetPostingByPersonID :many
+WITH ptod AS (
+	SELECT * FROM POSTED_TO_OFFICE_DATA WHERE c_personid = CAST(sqlc.arg(person_id) AS INTEGER)
+)
 SELECT 
 ac.c_appt_desc,
 ac.c_appt_desc_chn,
@@ -77,12 +79,12 @@ ptod.c_lastyear,
 tc.c_title_chn 
 FROM 
 POSTING_DATA pd 
-join POSTED_TO_OFFICE_DATA ptod on pd.c_posting_id = ptod.c_posting_id 
+join ptod on ptod.c_posting_id = pd.c_posting_id
 join APPOINTMENT_CODES ac on ac.c_appt_code = ptod.c_appt_code 
 LEFT join OFFICE_CATEGORIES oc on oc.c_office_category_id = ptod.c_office_category_id 
 join OFFICE_CODES oc2 on oc2.c_office_id = ptod.c_office_id 
 LEFT JOIN TEXT_CODES tc on ptod.c_source = tc.c_textid 
-where pd.c_personid = ?;
+where pd.c_personid = CAST(sqlc.arg(person_id) AS INTEGER);
 
 -- name: GetTextByPersonID :many
 SELECT
@@ -117,7 +119,7 @@ LEFT JOIN ASSOC_CODES ac on ad.c_assoc_code  = ac.c_assoc_code
 LEFT JOIN TEXT_CODES tc  on ad.c_source = tc.c_textid 
 LEFT JOIN ASSOC_CODE_TYPE_REL actr on actr.c_assoc_code = ac.c_assoc_code 
 LEFT JOIN ASSOC_TYPES t on t.c_assoc_type_code = actr.c_assoc_type_code 
-WHERE ad.c_personid = 1762;
+WHERE ad.c_personid = ?;
 
 -- name: GetInstitutionByPersonID :many
 SELECT 
@@ -138,4 +140,4 @@ LEFT JOIN SOCIAL_INSTITUTION_CODES sic on sic.c_inst_code = bid.c_inst_code
 --LEFT JOIN SOCIAL_INSTITUTION_ADDR sia on sia.c_inst_code = bid.c_inst_code
 LEFT JOIN BIOG_INST_CODES bic on bic.c_bi_role_code = bid.c_bi_role_code 
 LEFT JOIN TEXT_CODES tc on tc.c_textid  = bid.c_source 
-where bid.c_personid = 8043;
+where bid.c_personid = ?;
