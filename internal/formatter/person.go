@@ -101,6 +101,12 @@ func joinTwoLang(lang1, lang2 string) string {
 	return fmt.Sprintf("%s / %s", lang1, lang2)
 }
 
+// Combine two years to form a period
+// Example: 1000 2000 -> 1000 - 2000
+func joinTwoYear(lang1, lang2 string) string {
+	return fmt.Sprintf("%s - %s", lang1, lang2)
+}
+
 func printBasicInfo(info repository.GetPersonByIDRow) {
 	fmt.Println(headerStyle.Render("Person Profile:"))
 	rows := []string{
@@ -120,7 +126,11 @@ func printBasicInfo(info repository.GetPersonByIDRow) {
 func PrintPerson(person *model.Person) {
 	printBasicInfo(person.BasicInfo)
 	printAltNames(person.AltNames)
-	printKinship(person.KinShip)
+	printStatus(person.Status)
+	printKinships(person.KinShips)
+	//printAssociations(person.Associations)
+	printPlaces(person.Places)
+
 }
 
 func newTable(headers []string, rows [][]string) *table.Table {
@@ -154,7 +164,7 @@ func printAltNames(names []repository.GetAltnamesByPersonIDRow) {
 	lipgloss.Println(t)
 }
 
-func printKinship(kinships []repository.GetPersonKinShipByPersonIDRow) {
+func printKinships(kinships []repository.GetPersonKinShipByPersonIDRow) {
 	rows := [][]string{}
 
 	for _, kinship := range kinships {
@@ -166,5 +176,51 @@ func printKinship(kinships []repository.GetPersonKinShipByPersonIDRow) {
 	}
 
 	t := newTable([]string{"Kinship Type", "Name"}, rows)
+	lipgloss.Println(t)
+}
+
+func printAssociations(associations []repository.GetAssociationByPersonIDRow) {
+	rows := [][]string{}
+
+	for _, association := range associations {
+		rows = append(rows,
+			[]string{
+				joinTwoLang(safeValue(association.CAssocTypeDescChn), safeValue(association.CAssocTypeDesc)),
+				joinTwoLang(safeValue(association.CNameChn), safeValue(association.CNameChn)),
+			})
+	}
+
+	t := newTable([]string{"Association Type", "Name"}, rows)
+	lipgloss.Println(t)
+}
+
+func printStatus(status []repository.GetStatusByPersonIDRow) {
+	rows := [][]string{}
+
+	for _, v := range status {
+		rows = append(rows,
+			[]string{
+				joinTwoLang(v.CStatusDescChn,
+					v.CStatusDesc),
+			})
+	}
+
+	t := newTable([]string{"Status"}, rows)
+	lipgloss.Println(t)
+}
+
+func printPlaces(places []repository.GetPlaceByPersonIDRow) {
+	rows := [][]string{}
+
+	for _, v := range places {
+		rows = append(rows,
+			[]string{
+				joinTwoLang(safeValue(v.CNameChn), safeValue(v.CName)),
+				joinTwoLang(safeValue(v.CAddrDescChn), safeValue(v.CAddrDesc)),
+				joinTwoYear(safeValue(v.CFirstyear), safeValue(v.CLastyear)),
+			})
+	}
+
+	t := newTable([]string{"Place", "Type", "Period"}, rows)
 	lipgloss.Println(t)
 }
