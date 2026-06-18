@@ -362,6 +362,104 @@ func (q *Queries) GetPersonKinShipByPersonID(ctx context.Context, cPersonid int6
 	return items, nil
 }
 
+const getPlaceByPersonID = `-- name: GetPlaceByPersonID :many
+SELECT
+ac.c_name,
+ac.c_name_chn,
+bac.c_addr_desc,
+bac.c_addr_desc_chn,
+ac.c_admin_type,
+bad.c_firstyear,
+bad.c_lastyear,
+bad.c_notes,
+ac.x_coord,
+ac.y_coord,
+tc.c_title_chn,
+bad.c_pages,
+abd.c_addr_id, abd.c_belongs_to, abd.c_firstyear, abd.c_lastyear, abd.c_source, abd.c_pages, abd.c_notes, abd.c_created_by, abd.c_created_date, abd.c_modified_by, abd.c_modified_date
+FROM
+BIOG_ADDR_DATA bad 
+LEFT JOIN ADDR_CODES ac on ac.c_addr_id = bad.c_addr_id 
+LEFT JOIN BIOG_ADDR_CODES bac on bac.c_addr_type = bad.c_addr_type 
+LEFT JOIN TEXT_CODES tc on bad.c_source = tc.c_textid 
+LEFT JOIN ADDR_BELONGS_DATA abd on abd.c_addr_id = bad.c_addr_id 
+where bad.c_personid = ?
+ORDER BY bad.c_firstyear
+`
+
+type GetPlaceByPersonIDRow struct {
+	CName         *string  `json:"c_name"`
+	CNameChn      *string  `json:"c_name_chn"`
+	CAddrDesc     *string  `json:"c_addr_desc"`
+	CAddrDescChn  *string  `json:"c_addr_desc_chn"`
+	CAdminType    *string  `json:"c_admin_type"`
+	CFirstyear    *int16   `json:"c_firstyear"`
+	CLastyear     *int16   `json:"c_lastyear"`
+	CNotes        *string  `json:"c_notes"`
+	XCoord        *float64 `json:"x_coord"`
+	YCoord        *float64 `json:"y_coord"`
+	CTitleChn     *string  `json:"c_title_chn"`
+	CPages        *string  `json:"c_pages"`
+	CAddrID       *int64   `json:"c_addr_id"`
+	CBelongsTo    *int64   `json:"c_belongs_to"`
+	CFirstyear_2  *int16   `json:"c_firstyear_2"`
+	CLastyear_2   *int16   `json:"c_lastyear_2"`
+	CSource       *int64   `json:"c_source"`
+	CPages_2      *string  `json:"c_pages_2"`
+	CNotes_2      *string  `json:"c_notes_2"`
+	CCreatedBy    *string  `json:"c_created_by"`
+	CCreatedDate  *string  `json:"c_created_date"`
+	CModifiedBy   *string  `json:"c_modified_by"`
+	CModifiedDate *string  `json:"c_modified_date"`
+}
+
+func (q *Queries) GetPlaceByPersonID(ctx context.Context, cPersonid int64) ([]GetPlaceByPersonIDRow, error) {
+	rows, err := q.db.QueryContext(ctx, getPlaceByPersonID, cPersonid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetPlaceByPersonIDRow
+	for rows.Next() {
+		var i GetPlaceByPersonIDRow
+		if err := rows.Scan(
+			&i.CName,
+			&i.CNameChn,
+			&i.CAddrDesc,
+			&i.CAddrDescChn,
+			&i.CAdminType,
+			&i.CFirstyear,
+			&i.CLastyear,
+			&i.CNotes,
+			&i.XCoord,
+			&i.YCoord,
+			&i.CTitleChn,
+			&i.CPages,
+			&i.CAddrID,
+			&i.CBelongsTo,
+			&i.CFirstyear_2,
+			&i.CLastyear_2,
+			&i.CSource,
+			&i.CPages_2,
+			&i.CNotes_2,
+			&i.CCreatedBy,
+			&i.CCreatedDate,
+			&i.CModifiedBy,
+			&i.CModifiedDate,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getPostingByPersonID = `-- name: GetPostingByPersonID :many
 WITH ptod AS (
 	SELECT c_personid, c_office_id, c_posting_id, c_sequence, c_firstyear, c_fy_nh_code, c_fy_nh_year, c_fy_range, c_lastyear, c_ly_nh_code, c_ly_nh_year, c_ly_range, c_appt_code, c_assume_office_code, c_inst_code, c_inst_name_code, c_source, c_pages, c_notes, c_office_id_backup, c_office_category_id, c_fy_intercalary, c_fy_month, c_ly_intercalary, c_ly_month, c_fy_day, c_ly_day, c_fy_day_gz, c_ly_day_gz, c_dy, c_created_by, c_modified_by, c_created_date, c_modified_date FROM POSTED_TO_OFFICE_DATA WHERE c_personid = CAST(?1 AS INTEGER)

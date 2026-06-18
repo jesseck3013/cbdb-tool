@@ -21,9 +21,11 @@ type Person struct {
 
 	Texts []repository.GetTextByPersonIDRow
 
-	KinShip []repository.GetPersonKinShipByPersonIDRow
+	KinShips []repository.GetPersonKinShipByPersonIDRow
 
 	Associations []repository.GetAssociationByPersonIDRow
+
+	Places []repository.GetPlaceByPersonIDRow
 }
 
 func GetPerson(ctx context.Context, q *repository.Queries, id int64) (*Person, error) {
@@ -72,6 +74,11 @@ func GetPerson(ctx context.Context, q *repository.Queries, id int64) (*Person, e
 		return nil, err
 	}
 
+	places, err := q.GetPlaceByPersonID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
 	return &Person{
 		BasicInfo:    person,
 		AltNames:     altnames,
@@ -80,7 +87,8 @@ func GetPerson(ctx context.Context, q *repository.Queries, id int64) (*Person, e
 		Postings:     postings,
 		Status:       status,
 		Texts:        texts,
-		KinShip:      kinShip,
+		KinShips:     kinShip,
 		Associations: associations,
+		Places:       places,
 	}, nil
 }

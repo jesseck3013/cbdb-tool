@@ -142,3 +142,27 @@ LEFT JOIN SOCIAL_INSTITUTION_CODES sic on sic.c_inst_code = bid.c_inst_code
 LEFT JOIN BIOG_INST_CODES bic on bic.c_bi_role_code = bid.c_bi_role_code 
 LEFT JOIN TEXT_CODES tc on tc.c_textid  = bid.c_source 
 where bid.c_personid = ?;
+
+-- name: GetPlaceByPersonID :many
+SELECT
+ac.c_name,
+ac.c_name_chn,
+bac.c_addr_desc,
+bac.c_addr_desc_chn,
+ac.c_admin_type,
+bad.c_firstyear,
+bad.c_lastyear,
+bad.c_notes,
+ac.x_coord,
+ac.y_coord,
+tc.c_title_chn,
+bad.c_pages,
+abd.*
+FROM
+BIOG_ADDR_DATA bad 
+LEFT JOIN ADDR_CODES ac on ac.c_addr_id = bad.c_addr_id 
+LEFT JOIN BIOG_ADDR_CODES bac on bac.c_addr_type = bad.c_addr_type 
+LEFT JOIN TEXT_CODES tc on bad.c_source = tc.c_textid 
+LEFT JOIN ADDR_BELONGS_DATA abd on abd.c_addr_id = bad.c_addr_id 
+where bad.c_personid = ?
+ORDER BY bad.c_firstyear;

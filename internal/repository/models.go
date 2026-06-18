@@ -4,6 +4,35 @@
 
 package repository
 
+type AddrBelongsDatum struct {
+	CAddrID       int64       `json:"c_addr_id"`
+	CBelongsTo    int64       `json:"c_belongs_to"`
+	CFirstyear    interface{} `json:"c_firstyear"`
+	CLastyear     interface{} `json:"c_lastyear"`
+	CSource       *int64      `json:"c_source"`
+	CPages        *string     `json:"c_pages"`
+	CNotes        *string     `json:"c_notes"`
+	CCreatedBy    *string     `json:"c_created_by"`
+	CCreatedDate  *string     `json:"c_created_date"`
+	CModifiedBy   *string     `json:"c_modified_by"`
+	CModifiedDate *string     `json:"c_modified_date"`
+}
+
+type AddrCode struct {
+	CAddrID       int64       `json:"c_addr_id"`
+	CName         *string     `json:"c_name"`
+	CNameChn      *string     `json:"c_name_chn"`
+	CFirstyear    *int16      `json:"c_firstyear"`
+	CLastyear     *int16      `json:"c_lastyear"`
+	CAdminType    *string     `json:"c_admin_type"`
+	CAdminCatCode interface{} `json:"c_admin_cat_code"`
+	XCoord        *float64    `json:"x_coord"`
+	YCoord        *float64    `json:"y_coord"`
+	CHGISPTID     *int64      `json:"CHGIS_PT_ID"`
+	CNotes        *string     `json:"c_notes"`
+	CAltNames     *string     `json:"c_alt_names"`
+}
+
 type AltnameCode struct {
 	CNameTypeCode    interface{} `json:"c_name_type_code"`
 	CNameTypeDesc    *string     `json:"c_name_type_desc"`
@@ -103,6 +132,47 @@ type AssocType struct {
 	CAssocTypeLevel     *int16  `json:"c_assoc_type_level"`
 	CAssocTypeSortorder *int16  `json:"c_assoc_type_sortorder"`
 	CAssocTypeShortDesc *string `json:"c_assoc_type_short_desc"`
+}
+
+type BiogAddrCode struct {
+	CAddrType             interface{} `json:"c_addr_type"`
+	CAddrDesc             *string     `json:"c_addr_desc"`
+	CAddrDescChn          *string     `json:"c_addr_desc_chn"`
+	CAddrNote             *string     `json:"c_addr_note"`
+	CIndexAddrRank        *int16      `json:"c_index_addr_rank"`
+	CIndexAddrDefaultRank *int16      `json:"c_index_addr_default_rank"`
+}
+
+type BiogAddrDatum struct {
+	CPersonid      int64       `json:"c_personid"`
+	CAddrID        int64       `json:"c_addr_id"`
+	CAddrType      interface{} `json:"c_addr_type"`
+	CSequence      interface{} `json:"c_sequence"`
+	CFirstyear     *int16      `json:"c_firstyear"`
+	CLastyear      *int16      `json:"c_lastyear"`
+	CSource        *int64      `json:"c_source"`
+	CPages         *string     `json:"c_pages"`
+	CNotes         *string     `json:"c_notes"`
+	CFyNhCode      *int16      `json:"c_fy_nh_code"`
+	CLyNhCode      *int16      `json:"c_ly_nh_code"`
+	CFyNhYear      *int16      `json:"c_fy_nh_year"`
+	CLyNhYear      *int16      `json:"c_ly_nh_year"`
+	CFyRange       *int16      `json:"c_fy_range"`
+	CLyRange       *int16      `json:"c_ly_range"`
+	CNatal         *int64      `json:"c_natal"`
+	CFyIntercalary *int16      `json:"c_fy_intercalary"`
+	CLyIntercalary *int16      `json:"c_ly_intercalary"`
+	CFyMonth       *int16      `json:"c_fy_month"`
+	CLyMonth       *int16      `json:"c_ly_month"`
+	CFyDay         *int16      `json:"c_fy_day"`
+	CLyDay         *int16      `json:"c_ly_day"`
+	CFyDayGz       *int16      `json:"c_fy_day_gz"`
+	CLyDayGz       *int16      `json:"c_ly_day_gz"`
+	CCreatedBy     *string     `json:"c_created_by"`
+	CModifiedBy    *string     `json:"c_modified_by"`
+	CDelete        *int16      `json:"c_delete"`
+	CCreatedDate   *string     `json:"c_created_date"`
+	CModifiedDate  *string     `json:"c_modified_date"`
 }
 
 type BiogInstCode struct {

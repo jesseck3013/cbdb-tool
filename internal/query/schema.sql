@@ -477,3 +477,77 @@ CREATE TABLE BIOG_INST_CODES (
     "c_notes" varchar(255) DEFAULT NULL,
     PRIMARY KEY ("c_bi_role_code")
 );
+
+CREATE TABLE BIOG_ADDR_DATA (
+    "c_personid" INTEGER NOT NULL,
+    "c_addr_id" INTEGER NOT NULL DEFAULT 0,
+    "c_addr_type" smallint(6) NOT NULL,
+    "c_sequence" smallint(6) NOT NULL,
+    "c_firstyear" smallint(6) DEFAULT NULL,
+    "c_lastyear" smallint(6) DEFAULT NULL,
+    "c_source" INTEGER DEFAULT NULL,
+    "c_pages" varchar(255) DEFAULT NULL,
+    "c_notes" TEXT DEFAULT NULL,
+    "c_fy_nh_code" smallint(6) DEFAULT NULL,
+    "c_ly_nh_code" smallint(6) DEFAULT NULL,
+    "c_fy_nh_year" smallint(6) DEFAULT NULL,
+    "c_ly_nh_year" smallint(6) DEFAULT NULL,
+    "c_fy_range" smallint(6) DEFAULT NULL,
+    "c_ly_range" smallint(6) DEFAULT NULL,
+    "c_natal" INTEGER DEFAULT NULL /* Indicates whether the recorded address refers to a woman’s natal (maternal) family location rather than her married residence. Primarily applicable to female records. NULL should be used when natal origin is not explicitly documented. */,
+    "c_fy_intercalary" smallint(6) DEFAULT NULL,
+    "c_ly_intercalary" smallint(6) DEFAULT NULL,
+    "c_fy_month" smallint(6) DEFAULT NULL,
+    "c_ly_month" smallint(6) DEFAULT NULL,
+    "c_fy_day" smallint(6) DEFAULT NULL,
+    "c_ly_day" smallint(6) DEFAULT NULL,
+    "c_fy_day_gz" smallint(6) DEFAULT NULL,
+    "c_ly_day_gz" smallint(6) DEFAULT NULL,
+    "c_created_by" varchar(255) DEFAULT NULL,
+    "c_modified_by" varchar(255) DEFAULT NULL,
+    "c_delete" smallint(6) DEFAULT NULL,
+    "c_created_date" TEXT DEFAULT NULL,
+    "c_modified_date" TEXT DEFAULT NULL,
+    PRIMARY KEY ("c_personid", "c_addr_id", "c_addr_type", "c_sequence")
+);
+
+CREATE TABLE ADDR_CODES (
+    "c_addr_id" INTEGER NOT NULL,
+    "c_name" varchar(255) DEFAULT NULL,
+    "c_name_chn" varchar(255) DEFAULT NULL,
+    "c_firstyear" smallint(6) DEFAULT NULL,
+    "c_lastyear" smallint(6) DEFAULT NULL,
+    "c_admin_type" varchar(255) DEFAULT NULL,
+    "c_admin_cat_code" smallint(6) NOT NULL DEFAULT 0,
+    "x_coord" REAL DEFAULT NULL,
+    "y_coord" REAL DEFAULT NULL,
+    "CHGIS_PT_ID" INTEGER DEFAULT NULL,
+    "c_notes" TEXT DEFAULT NULL,
+    "c_alt_names" varchar(255) DEFAULT NULL,
+    PRIMARY KEY ("c_addr_id")
+);
+
+CREATE TABLE BIOG_ADDR_CODES (
+    "c_addr_type" smallint(6) NOT NULL,
+    "c_addr_desc" varchar(255) DEFAULT NULL,
+    "c_addr_desc_chn" varchar(255) DEFAULT NULL,
+    "c_addr_note" varchar(255) DEFAULT NULL,
+    "c_index_addr_rank" smallint(6) DEFAULT NULL,
+    "c_index_addr_default_rank" smallint(6) DEFAULT NULL,
+    PRIMARY KEY ("c_addr_type")
+);
+
+CREATE TABLE ADDR_BELONGS_DATA (
+    "c_addr_id" INTEGER NOT NULL,
+    "c_belongs_to" INTEGER NOT NULL,
+    "c_firstyear" smallint(6) NOT NULL,
+    "c_lastyear" smallint(6) NOT NULL,
+    "c_source" INTEGER DEFAULT NULL,
+    "c_pages" varchar(255) DEFAULT NULL,
+    "c_notes" varchar(255) DEFAULT NULL,
+    "c_created_by" varchar(255) DEFAULT NULL,
+    "c_created_date" TEXT DEFAULT NULL,
+    "c_modified_by" varchar(255) DEFAULT NULL,
+    "c_modified_date" TEXT DEFAULT NULL,
+    PRIMARY KEY ("c_addr_id", "c_belongs_to", "c_firstyear", "c_lastyear")
+);
