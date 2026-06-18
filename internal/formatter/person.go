@@ -3,12 +3,14 @@ package formatter
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"text/tabwriter"
 
+	"charm.land/lipgloss/v2"
+	"charm.land/lipgloss/v2/table"
+	"github.com/jesseck3013/cbdb-tool/internal/model"
 	"github.com/jesseck3013/cbdb-tool/internal/repository"
 )
-
-const FALLBACK = "Unkown"
 
 type PersonDisplay struct {
 	CPersonid     int64  `json:"c_personid"`
@@ -55,4 +57,98 @@ func Person(p repository.GetPersonByIDRow) {
 	fmt.Fprintf(tw, " Choronym (Chinese):\t%s\n", person.CChoronymChn)
 
 	tw.Flush()
+}
+
+var (
+	primaryColor = lipgloss.Color("#c7a587")
+
+	labelStyle = lipgloss.NewStyle().
+			Width(20).
+			Bold(true).
+			Foreground(primaryColor)
+
+	// Style for valid data values
+	valueStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("255")).
+			Align(lipgloss.Center)
+
+	// Style specifically for missing database points
+	emptyValueStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("240")).
+			Italic(true)
+
+	// Header style for "Person Profile:"
+	headerStyle = lipgloss.NewStyle().
+			Bold(true).
+			Foreground(primaryColor).
+			Underline(true).
+			MarginBottom(1)
+
+	tableHeaderStyle = lipgloss.NewStyle().
+				Foreground(primaryColor).
+				Bold(true).
+				Align(lipgloss.Center)
+)
+
+func renderLine(key, value string) string {
+	return lipgloss.JoinHorizontal(lipgloss.Left,
+		labelStyle.Render(key),
+		valueStyle.Render(value))
+}
+
+// Combine Chinese and English Data Entry
+func joinTwoLang(lang1, lang2 string) string {
+	return fmt.Sprintf("%s / %s", lang1, lang2)
+}
+
+func printBasicInfo(info repository.GetPersonByIDRow) {
+	fmt.Println(headerStyle.Render("Person Profile:"))
+	rows := []string{
+		renderLine(" ID:", strconv.FormatInt(info.CPersonid, 10)),
+		renderLine(" Name:", joinTwoLang(safeValue(info.CNameChn), safeValue(info.CName))),
+		renderLine(" Dynasty:", joinTwoLang(safeValue(info.CDynastyChn), safeValue(info.CDynasty))),
+		renderLine(" Choronym:", joinTwoLang(safeValue(info.CChoronymChn), safeValue(info.CChoronymDesc))),
+		renderLine(" Birth Year:", safeValue(info.CBirthyear)),
+		renderLine(" Death Year:", safeValue(info.CDeathyear)),
+	}
+
+	profileBlock := lipgloss.JoinVertical(lipgloss.Left, rows...)
+
+	fmt.Println(profileBlock)
+}
+
+func PrintPerson(person *model.Person) {
+	printBasicInfo(person.BasicInfo)
+	printAltNames(person.AltNames)
+}
+
+func newTable(headers []string, rows [][]string) *table.Table {
+	return table.New().
+		Border(lipgloss.NormalBorder()).
+		BorderStyle(lipgloss.NewStyle().Foreground(primaryColor)).
+		StyleFunc(func(row, col int) lipgloss.Style {
+			switch {
+			case row == table.HeaderRow:
+				return tableHeaderStyle
+			default:
+				return valueStyle
+			}
+		}).
+		Headers(headers...).
+		Rows(rows...)
+}
+
+func printAltNames(names []repository.GetAltnamesByPersonIDRow) {
+	rows := [][]string{}
+
+	for _, name := range names {
+		rows = append(rows,
+			[]string{
+				joinTwoLang(name.CAltNameChn, safeValue(name.CAltName)),
+				joinTwoLang(safeValue(name.CNameTypeDescChn), safeValue(name.CNameTypeDesc)),
+			})
+	}
+
+	t := newTable([]string{"Alternative Name", "Type"}, rows)
+	lipgloss.Println(t)
 }

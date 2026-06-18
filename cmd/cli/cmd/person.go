@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/jesseck3013/cbdb-tool/internal/formatter"
+	"github.com/jesseck3013/cbdb-tool/internal/model"
 	"github.com/spf13/cobra"
 )
 
@@ -25,11 +26,11 @@ var personCmd = &cobra.Command{
 
 			}
 
-			person, err := db.GetPersonByID(cmd.Context(), int64(id))
+			person, err := model.GetPerson(cmd.Context(), db, int64(id))
 			if err != nil {
 				log.Fatalf("error: %v", err)
 			}
-			formatter.Person(person)
+			formatter.PrintPerson(person)
 		}
 
 	},
