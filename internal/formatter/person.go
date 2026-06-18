@@ -137,7 +137,7 @@ func PrintPerson(person *model.Person) {
 }
 
 func newTable(headers []string, rows [][]string) *table.Table {
-	return table.New().
+	t := table.New().
 		Border(lipgloss.NormalBorder()).
 		BorderStyle(lipgloss.NewStyle().Foreground(primaryColor)).
 		StyleFunc(func(row, col int) lipgloss.Style {
@@ -150,6 +150,21 @@ func newTable(headers []string, rows [][]string) *table.Table {
 		}).
 		Headers(headers...).
 		Rows(rows...)
+
+	return t
+}
+
+func printTable(headers []string, rows [][]string) {
+	if len(rows) > 0 {
+		t := newTable(headers, rows)
+		lipgloss.Println(t)
+		return
+	}
+
+	t := newTable(headers, [][]string{
+		{"No data found in the database"},
+	})
+	lipgloss.Println(t)
 }
 
 func printAltNames(names []repository.GetAltnamesByPersonIDRow) {
@@ -163,8 +178,7 @@ func printAltNames(names []repository.GetAltnamesByPersonIDRow) {
 			})
 	}
 
-	t := newTable([]string{"Type", "Alternative Name"}, rows)
-	lipgloss.Println(t)
+	printTable([]string{"Type", "Alternative Name"}, rows)
 }
 
 func printKinships(kinships []repository.GetPersonKinShipByPersonIDRow) {
@@ -178,8 +192,7 @@ func printKinships(kinships []repository.GetPersonKinShipByPersonIDRow) {
 			})
 	}
 
-	t := newTable([]string{"Kinship Type", "Name"}, rows)
-	lipgloss.Println(t)
+	printTable([]string{"Kinship Type", "Name"}, rows)
 }
 
 func printAssociations(associations []repository.GetAssociationByPersonIDRow) {
@@ -193,8 +206,7 @@ func printAssociations(associations []repository.GetAssociationByPersonIDRow) {
 			})
 	}
 
-	t := newTable([]string{"Association Type", "Name"}, rows)
-	lipgloss.Println(t)
+	printTable([]string{"Association Type", "Name"}, rows)
 }
 
 func printStatus(status []repository.GetStatusByPersonIDRow) {
@@ -208,8 +220,7 @@ func printStatus(status []repository.GetStatusByPersonIDRow) {
 			})
 	}
 
-	t := newTable([]string{"Status"}, rows)
-	lipgloss.Println(t)
+	printTable([]string{"Status"}, rows)
 }
 
 func printPlaces(places []repository.GetPlaceByPersonIDRow) {
@@ -224,8 +235,7 @@ func printPlaces(places []repository.GetPlaceByPersonIDRow) {
 			})
 	}
 
-	t := newTable([]string{"Place", "Type", "Period"}, rows)
-	lipgloss.Println(t)
+	printTable([]string{"Place", "Type", "Period"}, rows)
 }
 
 func printEntries(entries []repository.GetEntryByPersonIDRow) {
@@ -241,8 +251,7 @@ func printEntries(entries []repository.GetEntryByPersonIDRow) {
 			})
 	}
 
-	t := newTable([]string{"Mode of Entry", "Year", "Age", "Exam Rank"}, rows)
-	lipgloss.Println(t)
+	printTable([]string{"Mode of Entry", "Year", "Age", "Exam Rank"}, rows)
 }
 
 func printPostings(postings []repository.GetPostingByPersonIDRow) {
@@ -257,8 +266,7 @@ func printPostings(postings []repository.GetPostingByPersonIDRow) {
 			})
 	}
 
-	t := newTable([]string{"Office", "Type", "Period"}, rows)
-	lipgloss.Println(t)
+	printTable([]string{"Office", "Type", "Period"}, rows)
 }
 
 func printInstitutions(insts []repository.GetInstitutionByPersonIDRow) {
@@ -273,8 +281,7 @@ func printInstitutions(insts []repository.GetInstitutionByPersonIDRow) {
 			})
 	}
 
-	t := newTable([]string{"Institution", "Role", "Period"}, rows)
-	lipgloss.Println(t)
+	printTable([]string{"Institution", "Role", "Period"}, rows)
 }
 
 // TODO: build a generic version
