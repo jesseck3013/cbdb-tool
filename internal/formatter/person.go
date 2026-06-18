@@ -130,6 +130,7 @@ func PrintPerson(person *model.Person) {
 	printKinships(person.KinShips)
 	//printAssociations(person.Associations)
 	printPlaces(person.Places)
+	printEntries(person.Entries)
 
 }
 
@@ -222,5 +223,22 @@ func printPlaces(places []repository.GetPlaceByPersonIDRow) {
 	}
 
 	t := newTable([]string{"Place", "Type", "Period"}, rows)
+	lipgloss.Println(t)
+}
+
+func printEntries(entries []repository.GetEntryByPersonIDRow) {
+	rows := [][]string{}
+
+	for _, v := range entries {
+		rows = append(rows,
+			[]string{
+				joinTwoLang(v.CEntryTypeDescChn, v.CEntryTypeDesc),
+				strconv.FormatInt(int64(v.CYear), 10),
+				safeValue(v.CAge),
+				safeValue(v.CExamRank),
+			})
+	}
+
+	t := newTable([]string{"Mode of Entry", "Year", "Age", "Exam Rank"}, rows)
 	lipgloss.Println(t)
 }

@@ -81,18 +81,18 @@ WHERE ad.c_personid = ?
 `
 
 type GetAssociationByPersonIDRow struct {
-	CAssocID            int64       `json:"c_assoc_id"`
-	CNameChn            *string     `json:"c_name_chn"`
-	CAssocFirstYear     interface{} `json:"c_assoc_first_year"`
-	CAssocLastYear      *int16      `json:"c_assoc_last_year"`
-	CAssocDescChn       *string     `json:"c_assoc_desc_chn"`
-	CAssocPair          *int16      `json:"c_assoc_pair"`
-	CNotes              *string     `json:"c_notes"`
-	CPages              *string     `json:"c_pages"`
-	CTitleChn           *string     `json:"c_title_chn"`
-	CAssocTypeDesc      *string     `json:"c_assoc_type_desc"`
-	CAssocTypeDescChn   *string     `json:"c_assoc_type_desc_chn"`
-	CAssocTypeShortDesc *string     `json:"c_assoc_type_short_desc"`
+	CAssocID            int64   `json:"c_assoc_id"`
+	CNameChn            *string `json:"c_name_chn"`
+	CAssocFirstYear     int16   `json:"c_assoc_first_year"`
+	CAssocLastYear      *int16  `json:"c_assoc_last_year"`
+	CAssocDescChn       *string `json:"c_assoc_desc_chn"`
+	CAssocPair          *int16  `json:"c_assoc_pair"`
+	CNotes              *string `json:"c_notes"`
+	CPages              *string `json:"c_pages"`
+	CTitleChn           *string `json:"c_title_chn"`
+	CAssocTypeDesc      *string `json:"c_assoc_type_desc"`
+	CAssocTypeDescChn   *string `json:"c_assoc_type_desc_chn"`
+	CAssocTypeShortDesc *string `json:"c_assoc_type_short_desc"`
 }
 
 func (q *Queries) GetAssociationByPersonID(ctx context.Context, cPersonid int64) ([]GetAssociationByPersonIDRow, error) {
@@ -149,13 +149,13 @@ where ed.c_personid = ?
 `
 
 type GetEntryByPersonIDRow struct {
-	CAge              *int16      `json:"c_age"`
-	CYear             interface{} `json:"c_year"`
-	CEntryTypeDesc    string      `json:"c_entry_type_desc"`
-	CEntryDescChn     string      `json:"c_entry_desc_chn"`
-	CEntryTypeLevel   *int16      `json:"c_entry_type_level"`
-	CEntryTypeDescChn string      `json:"c_entry_type_desc_chn"`
-	CExamRank         *string     `json:"c_exam_rank"`
+	CAge              *int16  `json:"c_age"`
+	CYear             int16   `json:"c_year"`
+	CEntryTypeDesc    string  `json:"c_entry_type_desc"`
+	CEntryDescChn     string  `json:"c_entry_desc_chn"`
+	CEntryTypeLevel   *int16  `json:"c_entry_type_level"`
+	CEntryTypeDescChn string  `json:"c_entry_type_desc_chn"`
+	CExamRank         *string `json:"c_exam_rank"`
 }
 
 // join NIAN_HAO nh on nh.c_nianhao_id = ed.c_entry_nh_id
