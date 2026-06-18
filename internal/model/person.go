@@ -23,7 +23,7 @@ type Person struct {
 
 	KinShip []repository.GetPersonKinShipByPersonIDRow
 
-	Associations []repository.GetAltnamesByPersonIDRow
+	Associations []repository.GetAssociationByPersonIDRow
 }
 
 func GetPerson(ctx context.Context, q *repository.Queries, id int64) (*Person, error) {
@@ -37,8 +37,50 @@ func GetPerson(ctx context.Context, q *repository.Queries, id int64) (*Person, e
 		return nil, err
 	}
 
+	entries, err := q.GetEntryByPersonID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	institutions, err := q.GetInstitutionByPersonID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	postings, err := q.GetPostingByPersonID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	status, err := q.GetStatusByPersonID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	texts, err := q.GetTextByPersonID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	kinShip, err := q.GetPersonKinShipByPersonID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	associations, err := q.GetAssociationByPersonID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
 	return &Person{
-		BasicInfo: person,
-		AltNames:  altnames,
+		BasicInfo:    person,
+		AltNames:     altnames,
+		Entries:      entries,
+		Institutions: institutions,
+		Postings:     postings,
+		Status:       status,
+		Texts:        texts,
+		KinShip:      kinShip,
+		Associations: associations,
 	}, nil
 }
