@@ -2,9 +2,7 @@ package formatter
 
 import (
 	"fmt"
-	"os"
 	"strconv"
-	"text/tabwriter"
 
 	"charm.land/lipgloss/v2"
 	"charm.land/lipgloss/v2/table"
@@ -42,33 +40,17 @@ func newPersonDisplay(p repository.GetPersonByIDRow) PersonDisplay {
 	}
 }
 
-func Person(p repository.GetPersonByIDRow) {
-	person := newPersonDisplay(p)
-	tw := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', 0)
-	fmt.Fprintln(tw, "Person Profile:")
-	fmt.Fprintf(tw, " ID:\t%d\n", person.CPersonid)
-	fmt.Fprintf(tw, " Name:\t%s\n", person.CName)
-	fmt.Fprintf(tw, " Name (Chinese):\t%s\n", person.CNameChn)
-	fmt.Fprintf(tw, " Dynasty:\t%s\n", person.CDynasty)
-	fmt.Fprintf(tw, " Dynasty (Chinese):\t%s\n", person.CDynastyChn)
-	fmt.Fprintf(tw, " Birth Year:\t%s\n", person.CBirthyear)
-	fmt.Fprintf(tw, " Death Year:\t%s\n", person.CDeathyear)
-	fmt.Fprintf(tw, " Choronym:\t%s\n", person.CChoronymDesc)
-	fmt.Fprintf(tw, " Choronym (Chinese):\t%s\n", person.CChoronymChn)
-
-	tw.Flush()
-}
-
 var (
 	primaryColor = lipgloss.Color("#c7a587")
 
 	labelStyle = lipgloss.NewStyle().
+			Height(1).
 			Width(20).
-			Bold(true).
-			Foreground(primaryColor)
+			Bold(true)
 
 	// Style for valid data values
 	valueStyle = lipgloss.NewStyle().
+			Height(1).
 			Foreground(lipgloss.Color("255")).
 			Align(lipgloss.Left)
 
@@ -81,12 +63,10 @@ var (
 	headerStyle = lipgloss.NewStyle().
 			Bold(true).
 			Foreground(primaryColor).
-			Underline(true).
-			MarginBottom(1)
+			Margin(1, 0, 1, 0)
 
 	tableHeaderStyle = lipgloss.NewStyle().
-				Foreground(primaryColor).
-				Bold(true).
+				Foreground(lipgloss.Color("255")).
 				Align(lipgloss.Center)
 )
 
@@ -108,7 +88,7 @@ func joinTwoYear(lang1, lang2 string) string {
 }
 
 func printBasicInfo(info repository.GetPersonByIDRow) {
-	fmt.Println(headerStyle.Render("Person Profile:"))
+	fmt.Println(headerStyle.Render("# Profile"))
 	rows := []string{
 		renderLine(" ID:", strconv.FormatInt(info.CPersonid, 10)),
 		renderLine(" Name:", joinTwoLang(safeValue(info.CNameChn), safeValue(info.CName))),
@@ -138,8 +118,9 @@ func PrintPerson(person *model.Person) {
 
 func newTable(headers []string, rows [][]string) *table.Table {
 	t := table.New().
-		Border(lipgloss.NormalBorder()).
-		BorderStyle(lipgloss.NewStyle().Foreground(primaryColor)).
+		Border(lipgloss.ASCIIBorder()).
+		BorderStyle(lipgloss.NewStyle().Foreground(lipgloss.Color("255"))).
+		Width(80).
 		StyleFunc(func(row, col int) lipgloss.Style {
 			switch {
 			case row == table.HeaderRow:
@@ -155,19 +136,22 @@ func newTable(headers []string, rows [][]string) *table.Table {
 }
 
 func printTable(headers []string, rows [][]string) {
-	if len(rows) > 0 {
-		t := newTable(headers, rows)
-		lipgloss.Println(t)
+	if len(rows) == 0 {
+		// t := newTable(headers, [][]string{
+		// 	{"No data found in the database"},
+		// })
+		// lipgloss.Println(t)
+		fmt.Println(valueStyle.Render("Data not found"))
+		fmt.Println("")
 		return
 	}
 
-	t := newTable(headers, [][]string{
-		{"No data found in the database"},
-	})
+	t := newTable(headers, rows)
 	lipgloss.Println(t)
 }
 
 func printAltNames(names []repository.GetAltnamesByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Alternative Names"))
 	rows := [][]string{}
 
 	for _, name := range names {
@@ -182,34 +166,39 @@ func printAltNames(names []repository.GetAltnamesByPersonIDRow) {
 }
 
 func printKinships(kinships []repository.GetPersonKinShipByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Kinship"))
 	rows := [][]string{}
 
 	for _, kinship := range kinships {
 		rows = append(rows,
 			[]string{
-				joinTwoLang(kinship.CKinrelChn, kinship.CKinrel),
+				strconv.FormatInt(kinship.CKinID, 10),
 				joinTwoLang(safeValue(kinship.CNameChn), safeValue(kinship.CName)),
+				joinTwoLang(kinship.CKinrelChn, kinship.CKinrel),
 			})
 	}
 
-	printTable([]string{"Kinship Type", "Name"}, rows)
+	printTable([]string{"ID", "Name", "Type"}, rows)
 }
 
 func printAssociations(associations []repository.GetAssociationByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Associations"))
 	rows := [][]string{}
 
 	for _, association := range associations {
 		rows = append(rows,
 			[]string{
-				joinTwoLang(safeValue(association.CAssocTypeDescChn), safeValue(association.CAssocTypeShortDesc)),
+				strconv.FormatInt(association.CAssocID, 10),
 				joinTwoLang(safeValue(association.CNameChn), safeValue(association.CNameChn)),
+				joinTwoLang(safeValue(association.CAssocTypeDescChn), safeValue(association.CAssocTypeShortDesc)),
 			})
 	}
 
-	printTable([]string{"Association Type", "Name"}, rows)
+	printTable([]string{"ID", "Name", "Type"}, rows)
 }
 
 func printStatus(status []repository.GetStatusByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Status"))
 	rows := [][]string{}
 
 	for _, v := range status {
@@ -224,6 +213,7 @@ func printStatus(status []repository.GetStatusByPersonIDRow) {
 }
 
 func printPlaces(places []repository.GetPlaceByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Biographical Place Information"))
 	rows := [][]string{}
 
 	for _, v := range places {
@@ -239,6 +229,7 @@ func printPlaces(places []repository.GetPlaceByPersonIDRow) {
 }
 
 func printEntries(entries []repository.GetEntryByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Modes of Entry"))
 	rows := [][]string{}
 
 	for _, v := range entries {
@@ -255,6 +246,7 @@ func printEntries(entries []repository.GetEntryByPersonIDRow) {
 }
 
 func printPostings(postings []repository.GetPostingByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Offices and Postings"))
 	rows := [][]string{}
 
 	for _, v := range postings {
@@ -270,6 +262,7 @@ func printPostings(postings []repository.GetPostingByPersonIDRow) {
 }
 
 func printInstitutions(insts []repository.GetInstitutionByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Social Institutions"))
 	rows := [][]string{}
 
 	for _, v := range insts {

@@ -16,3 +16,6 @@ CREATE INDEX person_idx_KIN_DATA ON KIN_DATA(c_personid);
 
 -- ASSOCIATION
 CREATE INDEX person_idx_ASSOC_DATA ON ASSOC_DATA(c_personid);
+
+-- BIOG_MAIN
+CREATE INDEX bm_name_chnx_BIOG_MAIN ON BIOG_MAIN(c_name_chn);

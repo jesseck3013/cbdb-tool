@@ -4,6 +4,7 @@ Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"database/sql"
 	"log"
 	"strconv"
 
@@ -26,11 +27,16 @@ var personCmd = &cobra.Command{
 
 			}
 
-			person, err := model.GetPerson(cmd.Context(), db, int64(id))
-			if err != nil {
+			person, err := model.GetPersonByID(cmd.Context(), db, int64(id))
+
+			switch err {
+			case sql.ErrNoRows:
+			case nil:
+				formatter.PrintPerson(person)
+			default:
 				log.Fatalf("error: %v", err)
 			}
-			formatter.PrintPerson(person)
+
 		}
 
 	},

@@ -313,6 +313,65 @@ func (q *Queries) GetPersonByID(ctx context.Context, cPersonid int64) (GetPerson
 	return i, err
 }
 
+const getPersonByName = `-- name: GetPersonByName :many
+SELECT
+bm.c_personid,
+bm.c_name_chn,
+bm.c_birthyear,
+bm.c_deathyear,
+d.c_dynasty,
+d.c_dynasty_chn,
+d.c_start,
+d.c_end
+FROM 
+BIOG_MAIN bm 
+join DYNASTIES d on bm.c_dy = d.c_dy 
+WHERE bm.c_name_chn = ?
+`
+
+type GetPersonByNameRow struct {
+	CPersonid   int64   `json:"c_personid"`
+	CNameChn    *string `json:"c_name_chn"`
+	CBirthyear  *int16  `json:"c_birthyear"`
+	CDeathyear  *int16  `json:"c_deathyear"`
+	CDynasty    *string `json:"c_dynasty"`
+	CDynastyChn *string `json:"c_dynasty_chn"`
+	CStart      int16   `json:"c_start"`
+	CEnd        int16   `json:"c_end"`
+}
+
+func (q *Queries) GetPersonByName(ctx context.Context, cNameChn *string) ([]GetPersonByNameRow, error) {
+	rows, err := q.db.QueryContext(ctx, getPersonByName, cNameChn)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetPersonByNameRow
+	for rows.Next() {
+		var i GetPersonByNameRow
+		if err := rows.Scan(
+			&i.CPersonid,
+			&i.CNameChn,
+			&i.CBirthyear,
+			&i.CDeathyear,
+			&i.CDynasty,
+			&i.CDynastyChn,
+			&i.CStart,
+			&i.CEnd,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getPersonKinShipByPersonID = `-- name: GetPersonKinShipByPersonID :many
 select 
 kd.c_kin_id,

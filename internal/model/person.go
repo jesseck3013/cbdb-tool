@@ -28,7 +28,7 @@ type Person struct {
 	Places []repository.GetPlaceByPersonIDRow
 }
 
-func GetPerson(ctx context.Context, q *repository.Queries, id int64) (*Person, error) {
+func GetPersonByID(ctx context.Context, q *repository.Queries, id int64) (*Person, error) {
 	person, err := q.GetPersonByID(ctx, id)
 	if err != nil {
 		return nil, err

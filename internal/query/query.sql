@@ -1,3 +1,18 @@
+-- name: GetPersonByName :many
+SELECT
+bm.c_personid,
+bm.c_name_chn,
+bm.c_birthyear,
+bm.c_deathyear,
+d.c_dynasty,
+d.c_dynasty_chn,
+d.c_start,
+d.c_end
+FROM 
+BIOG_MAIN bm 
+join DYNASTIES d on bm.c_dy = d.c_dy 
+WHERE bm.c_name_chn = ?;
+
 -- name: GetPersonByID :one
 select 
 bm.c_personid,
