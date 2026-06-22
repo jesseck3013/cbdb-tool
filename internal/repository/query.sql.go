@@ -261,7 +261,7 @@ func (q *Queries) GetInstitutionByPersonID(ctx context.Context, cPersonid int64)
 	return items, nil
 }
 
-const getPersonByID = `-- name: GetPersonByID :one
+const getPersonBasicInfoByID = `-- name: GetPersonBasicInfoByID :one
 select 
 bm.c_personid,
 bm.c_name,
@@ -280,7 +280,7 @@ left join CHORONYM_CODES cc on bm.c_choronym_code = cc.c_choronym_code
 where bm.c_personid = ?
 `
 
-type GetPersonByIDRow struct {
+type GetPersonBasicInfoByIDRow struct {
 	CPersonid     int64   `json:"c_personid"`
 	CName         *string `json:"c_name"`
 	CNameChn      *string `json:"c_name_chn"`
@@ -294,9 +294,9 @@ type GetPersonByIDRow struct {
 	CChoronymChn  *string `json:"c_choronym_chn"`
 }
 
-func (q *Queries) GetPersonByID(ctx context.Context, cPersonid int64) (GetPersonByIDRow, error) {
-	row := q.db.QueryRowContext(ctx, getPersonByID, cPersonid)
-	var i GetPersonByIDRow
+func (q *Queries) GetPersonBasicInfoByID(ctx context.Context, cPersonid int64) (GetPersonBasicInfoByIDRow, error) {
+	row := q.db.QueryRowContext(ctx, getPersonBasicInfoByID, cPersonid)
+	var i GetPersonBasicInfoByIDRow
 	err := row.Scan(
 		&i.CPersonid,
 		&i.CName,

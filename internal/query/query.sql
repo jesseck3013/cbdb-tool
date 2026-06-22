@@ -13,7 +13,7 @@ BIOG_MAIN bm
 join DYNASTIES d on bm.c_dy = d.c_dy 
 WHERE bm.c_name_chn = ?;
 
--- name: GetPersonByID :one
+-- name: GetPersonBasicInfoByID :one
 select 
 bm.c_personid,
 bm.c_name,

@@ -8,6 +8,7 @@ import (
 	"log"
 
 	"github.com/jesseck3013/cbdb-tool/cmd/cli/cmd"
+	"github.com/jesseck3013/cbdb-tool/internal/controller"
 	"github.com/jesseck3013/cbdb-tool/internal/repository"
 	_ "modernc.org/sqlite"
 )
@@ -22,5 +23,7 @@ func main() {
 
 	query := repository.New(db)
 
-	cmd.Execute(query)
+	c := controller.NewController(query, struct{}{})
+
+	cmd.Execute(c)
 }

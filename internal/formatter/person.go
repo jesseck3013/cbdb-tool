@@ -24,22 +24,6 @@ type PersonDisplay struct {
 	CChoronymChn  string `json:"c_choronym_chn"`
 }
 
-func newPersonDisplay(p repository.GetPersonByIDRow) PersonDisplay {
-	return PersonDisplay{
-		CPersonid:     p.CPersonid,
-		CName:         valueOrFallBack(p.CName, FALLBACK),
-		CNameChn:      valueOrFallBack(p.CNameChn, FALLBACK),
-		CMingzi:       valueOrFallBack(p.CMingzi, FALLBACK),
-		CFemale:       valueOrFallBack(p.CFemale, FALLBACK),
-		CBirthyear:    valueOrFallBack(p.CBirthyear, FALLBACK),
-		CDeathyear:    valueOrFallBack(p.CDeathyear, FALLBACK),
-		CDynasty:      valueOrFallBack(p.CDynasty, FALLBACK),
-		CDynastyChn:   valueOrFallBack(p.CDynastyChn, FALLBACK),
-		CChoronymDesc: valueOrFallBack(p.CChoronymDesc, FALLBACK),
-		CChoronymChn:  valueOrFallBack(p.CChoronymChn, FALLBACK),
-	}
-}
-
 var (
 	primaryColor = lipgloss.Color("#c7a587")
 
@@ -87,7 +71,7 @@ func joinTwoYear(lang1, lang2 string) string {
 	return fmt.Sprintf("%s - %s", lang1, lang2)
 }
 
-func printBasicInfo(info repository.GetPersonByIDRow) {
+func printBasicInfo(info repository.GetPersonBasicInfoByIDRow) {
 	fmt.Println(headerStyle.Render("# Profile"))
 	rows := []string{
 		renderLine(" ID:", strconv.FormatInt(info.CPersonid, 10)),

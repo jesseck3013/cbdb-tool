@@ -4,11 +4,9 @@ Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"database/sql"
-	"log"
-	"strconv"
+	"fmt"
+	"os"
 
-	"github.com/jesseck3013/cbdb-tool/internal/formatter"
 	"github.com/jesseck3013/cbdb-tool/internal/model"
 	"github.com/spf13/cobra"
 )
@@ -19,30 +17,26 @@ var personCmd = &cobra.Command{
 	Short: "Search profiles of person from CBDB",
 	Long:  `Search profiles of person from CBDB`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) > 0 {
-			idStr := args[0]
-			id, err := strconv.Atoi(idStr)
-			if err != nil {
-				log.Fatal("id should be number")
-
-			}
-
-			person, err := model.GetPersonByID(cmd.Context(), db, int64(id))
-
-			switch err {
-			case sql.ErrNoRows:
-			case nil:
-				formatter.PrintPerson(person)
-			default:
-				log.Fatalf("error: %v", err)
-			}
-
+		err := c.Person(cmd.Context(), args, cmd.Flags())
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
 		}
-
 	},
 }
 
 func init() {
+	personCmd.Flags().Bool(string(model.AltName), true, "select basic info")
+	personCmd.Flags().Bool(string(model.Association), false, "select basic info")
+	personCmd.Flags().Bool(string(model.BasicInfo), false, "select basic info")
+	personCmd.Flags().Bool(string(model.Entry), false, "select basic info")
+	personCmd.Flags().Bool(string(model.Institution), false, "select basic info")
+	personCmd.Flags().Bool(string(model.KinShip), false, "select basic info")
+	personCmd.Flags().Bool(string(model.Place), false, "select basic info")
+	personCmd.Flags().Bool(string(model.Posting), false, "select basic info")
+	personCmd.Flags().Bool(string(model.Status), false, "select basic info")
+	personCmd.Flags().Bool(string(model.Text), false, "select basic info")
+
 	rootCmd.AddCommand(personCmd)
 
 	// Here you will define your flags and configuration settings.

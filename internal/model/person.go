@@ -25,6 +25,19 @@ const (
 	Place       PersonField = "place"
 )
 
+var ALLPersonFileds = []PersonField{
+	BasicInfo,
+	AltName,
+	Entry,
+	Institution,
+	Posting,
+	Status,
+	Text,
+	KinShip,
+	Association,
+	Place,
+}
+
 type PersonByIDInput struct {
 	ID     int64
 	Fileds []PersonField

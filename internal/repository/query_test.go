@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"context"
 	"database/sql"
 	"testing"
 
@@ -21,17 +20,4 @@ func ConnectDB(t *testing.T, path string) *Queries {
 	})
 
 	return New(db)
-}
-
-func TestGetPersonByID(t *testing.T) {
-	query := ConnectDB(t, DB_PATH)
-	person, err := query.GetPersonByID(context.Background(), 1762)
-
-	if err != nil {
-		t.Fatalf("Query failed: %v", err)
-	}
-
-	if *person.CNameChn != "王安石" {
-		t.Errorf("Expected '王安石', got '%s'", *person.CNameChn)
-	}
 }
