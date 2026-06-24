@@ -63,7 +63,6 @@ type PersonIDStore interface {
 	GetAssociationByPersonID(ctx context.Context, cPersonid int64) ([]repository.GetAssociationByPersonIDRow, error)
 	GetEntryByPersonID(ctx context.Context, cPersonid int64) ([]repository.GetEntryByPersonIDRow, error)
 	GetInstitutionByPersonID(ctx context.Context, cPersonid int64) ([]repository.GetInstitutionByPersonIDRow, error)
-	GetPersonByName(ctx context.Context, cNameChn *string) ([]repository.GetPersonByNameRow, error)
 	GetPersonKinShipByPersonID(ctx context.Context, cPersonid int64) ([]repository.GetPersonKinShipByPersonIDRow, error)
 	GetPlaceByPersonID(ctx context.Context, cPersonid int64) ([]repository.GetPlaceByPersonIDRow, error)
 	GetPostingByPersonID(ctx context.Context, personID int64) ([]repository.GetPostingByPersonIDRow, error)
@@ -71,8 +70,13 @@ type PersonIDStore interface {
 	GetTextByPersonID(ctx context.Context, cPersonid int64) ([]repository.GetTextByPersonIDRow, error)
 }
 
+type PersonNameStore interface {
+	GetPersonByName(ctx context.Context, name string) ([]repository.GetPersonByNameRow, error)
+}
+
 type Store interface {
 	PersonIDStore
+	PersonNameStore
 }
 
 type Service struct {
@@ -202,4 +206,25 @@ func (s *Service) FetchPersonByID(ctx context.Context, input PersonByIDInput) (*
 	}
 
 	return p, nil
+}
+
+type PersonSearchResult struct {
+	ID         int64  `json:"id"`
+	Name       string `json:name,omitempty`
+	NameChn    string `json:"nameChn,omitempty"`
+	BirthYear  int16  `json:"birthYear,omitempty"`
+	DeathYear  int16  `json:"deathYear,omitempty"`
+	Dynasty    string `json:"dynasty,omitempty"`
+	DynastyChn string `json:"dynastyChn,omitempty"`
+	Start      int16  `json:"start"`
+	End        int16  `json:"end"`
+}
+
+func (s *Service) FetchPersonByName(ctx context.Context, name string) ([]repository.GetPersonByNameRow, error) {
+	ps, err := s.store.GetPersonByName(ctx, name)
+	if err != nil {
+		return nil, err
+	}
+
+	return ps, nil
 }

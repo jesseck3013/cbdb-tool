@@ -16,7 +16,7 @@ const (
 
 var person100 = model.Person{
 	BasicInfo: repository.GetPersonBasicInfoByIDRow{
-		CPersonid: MOCK_PERSON_ID,
+		PersonID: MOCK_PERSON_ID,
 	},
 
 	AltNames:     []repository.GetAltnamesByPersonIDRow{},
@@ -45,6 +45,10 @@ func (m *MockStore) GetPersonBasicInfoByID(ctx context.Context, id int64) (repos
 	return person.BasicInfo, nil
 }
 
+func (m *MockStore) GetPersonByName(ctx context.Context, name string) ([]repository.GetPersonByNameRow, error) {
+	return []repository.GetPersonByNameRow{}, nil
+}
+
 func (m *MockStore) GetAltnamesByPersonID(ctx context.Context, cPersonid int64) ([]repository.GetAltnamesByPersonIDRow, error) {
 	return []repository.GetAltnamesByPersonIDRow{}, nil
 }
@@ -59,9 +63,6 @@ func (m *MockStore) GetEntryByPersonID(ctx context.Context, cPersonid int64) ([]
 
 func (m *MockStore) GetInstitutionByPersonID(ctx context.Context, cPersonid int64) ([]repository.GetInstitutionByPersonIDRow, error) {
 	return []repository.GetInstitutionByPersonIDRow{}, nil
-}
-func (m *MockStore) GetPersonByName(ctx context.Context, cNameChn *string) ([]repository.GetPersonByNameRow, error) {
-	return []repository.GetPersonByNameRow{}, nil
 }
 
 func (m *MockStore) GetPersonKinShipByPersonID(ctx context.Context, cPersonid int64) ([]repository.GetPersonKinShipByPersonIDRow, error) {

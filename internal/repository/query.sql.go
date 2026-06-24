@@ -11,10 +11,10 @@ import (
 
 const getAltnamesByPersonID = `-- name: GetAltnamesByPersonID :many
 select 
-ad.c_alt_name ,
-ad.c_alt_name_chn ,
-ac.c_name_type_desc,
-ac.c_name_type_desc_chn 
+ad.c_alt_name as altname_en,
+ad.c_alt_name_chn as altname_ch,
+ac.c_name_type_desc as name_type,
+ac.c_name_type_desc_chn as name_type_ch
 from 
 ALTNAME_DATA ad 
 join ALTNAME_CODES ac on ad.c_alt_name_type_code = ac.c_name_type_code 
@@ -22,10 +22,10 @@ where ad.c_personid = ?
 `
 
 type GetAltnamesByPersonIDRow struct {
-	CAltName         *string `json:"c_alt_name"`
-	CAltNameChn      string  `json:"c_alt_name_chn"`
-	CNameTypeDesc    *string `json:"c_name_type_desc"`
-	CNameTypeDescChn *string `json:"c_name_type_desc_chn"`
+	AltnameEn  *string `json:"altname_en"`
+	AltnameCh  string  `json:"altname_ch"`
+	NameType   *string `json:"name_type"`
+	NameTypeCh *string `json:"name_type_ch"`
 }
 
 func (q *Queries) GetAltnamesByPersonID(ctx context.Context, cPersonid int64) ([]GetAltnamesByPersonIDRow, error) {
@@ -38,10 +38,10 @@ func (q *Queries) GetAltnamesByPersonID(ctx context.Context, cPersonid int64) ([
 	for rows.Next() {
 		var i GetAltnamesByPersonIDRow
 		if err := rows.Scan(
-			&i.CAltName,
-			&i.CAltNameChn,
-			&i.CNameTypeDesc,
-			&i.CNameTypeDescChn,
+			&i.AltnameEn,
+			&i.AltnameCh,
+			&i.NameType,
+			&i.NameTypeCh,
 		); err != nil {
 			return nil, err
 		}
@@ -58,19 +58,20 @@ func (q *Queries) GetAltnamesByPersonID(ctx context.Context, cPersonid int64) ([
 
 const getAssociationByPersonID = `-- name: GetAssociationByPersonID :many
 SELECT
-ad.c_assoc_id,
-ad.c_text_title,
-bm.c_name_chn,
-ad.c_assoc_first_year,
-ad.c_assoc_last_year,
-ac.c_assoc_desc_chn,
-ac.c_assoc_pair,
-ad.c_notes,
-ad.c_pages,
-tc.c_title_chn,
-t.c_assoc_type_desc,
-t.c_assoc_type_desc_chn,
-t.c_assoc_type_short_desc
+ad.c_assoc_id as assoc_id,
+ad.c_text_title as text_title,
+bm.c_name as name_en,
+bm.c_name_chn as name_ch,
+ad.c_assoc_first_year as assoc_first_year,
+ad.c_assoc_last_year as assoc_last_year,
+ac.c_assoc_desc_chn as assoc_cn,
+ac.c_assoc_pair as assoc_pair,
+ad.c_notes as notes,
+ad.c_pages as pages,
+tc.c_title_chn as title_ch,
+t.c_assoc_type_desc as assoc_type_en,
+t.c_assoc_type_desc_chn as assoc_type_ch,
+t.c_assoc_type_short_desc as assoc_type_short
 FROM 
 ASSOC_DATA ad 
 LEFT JOIN BIOG_MAIN bm on ad.c_assoc_id = bm.c_personid 
@@ -82,19 +83,20 @@ WHERE ad.c_personid = ?
 `
 
 type GetAssociationByPersonIDRow struct {
-	CAssocID            int64   `json:"c_assoc_id"`
-	CTextTitle          string  `json:"c_text_title"`
-	CNameChn            *string `json:"c_name_chn"`
-	CAssocFirstYear     int16   `json:"c_assoc_first_year"`
-	CAssocLastYear      *int16  `json:"c_assoc_last_year"`
-	CAssocDescChn       *string `json:"c_assoc_desc_chn"`
-	CAssocPair          *int16  `json:"c_assoc_pair"`
-	CNotes              *string `json:"c_notes"`
-	CPages              *string `json:"c_pages"`
-	CTitleChn           *string `json:"c_title_chn"`
-	CAssocTypeDesc      *string `json:"c_assoc_type_desc"`
-	CAssocTypeDescChn   *string `json:"c_assoc_type_desc_chn"`
-	CAssocTypeShortDesc *string `json:"c_assoc_type_short_desc"`
+	AssocID        int64   `json:"assoc_id"`
+	TextTitle      string  `json:"text_title"`
+	NameEn         *string `json:"name_en"`
+	NameCh         *string `json:"name_ch"`
+	AssocFirstYear int16   `json:"assoc_first_year"`
+	AssocLastYear  *int16  `json:"assoc_last_year"`
+	AssocCn        *string `json:"assoc_cn"`
+	AssocPair      *int16  `json:"assoc_pair"`
+	Notes          *string `json:"notes"`
+	Pages          *string `json:"pages"`
+	TitleCh        *string `json:"title_ch"`
+	AssocTypeEn    *string `json:"assoc_type_en"`
+	AssocTypeCh    *string `json:"assoc_type_ch"`
+	AssocTypeShort *string `json:"assoc_type_short"`
 }
 
 func (q *Queries) GetAssociationByPersonID(ctx context.Context, cPersonid int64) ([]GetAssociationByPersonIDRow, error) {
@@ -107,19 +109,20 @@ func (q *Queries) GetAssociationByPersonID(ctx context.Context, cPersonid int64)
 	for rows.Next() {
 		var i GetAssociationByPersonIDRow
 		if err := rows.Scan(
-			&i.CAssocID,
-			&i.CTextTitle,
-			&i.CNameChn,
-			&i.CAssocFirstYear,
-			&i.CAssocLastYear,
-			&i.CAssocDescChn,
-			&i.CAssocPair,
-			&i.CNotes,
-			&i.CPages,
-			&i.CTitleChn,
-			&i.CAssocTypeDesc,
-			&i.CAssocTypeDescChn,
-			&i.CAssocTypeShortDesc,
+			&i.AssocID,
+			&i.TextTitle,
+			&i.NameEn,
+			&i.NameCh,
+			&i.AssocFirstYear,
+			&i.AssocLastYear,
+			&i.AssocCn,
+			&i.AssocPair,
+			&i.Notes,
+			&i.Pages,
+			&i.TitleCh,
+			&i.AssocTypeEn,
+			&i.AssocTypeCh,
+			&i.AssocTypeShort,
 		); err != nil {
 			return nil, err
 		}
@@ -136,13 +139,13 @@ func (q *Queries) GetAssociationByPersonID(ctx context.Context, cPersonid int64)
 
 const getEntryByPersonID = `-- name: GetEntryByPersonID :many
 SELECT
-ed.c_age,
-ed.c_year,
-et.c_entry_type_desc,
-ec.c_entry_desc_chn,
-et.c_entry_type_level,
-et.c_entry_type_desc_chn,
-ed.c_exam_rank
+ed.c_age as age,
+ed.c_year as year,
+et.c_entry_type_desc as entry_type_en,
+ec.c_entry_desc_chn as entry_ch,
+et.c_entry_type_level as entry_type_level,
+et.c_entry_type_desc_chn as entry_type_level_ch,
+ed.c_exam_rank as exam_rank
 FROM
 ENTRY_DATA ed 
 join ENTRY_CODES ec on ec.c_entry_code  = ed.c_entry_code 
@@ -152,13 +155,13 @@ where ed.c_personid = ?
 `
 
 type GetEntryByPersonIDRow struct {
-	CAge              *int16  `json:"c_age"`
-	CYear             int16   `json:"c_year"`
-	CEntryTypeDesc    string  `json:"c_entry_type_desc"`
-	CEntryDescChn     string  `json:"c_entry_desc_chn"`
-	CEntryTypeLevel   *int16  `json:"c_entry_type_level"`
-	CEntryTypeDescChn string  `json:"c_entry_type_desc_chn"`
-	CExamRank         *string `json:"c_exam_rank"`
+	Age              *int16  `json:"age"`
+	Year             int16   `json:"year"`
+	EntryTypeEn      string  `json:"entry_type_en"`
+	EntryCh          string  `json:"entry_ch"`
+	EntryTypeLevel   *int16  `json:"entry_type_level"`
+	EntryTypeLevelCh string  `json:"entry_type_level_ch"`
+	ExamRank         *string `json:"exam_rank"`
 }
 
 // join NIAN_HAO nh on nh.c_nianhao_id = ed.c_entry_nh_id
@@ -172,13 +175,13 @@ func (q *Queries) GetEntryByPersonID(ctx context.Context, cPersonid int64) ([]Ge
 	for rows.Next() {
 		var i GetEntryByPersonIDRow
 		if err := rows.Scan(
-			&i.CAge,
-			&i.CYear,
-			&i.CEntryTypeDesc,
-			&i.CEntryDescChn,
-			&i.CEntryTypeLevel,
-			&i.CEntryTypeDescChn,
-			&i.CExamRank,
+			&i.Age,
+			&i.Year,
+			&i.EntryTypeEn,
+			&i.EntryCh,
+			&i.EntryTypeLevel,
+			&i.EntryTypeLevelCh,
+			&i.ExamRank,
 		); err != nil {
 			return nil, err
 		}
@@ -195,15 +198,15 @@ func (q *Queries) GetEntryByPersonID(ctx context.Context, cPersonid int64) ([]Ge
 
 const getInstitutionByPersonID = `-- name: GetInstitutionByPersonID :many
 SELECT 
-sinc.c_inst_name_hz,
-sinc.c_inst_name_py,
-bic.c_bi_role_desc,
-bic.c_bi_role_chn,
-bid.c_bi_begin_year,
-bid.c_bi_end_year,
-tc.c_title,
-tc.c_title_chn,
-bid.c_pages
+sinc.c_inst_name_hz as inst_name_hz,
+sinc.c_inst_name_py as inst_name_py,
+bic.c_bi_role_desc as bi_role_en,
+bic.c_bi_role_chn as bi_role_ch,
+bid.c_bi_begin_year as bi_begin_year,
+bid.c_bi_end_year as bi_end_year,
+tc.c_title as title,
+tc.c_title_chn as title_chn,
+bid.c_pages as pages
 FROM
 BIOG_INST_DATA bid 
 LEFT JOIN BIOG_MAIN bm on bm.c_personid = bid.c_personid 
@@ -216,15 +219,15 @@ ORDER BY bid.c_bi_begin_year
 `
 
 type GetInstitutionByPersonIDRow struct {
-	CInstNameHz  *string `json:"c_inst_name_hz"`
-	CInstNamePy  *string `json:"c_inst_name_py"`
-	CBiRoleDesc  *string `json:"c_bi_role_desc"`
-	CBiRoleChn   *string `json:"c_bi_role_chn"`
-	CBiBeginYear *int16  `json:"c_bi_begin_year"`
-	CBiEndYear   *int16  `json:"c_bi_end_year"`
-	CTitle       *string `json:"c_title"`
-	CTitleChn    *string `json:"c_title_chn"`
-	CPages       *string `json:"c_pages"`
+	InstNameHz  *string `json:"inst_name_hz"`
+	InstNamePy  *string `json:"inst_name_py"`
+	BiRoleEn    *string `json:"bi_role_en"`
+	BiRoleCh    *string `json:"bi_role_ch"`
+	BiBeginYear *int16  `json:"bi_begin_year"`
+	BiEndYear   *int16  `json:"bi_end_year"`
+	Title       *string `json:"title"`
+	TitleChn    *string `json:"title_chn"`
+	Pages       *string `json:"pages"`
 }
 
 // LEFT JOIN SOCIAL_INSTITUTION_ADDR sia on sia.c_inst_code = bid.c_inst_code
@@ -238,15 +241,15 @@ func (q *Queries) GetInstitutionByPersonID(ctx context.Context, cPersonid int64)
 	for rows.Next() {
 		var i GetInstitutionByPersonIDRow
 		if err := rows.Scan(
-			&i.CInstNameHz,
-			&i.CInstNamePy,
-			&i.CBiRoleDesc,
-			&i.CBiRoleChn,
-			&i.CBiBeginYear,
-			&i.CBiEndYear,
-			&i.CTitle,
-			&i.CTitleChn,
-			&i.CPages,
+			&i.InstNameHz,
+			&i.InstNamePy,
+			&i.BiRoleEn,
+			&i.BiRoleCh,
+			&i.BiBeginYear,
+			&i.BiEndYear,
+			&i.Title,
+			&i.TitleChn,
+			&i.Pages,
 		); err != nil {
 			return nil, err
 		}
@@ -263,17 +266,17 @@ func (q *Queries) GetInstitutionByPersonID(ctx context.Context, cPersonid int64)
 
 const getPersonBasicInfoByID = `-- name: GetPersonBasicInfoByID :one
 select 
-bm.c_personid,
-bm.c_name,
-bm.c_name_chn,
-bm.c_mingzi,
-bm.c_female,
-bm.c_birthyear,
-bm.c_deathyear,
-d.c_dynasty,
-d.c_dynasty_chn,
-cc.c_choronym_desc,
-cc.c_choronym_chn 
+bm.c_personid AS person_id,
+bm.c_name AS name_en,
+bm.c_name_chn As name_ch,
+bm.c_mingzi AS mingzi,
+bm.c_female AS female,
+bm.c_birthyear as birth_year,
+bm.c_deathyear as death_year,
+d.c_dynasty as dynasty_en,
+d.c_dynasty_chn as dynasty_ch,
+cc.c_choronym_desc as choronym_en,
+cc.c_choronym_chn as choronym_ch
 from BIOG_MAIN bm 
 left join DYNASTIES d on bm.c_dy = d.c_dy 
 left join CHORONYM_CODES cc on bm.c_choronym_code = cc.c_choronym_code 
@@ -281,67 +284,71 @@ where bm.c_personid = ?
 `
 
 type GetPersonBasicInfoByIDRow struct {
-	CPersonid     int64   `json:"c_personid"`
-	CName         *string `json:"c_name"`
-	CNameChn      *string `json:"c_name_chn"`
-	CMingzi       *string `json:"c_mingzi"`
-	CFemale       *int16  `json:"c_female"`
-	CBirthyear    *int16  `json:"c_birthyear"`
-	CDeathyear    *int16  `json:"c_deathyear"`
-	CDynasty      *string `json:"c_dynasty"`
-	CDynastyChn   *string `json:"c_dynasty_chn"`
-	CChoronymDesc *string `json:"c_choronym_desc"`
-	CChoronymChn  *string `json:"c_choronym_chn"`
+	PersonID   int64   `json:"person_id"`
+	NameEn     *string `json:"name_en"`
+	NameCh     *string `json:"name_ch"`
+	Mingzi     *string `json:"mingzi"`
+	Female     *int16  `json:"female"`
+	BirthYear  *int16  `json:"birth_year"`
+	DeathYear  *int16  `json:"death_year"`
+	DynastyEn  *string `json:"dynasty_en"`
+	DynastyCh  *string `json:"dynasty_ch"`
+	ChoronymEn *string `json:"choronym_en"`
+	ChoronymCh *string `json:"choronym_ch"`
 }
 
 func (q *Queries) GetPersonBasicInfoByID(ctx context.Context, cPersonid int64) (GetPersonBasicInfoByIDRow, error) {
 	row := q.db.QueryRowContext(ctx, getPersonBasicInfoByID, cPersonid)
 	var i GetPersonBasicInfoByIDRow
 	err := row.Scan(
-		&i.CPersonid,
-		&i.CName,
-		&i.CNameChn,
-		&i.CMingzi,
-		&i.CFemale,
-		&i.CBirthyear,
-		&i.CDeathyear,
-		&i.CDynasty,
-		&i.CDynastyChn,
-		&i.CChoronymDesc,
-		&i.CChoronymChn,
+		&i.PersonID,
+		&i.NameEn,
+		&i.NameCh,
+		&i.Mingzi,
+		&i.Female,
+		&i.BirthYear,
+		&i.DeathYear,
+		&i.DynastyEn,
+		&i.DynastyCh,
+		&i.ChoronymEn,
+		&i.ChoronymCh,
 	)
 	return i, err
 }
 
 const getPersonByName = `-- name: GetPersonByName :many
 SELECT
-bm.c_personid,
-bm.c_name_chn,
-bm.c_birthyear,
-bm.c_deathyear,
-d.c_dynasty,
-d.c_dynasty_chn,
-d.c_start,
-d.c_end
+bm.c_personid AS person_id,
+bm.c_name AS name_en,
+bm.c_name_chn AS name_ch,
+bm.c_birthyear AS birth_year,
+bm.c_deathyear AS death_year,
+d.c_dynasty AS dynasty_en,
+d.c_dynasty_chn AS dynasty_ch,
+d.c_start AS dynasty_start,
+d.c_end AS dynasty_end
 FROM 
 BIOG_MAIN bm 
 join DYNASTIES d on bm.c_dy = d.c_dy 
-WHERE bm.c_name_chn = ?
+WHERE bm.c_name_chn = CAST(?1 AS text)
+OR 
+bm.c_name like CAST(?1 AS text)
 `
 
 type GetPersonByNameRow struct {
-	CPersonid   int64   `json:"c_personid"`
-	CNameChn    *string `json:"c_name_chn"`
-	CBirthyear  *int16  `json:"c_birthyear"`
-	CDeathyear  *int16  `json:"c_deathyear"`
-	CDynasty    *string `json:"c_dynasty"`
-	CDynastyChn *string `json:"c_dynasty_chn"`
-	CStart      int16   `json:"c_start"`
-	CEnd        int16   `json:"c_end"`
+	PersonID     int64   `json:"person_id"`
+	NameEn       *string `json:"name_en"`
+	NameCh       *string `json:"name_ch"`
+	BirthYear    *int16  `json:"birth_year"`
+	DeathYear    *int16  `json:"death_year"`
+	DynastyEn    *string `json:"dynasty_en"`
+	DynastyCh    *string `json:"dynasty_ch"`
+	DynastyStart int16   `json:"dynasty_start"`
+	DynastyEnd   int16   `json:"dynasty_end"`
 }
 
-func (q *Queries) GetPersonByName(ctx context.Context, cNameChn *string) ([]GetPersonByNameRow, error) {
-	rows, err := q.db.QueryContext(ctx, getPersonByName, cNameChn)
+func (q *Queries) GetPersonByName(ctx context.Context, name string) ([]GetPersonByNameRow, error) {
+	rows, err := q.db.QueryContext(ctx, getPersonByName, name)
 	if err != nil {
 		return nil, err
 	}
@@ -350,14 +357,15 @@ func (q *Queries) GetPersonByName(ctx context.Context, cNameChn *string) ([]GetP
 	for rows.Next() {
 		var i GetPersonByNameRow
 		if err := rows.Scan(
-			&i.CPersonid,
-			&i.CNameChn,
-			&i.CBirthyear,
-			&i.CDeathyear,
-			&i.CDynasty,
-			&i.CDynastyChn,
-			&i.CStart,
-			&i.CEnd,
+			&i.PersonID,
+			&i.NameEn,
+			&i.NameCh,
+			&i.BirthYear,
+			&i.DeathYear,
+			&i.DynastyEn,
+			&i.DynastyCh,
+			&i.DynastyStart,
+			&i.DynastyEnd,
 		); err != nil {
 			return nil, err
 		}
@@ -374,12 +382,12 @@ func (q *Queries) GetPersonByName(ctx context.Context, cNameChn *string) ([]GetP
 
 const getPersonKinShipByPersonID = `-- name: GetPersonKinShipByPersonID :many
 select 
-kd.c_kin_id,
-kc.c_kinrel, 
-kc.c_kinrel_alt, 
-kc.c_kinrel_chn, 
-bm.c_name,
-bm.c_name_chn 
+kd.c_kin_id as kin_id,
+kc.c_kinrel as kin_rel_en, 
+kc.c_kinrel_alt as kin_alt, 
+kc.c_kinrel_chn as kin_rel_ch, 
+bm.c_name as name,
+bm.c_name_chn as name_ch
 from KIN_DATA kd
 join BIOG_MAIN bm on bm.c_personid = kd.c_kin_id 
 join KINSHIP_CODES kc on kd.c_kin_code = kc.c_kincode 
@@ -387,12 +395,12 @@ where kd.c_personid = ?
 `
 
 type GetPersonKinShipByPersonIDRow struct {
-	CKinID     int64   `json:"c_kin_id"`
-	CKinrel    string  `json:"c_kinrel"`
-	CKinrelAlt *string `json:"c_kinrel_alt"`
-	CKinrelChn string  `json:"c_kinrel_chn"`
-	CName      *string `json:"c_name"`
-	CNameChn   *string `json:"c_name_chn"`
+	KinID    int64   `json:"kin_id"`
+	KinRelEn string  `json:"kin_rel_en"`
+	KinAlt   *string `json:"kin_alt"`
+	KinRelCh string  `json:"kin_rel_ch"`
+	Name     *string `json:"name"`
+	NameCh   *string `json:"name_ch"`
 }
 
 func (q *Queries) GetPersonKinShipByPersonID(ctx context.Context, cPersonid int64) ([]GetPersonKinShipByPersonIDRow, error) {
@@ -405,12 +413,12 @@ func (q *Queries) GetPersonKinShipByPersonID(ctx context.Context, cPersonid int6
 	for rows.Next() {
 		var i GetPersonKinShipByPersonIDRow
 		if err := rows.Scan(
-			&i.CKinID,
-			&i.CKinrel,
-			&i.CKinrelAlt,
-			&i.CKinrelChn,
-			&i.CName,
-			&i.CNameChn,
+			&i.KinID,
+			&i.KinRelEn,
+			&i.KinAlt,
+			&i.KinRelCh,
+			&i.Name,
+			&i.NameCh,
 		); err != nil {
 			return nil, err
 		}
@@ -429,18 +437,18 @@ const getPlaceByPersonID = `-- name: GetPlaceByPersonID :many
 ;
 
 SELECT
-ac.c_name,
-ac.c_name_chn,
-bac.c_addr_desc,
-bac.c_addr_desc_chn,
-ac.c_admin_type,
-bad.c_firstyear,
-bad.c_lastyear,
-bad.c_notes,
-ac.x_coord,
-ac.y_coord,
-tc.c_title_chn,
-bad.c_pages
+ac.c_name as name_en,
+ac.c_name_chn as name_ch,
+bac.c_addr_desc as addr_en,
+bac.c_addr_desc_chn as addr_ch,
+ac.c_admin_type as admin_type,
+bad.c_firstyear as first_year,
+bad.c_lastyear as last_year,
+bad.c_notes as notes,
+ac.x_coord as x_coord,
+ac.y_coord as y_coord,
+tc.c_title_chn as title_ch,
+bad.c_pages as pages
 FROM
 BIOG_ADDR_DATA bad 
 LEFT JOIN ADDR_CODES ac on ac.c_addr_id = bad.c_addr_id 
@@ -452,18 +460,18 @@ ORDER BY bad.c_firstyear
 `
 
 type GetPlaceByPersonIDRow struct {
-	CName        *string  `json:"c_name"`
-	CNameChn     *string  `json:"c_name_chn"`
-	CAddrDesc    *string  `json:"c_addr_desc"`
-	CAddrDescChn *string  `json:"c_addr_desc_chn"`
-	CAdminType   *string  `json:"c_admin_type"`
-	CFirstyear   *int16   `json:"c_firstyear"`
-	CLastyear    *int16   `json:"c_lastyear"`
-	CNotes       *string  `json:"c_notes"`
-	XCoord       *float64 `json:"x_coord"`
-	YCoord       *float64 `json:"y_coord"`
-	CTitleChn    *string  `json:"c_title_chn"`
-	CPages       *string  `json:"c_pages"`
+	NameEn    *string  `json:"name_en"`
+	NameCh    *string  `json:"name_ch"`
+	AddrEn    *string  `json:"addr_en"`
+	AddrCh    *string  `json:"addr_ch"`
+	AdminType *string  `json:"admin_type"`
+	FirstYear *int16   `json:"first_year"`
+	LastYear  *int16   `json:"last_year"`
+	Notes     *string  `json:"notes"`
+	XCoord    *float64 `json:"x_coord"`
+	YCoord    *float64 `json:"y_coord"`
+	TitleCh   *string  `json:"title_ch"`
+	Pages     *string  `json:"pages"`
 }
 
 func (q *Queries) GetPlaceByPersonID(ctx context.Context, cPersonid int64) ([]GetPlaceByPersonIDRow, error) {
@@ -476,18 +484,18 @@ func (q *Queries) GetPlaceByPersonID(ctx context.Context, cPersonid int64) ([]Ge
 	for rows.Next() {
 		var i GetPlaceByPersonIDRow
 		if err := rows.Scan(
-			&i.CName,
-			&i.CNameChn,
-			&i.CAddrDesc,
-			&i.CAddrDescChn,
-			&i.CAdminType,
-			&i.CFirstyear,
-			&i.CLastyear,
-			&i.CNotes,
+			&i.NameEn,
+			&i.NameCh,
+			&i.AddrEn,
+			&i.AddrCh,
+			&i.AdminType,
+			&i.FirstYear,
+			&i.LastYear,
+			&i.Notes,
 			&i.XCoord,
 			&i.YCoord,
-			&i.CTitleChn,
-			&i.CPages,
+			&i.TitleCh,
+			&i.Pages,
 		); err != nil {
 			return nil, err
 		}
@@ -507,13 +515,13 @@ WITH ptod AS (
 	SELECT c_personid, c_office_id, c_posting_id, c_sequence, c_firstyear, c_fy_nh_code, c_fy_nh_year, c_fy_range, c_lastyear, c_ly_nh_code, c_ly_nh_year, c_ly_range, c_appt_code, c_assume_office_code, c_inst_code, c_inst_name_code, c_source, c_pages, c_notes, c_office_id_backup, c_office_category_id, c_fy_intercalary, c_fy_month, c_ly_intercalary, c_ly_month, c_fy_day, c_ly_day, c_fy_day_gz, c_ly_day_gz, c_dy, c_created_by, c_modified_by, c_created_date, c_modified_date FROM POSTED_TO_OFFICE_DATA WHERE c_personid = CAST(?1 AS INTEGER)
 )
 SELECT 
-ac.c_appt_desc,
-ac.c_appt_desc_chn,
-oc2.c_office_chn,
-oc2.c_office_chn_alt,
-ptod.c_firstyear,
-ptod.c_lastyear,
-tc.c_title_chn 
+ac.c_appt_desc as appt_en,
+ac.c_appt_desc_chn as appt_cn,
+oc2.c_office_chn as office_ch,
+oc2.c_office_chn_alt as office_ch_alt,
+ptod.c_firstyear as first_year,
+ptod.c_lastyear as last_year,
+tc.c_title_chn as title_ch
 FROM 
 POSTING_DATA pd 
 join ptod on ptod.c_posting_id = pd.c_posting_id
@@ -526,13 +534,13 @@ ORDER BY ptod.c_firstyear
 `
 
 type GetPostingByPersonIDRow struct {
-	CApptDesc     *string `json:"c_appt_desc"`
-	CApptDescChn  *string `json:"c_appt_desc_chn"`
-	COfficeChn    *string `json:"c_office_chn"`
-	COfficeChnAlt *string `json:"c_office_chn_alt"`
-	CFirstyear    *int16  `json:"c_firstyear"`
-	CLastyear     *int16  `json:"c_lastyear"`
-	CTitleChn     *string `json:"c_title_chn"`
+	ApptEn      *string `json:"appt_en"`
+	ApptCn      *string `json:"appt_cn"`
+	OfficeCh    *string `json:"office_ch"`
+	OfficeChAlt *string `json:"office_ch_alt"`
+	FirstYear   *int16  `json:"first_year"`
+	LastYear    *int16  `json:"last_year"`
+	TitleCh     *string `json:"title_ch"`
 }
 
 func (q *Queries) GetPostingByPersonID(ctx context.Context, personID int64) ([]GetPostingByPersonIDRow, error) {
@@ -545,13 +553,13 @@ func (q *Queries) GetPostingByPersonID(ctx context.Context, personID int64) ([]G
 	for rows.Next() {
 		var i GetPostingByPersonIDRow
 		if err := rows.Scan(
-			&i.CApptDesc,
-			&i.CApptDescChn,
-			&i.COfficeChn,
-			&i.COfficeChnAlt,
-			&i.CFirstyear,
-			&i.CLastyear,
-			&i.CTitleChn,
+			&i.ApptEn,
+			&i.ApptCn,
+			&i.OfficeCh,
+			&i.OfficeChAlt,
+			&i.FirstYear,
+			&i.LastYear,
+			&i.TitleCh,
 		); err != nil {
 			return nil, err
 		}
@@ -568,8 +576,8 @@ func (q *Queries) GetPostingByPersonID(ctx context.Context, personID int64) ([]G
 
 const getStatusByPersonID = `-- name: GetStatusByPersonID :many
 SELECT 
-sc.c_status_desc ,
-sc.c_status_desc_chn 
+sc.c_status_desc as status_en,
+sc.c_status_desc_chn as status_ch
 FROM
 STATUS_DATA sd 
 join STATUS_CODES sc on sd.c_status_code = sc.c_status_code 
@@ -577,8 +585,8 @@ where sd.c_personid = ?
 `
 
 type GetStatusByPersonIDRow struct {
-	CStatusDesc    string `json:"c_status_desc"`
-	CStatusDescChn string `json:"c_status_desc_chn"`
+	StatusEn string `json:"status_en"`
+	StatusCh string `json:"status_ch"`
 }
 
 func (q *Queries) GetStatusByPersonID(ctx context.Context, cPersonid int64) ([]GetStatusByPersonIDRow, error) {
@@ -590,7 +598,7 @@ func (q *Queries) GetStatusByPersonID(ctx context.Context, cPersonid int64) ([]G
 	var items []GetStatusByPersonIDRow
 	for rows.Next() {
 		var i GetStatusByPersonIDRow
-		if err := rows.Scan(&i.CStatusDesc, &i.CStatusDescChn); err != nil {
+		if err := rows.Scan(&i.StatusEn, &i.StatusCh); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -606,10 +614,10 @@ func (q *Queries) GetStatusByPersonID(ctx context.Context, cPersonid int64) ([]G
 
 const getTextByPersonID = `-- name: GetTextByPersonID :many
 SELECT
-tc.c_title_chn,
-tc.c_text_year,
-tc.c_source,
-tc2.c_title_chn 
+tc.c_title_chn as title_ch,
+tc.c_text_year as text_year,
+tc.c_source as source,
+tc2.c_title_chn as source_title
 FROM
 BIOG_TEXT_DATA btd 
 JOIN TEXT_CODES tc on tc.c_textid  = btd.c_textid 
@@ -618,10 +626,10 @@ WHERE btd.c_personid = ?
 `
 
 type GetTextByPersonIDRow struct {
-	CTitleChn   *string `json:"c_title_chn"`
-	CTextYear   *int16  `json:"c_text_year"`
-	CSource     *int64  `json:"c_source"`
-	CTitleChn_2 *string `json:"c_title_chn_2"`
+	TitleCh     *string `json:"title_ch"`
+	TextYear    *int16  `json:"text_year"`
+	Source      *int64  `json:"source"`
+	SourceTitle *string `json:"source_title"`
 }
 
 func (q *Queries) GetTextByPersonID(ctx context.Context, cPersonid int64) ([]GetTextByPersonIDRow, error) {
@@ -634,10 +642,10 @@ func (q *Queries) GetTextByPersonID(ctx context.Context, cPersonid int64) ([]Get
 	for rows.Next() {
 		var i GetTextByPersonIDRow
 		if err := rows.Scan(
-			&i.CTitleChn,
-			&i.CTextYear,
-			&i.CSource,
-			&i.CTitleChn_2,
+			&i.TitleCh,
+			&i.TextYear,
+			&i.Source,
+			&i.SourceTitle,
 		); err != nil {
 			return nil, err
 		}

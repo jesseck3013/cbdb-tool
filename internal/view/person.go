@@ -61,12 +61,12 @@ func joinTwoYear(lang1, lang2 string) string {
 func printBasicInfo(info repository.GetPersonBasicInfoByIDRow) {
 	fmt.Println(headerStyle.Render("# Profile"))
 	rows := []string{
-		renderLine(" ID:", strconv.FormatInt(info.CPersonid, 10)),
-		renderLine(" Name:", joinTwoLang(safeValue(info.CNameChn), safeValue(info.CName))),
-		renderLine(" Dynasty:", joinTwoLang(safeValue(info.CDynastyChn), safeValue(info.CDynasty))),
-		renderLine(" Choronym:", joinTwoLang(safeValue(info.CChoronymChn), safeValue(info.CChoronymDesc))),
-		renderLine(" Birth Year:", safeValue(info.CBirthyear)),
-		renderLine(" Death Year:", safeValue(info.CDeathyear)),
+		renderLine(" ID:", strconv.FormatInt(info.PersonID, 10)),
+		renderLine(" Name:", joinTwoLang(safeValue(info.NameCh), safeValue(info.NameEn))),
+		renderLine(" Dynasty:", joinTwoLang(safeValue(info.DynastyEn), safeValue(info.DynastyCh))),
+		renderLine(" Choronym:", joinTwoLang(safeValue(info.ChoronymCh), safeValue(info.ChoronymEn))),
+		renderLine(" Birth Year:", safeValue(info.BirthYear)),
+		renderLine(" Death Year:", safeValue(info.DeathYear)),
 	}
 
 	profileBlock := lipgloss.JoinVertical(lipgloss.Left, rows...)
@@ -124,8 +124,8 @@ func printAltNames(names []repository.GetAltnamesByPersonIDRow) {
 	for _, name := range names {
 		rows = append(rows,
 			[]string{
-				joinTwoLang(safeValue(name.CNameTypeDescChn), safeValue(name.CNameTypeDesc)),
-				joinTwoLang(name.CAltNameChn, safeValue(name.CAltName)),
+				joinTwoLang(safeValue(name.NameTypeCh), safeValue(name.NameType)),
+				joinTwoLang(name.AltnameCh, safeValue(name.AltnameEn)),
 			})
 	}
 
@@ -139,9 +139,9 @@ func printKinships(kinships []repository.GetPersonKinShipByPersonIDRow) {
 	for _, kinship := range kinships {
 		rows = append(rows,
 			[]string{
-				strconv.FormatInt(kinship.CKinID, 10),
-				joinTwoLang(safeValue(kinship.CNameChn), safeValue(kinship.CName)),
-				joinTwoLang(kinship.CKinrelChn, kinship.CKinrel),
+				strconv.FormatInt(kinship.KinID, 10),
+				joinTwoLang(safeValue(kinship.NameCh), safeValue(kinship.Name)),
+				joinTwoLang(kinship.KinRelCh, kinship.KinRelEn),
 			})
 	}
 
@@ -155,9 +155,9 @@ func printAssociations(associations []repository.GetAssociationByPersonIDRow) {
 	for _, association := range associations {
 		rows = append(rows,
 			[]string{
-				strconv.FormatInt(association.CAssocID, 10),
-				joinTwoLang(safeValue(association.CNameChn), safeValue(association.CNameChn)),
-				joinTwoLang(safeValue(association.CAssocTypeDescChn), safeValue(association.CAssocTypeShortDesc)),
+				strconv.FormatInt(association.AssocID, 10),
+				joinTwoLang(safeValue(association.NameCh), safeValue(association.NameEn)),
+				joinTwoLang(safeValue(association.AssocTypeCh), safeValue(association.AssocTypeEn)),
 			})
 	}
 
@@ -171,8 +171,7 @@ func printStatus(status []repository.GetStatusByPersonIDRow) {
 	for _, v := range status {
 		rows = append(rows,
 			[]string{
-				joinTwoLang(v.CStatusDescChn,
-					v.CStatusDesc),
+				joinTwoLang(v.StatusCh, v.StatusEn),
 			})
 	}
 
@@ -186,9 +185,9 @@ func printPlaces(places []repository.GetPlaceByPersonIDRow) {
 	for _, v := range places {
 		rows = append(rows,
 			[]string{
-				joinTwoLang(safeValue(v.CNameChn), safeValue(v.CName)),
-				joinTwoLang(safeValue(v.CAddrDescChn), safeValue(v.CAddrDesc)),
-				joinTwoYear(safeValue(v.CFirstyear), safeValue(v.CLastyear)),
+				joinTwoLang(safeValue(v.NameCh), safeValue(v.NameEn)),
+				joinTwoLang(safeValue(v.AddrCh), safeValue(v.AddrEn)),
+				joinTwoYear(safeValue(v.FirstYear), safeValue(v.LastYear)),
 			})
 	}
 
@@ -202,10 +201,10 @@ func printEntries(entries []repository.GetEntryByPersonIDRow) {
 	for _, v := range entries {
 		rows = append(rows,
 			[]string{
-				joinTwoLang(v.CEntryTypeDescChn, v.CEntryTypeDesc),
-				strconv.FormatInt(int64(v.CYear), 10),
-				safeValue(v.CAge),
-				safeValue(v.CExamRank),
+				joinTwoLang(v.EntryCh, v.EntryTypeEn),
+				strconv.FormatInt(int64(v.Year), 10),
+				safeValue(v.Age),
+				safeValue(v.ExamRank),
 			})
 	}
 
@@ -219,9 +218,9 @@ func printPostings(postings []repository.GetPostingByPersonIDRow) {
 	for _, v := range postings {
 		rows = append(rows,
 			[]string{
-				safeValue(v.COfficeChn),
-				joinTwoLang(safeValue(v.CApptDescChn), safeValue(v.CApptDesc)),
-				joinTwoYear(safeValue(v.CFirstyear), safeValue(v.CLastyear)),
+				safeValue(v.OfficeCh),
+				joinTwoLang(safeValue(v.ApptCn), safeValue(v.ApptEn)),
+				joinTwoYear(safeValue(v.FirstYear), safeValue(v.LastYear)),
 			})
 	}
 
@@ -235,9 +234,9 @@ func printInstitutions(insts []repository.GetInstitutionByPersonIDRow) {
 	for _, v := range insts {
 		rows = append(rows,
 			[]string{
-				joinTwoLang(safeValue(v.CInstNameHz), safeValue(v.CInstNamePy)),
-				joinTwoLang(safeValue(v.CBiRoleChn), safeValue(v.CBiRoleDesc)),
-				joinTwoYear(safeValue(v.CBiBeginYear), safeValue(v.CBiEndYear)),
+				joinTwoLang(safeValue(v.InstNameHz), safeValue(v.InstNamePy)),
+				joinTwoLang(safeValue(v.BiRoleCh), safeValue(v.BiRoleEn)),
+				joinTwoYear(safeValue(v.BiBeginYear), safeValue(v.BiEndYear)),
 			})
 	}
 
@@ -251,8 +250,8 @@ func printTexts(insts []repository.GetTextByPersonIDRow) {
 	for _, v := range insts {
 		rows = append(rows,
 			[]string{
-				safeValue(v.CTitleChn),
-				safeValue(v.CTextYear),
+				safeValue(v.TitleCh),
+				safeValue(v.TextYear),
 			})
 	}
 
@@ -263,7 +262,7 @@ func printTexts(insts []repository.GetTextByPersonIDRow) {
 func removeDupliate(s []repository.GetAssociationByPersonIDRow) []repository.GetAssociationByPersonIDRow {
 	set := make(map[int64]*repository.GetAssociationByPersonIDRow)
 	for _, v := range s {
-		set[v.CAssocID] = &v
+		set[v.AssocID] = &v
 	}
 
 	res := make([]repository.GetAssociationByPersonIDRow, 0)
