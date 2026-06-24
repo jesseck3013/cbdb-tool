@@ -7,7 +7,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/jesseck3013/cbdb-tool/internal/controller"
 	"github.com/jesseck3013/cbdb-tool/internal/model"
+	"github.com/jesseck3013/cbdb-tool/internal/view"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +19,20 @@ var personCmd = &cobra.Command{
 	Short: "Search profiles of person from CBDB",
 	Long:  `Search profiles of person from CBDB`,
 	Run: func(cmd *cobra.Command, args []string) {
-		err := c.Person(cmd.Context(), args, cmd.Flags())
+		isJSONOutput, err := cmd.Flags().GetBool("json")
+		if err != nil {
+			msg := fmt.Sprintf("Developer Error: flag json is not defined %v", err)
+			panic(msg)
+		}
+
+		var c *controller.CLI
+		switch isJSONOutput {
+		case true:
+			c = controller.NewController(db, view.JSONRenderer{})
+		default:
+			c = controller.NewController(db, view.TextRenderer{})
+		}
+		err = c.Person(cmd.Context(), args, cmd.Flags())
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -26,6 +41,7 @@ var personCmd = &cobra.Command{
 }
 
 func init() {
+	personCmd.Flags().Bool("json", false, "output the query result in JSON format")
 	personCmd.Flags().Bool(string(model.All), false, "select all fields")
 	personCmd.Flags().Bool(string(model.AltName), false, "alternative names")
 	personCmd.Flags().Bool(string(model.Association), false, "non-kinship association")

@@ -1,7 +1,8 @@
-package formatter
+package view
 
 import (
 	"fmt"
+	"io"
 	"strconv"
 
 	"charm.land/lipgloss/v2"
@@ -9,20 +10,6 @@ import (
 	"github.com/jesseck3013/cbdb-tool/internal/model"
 	"github.com/jesseck3013/cbdb-tool/internal/repository"
 )
-
-type PersonDisplay struct {
-	CPersonid     int64  `json:"c_personid"`
-	CName         string `json:"c_name"`
-	CNameChn      string `json:"c_name_chn"`
-	CMingzi       string `json:"c_mingzi"`
-	CFemale       string `json:"c_female"`
-	CBirthyear    string `json:"c_birthyear"`
-	CDeathyear    string `json:"c_deathyear"`
-	CDynasty      string `json:"c_dynasty"`
-	CDynastyChn   string `json:"c_dynasty_chn"`
-	CChoronymDesc string `json:"c_choronym_desc"`
-	CChoronymChn  string `json:"c_choronym_chn"`
-}
 
 var (
 	primaryColor = lipgloss.Color("#c7a587")
@@ -87,7 +74,7 @@ func printBasicInfo(info repository.GetPersonBasicInfoByIDRow) {
 	fmt.Println(profileBlock)
 }
 
-func PrintPerson(person *model.Person) {
+func PrintPerson(w io.Writer, person *model.Person) {
 	printBasicInfo(person.BasicInfo)
 	printAltNames(person.AltNames)
 	printStatus(person.Status)

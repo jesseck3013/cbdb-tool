@@ -8,22 +8,18 @@ import (
 	"log"
 
 	"github.com/jesseck3013/cbdb-tool/cmd/cli/cmd"
-	"github.com/jesseck3013/cbdb-tool/internal/controller"
 	"github.com/jesseck3013/cbdb-tool/internal/repository"
 	_ "modernc.org/sqlite"
 )
 
 func main() {
 	// TODO: handle the DB path
-	db, err := sql.Open("sqlite", "./data/cbdb.sqlite3")
+	sqlite, err := sql.Open("sqlite", "./data/cbdb.sqlite3")
 	if err != nil {
 		log.Fatalf("Failed to open DB: %v", err)
 	}
-	defer db.Close()
+	defer sqlite.Close()
 
-	query := repository.New(db)
-
-	c := controller.NewController(query, struct{}{})
-
-	cmd.Execute(c)
+	db := repository.New(sqlite)
+	cmd.Execute(db)
 }

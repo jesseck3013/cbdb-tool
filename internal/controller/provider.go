@@ -2,7 +2,9 @@ package controller
 
 import (
 	"context"
+	"io"
 
+	"github.com/jesseck3013/cbdb-tool/internal/model"
 	"github.com/jesseck3013/cbdb-tool/internal/repository"
 )
 
@@ -20,4 +22,5 @@ type Store interface {
 }
 
 type Renderer interface {
+	PersonByID(io.Writer, *model.Person) error
 }

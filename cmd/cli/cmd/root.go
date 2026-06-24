@@ -6,13 +6,11 @@ package cmd
 import (
 	"os"
 
-	"github.com/jesseck3013/cbdb-tool/internal/controller"
 	"github.com/jesseck3013/cbdb-tool/internal/repository"
 	"github.com/spf13/cobra"
 )
 
 var db *repository.Queries
-var c *controller.CLI
 
 var rootCmd = &cobra.Command{
 	Use:   "cbdb",
@@ -23,8 +21,8 @@ Database Project`,
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute(cli *controller.CLI) {
-	c = cli
+func Execute(query *repository.Queries) {
+	db = query
 	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)

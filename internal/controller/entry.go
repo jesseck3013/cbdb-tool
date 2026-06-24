@@ -2,9 +2,9 @@ package controller
 
 import (
 	"context"
+	"os"
 	"strconv"
 
-	"github.com/jesseck3013/cbdb-tool/internal/formatter"
 	"github.com/jesseck3013/cbdb-tool/internal/model"
 	"github.com/spf13/pflag"
 )
@@ -73,7 +73,7 @@ func (c *CLI) Person(ctx context.Context, args []string, flags *pflag.FlagSet) e
 			if err != nil {
 				return err
 			}
-			formatter.PrintPerson(person)
+			return c.Renderer.PersonByID(os.Stdout, person)
 		}
 	}
 
