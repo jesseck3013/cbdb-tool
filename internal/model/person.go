@@ -45,16 +45,16 @@ type PersonByIDInput struct {
 }
 
 type Person struct {
-	BasicInfo    repository.GetPersonBasicInfoByIDRow
-	AltNames     []repository.GetAltnamesByPersonIDRow
-	Entries      []repository.GetEntryByPersonIDRow
-	Institutions []repository.GetInstitutionByPersonIDRow
-	Postings     []repository.GetPostingByPersonIDRow
-	Status       []repository.GetStatusByPersonIDRow
-	Texts        []repository.GetTextByPersonIDRow
-	KinShips     []repository.GetPersonKinShipByPersonIDRow
-	Associations []repository.GetAssociationByPersonIDRow
-	Places       []repository.GetPlaceByPersonIDRow
+	BasicInfo    repository.GetPersonBasicInfoByIDRow       `json:"basicInfo"`
+	AltNames     []repository.GetAltnamesByPersonIDRow      `json:"altnames,omitempty"`
+	Entries      []repository.GetEntryByPersonIDRow         `json:"entries,omitempty"`
+	Institutions []repository.GetInstitutionByPersonIDRow   `json:"institutions,omitempty"`
+	Postings     []repository.GetPostingByPersonIDRow       `json:"postings,omitempty"`
+	Status       []repository.GetStatusByPersonIDRow        `json:"status,omitempty"`
+	Texts        []repository.GetTextByPersonIDRow          `json:"texts,omitempty"`
+	KinShips     []repository.GetPersonKinShipByPersonIDRow `json:"kinship,omitempty"`
+	Associations []repository.GetAssociationByPersonIDRow   `json:"associations,omitempty"`
+	Places       []repository.GetPlaceByPersonIDRow         `json:"places,omitempty"`
 }
 
 type PersonIDStore interface {
