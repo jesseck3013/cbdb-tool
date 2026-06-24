@@ -23,4 +23,5 @@ type Store interface {
 
 type Renderer interface {
 	PersonByID(io.Writer, *model.Person, []model.PersonField) error
+	PersonByName(io.Writer, []repository.GetPersonByNameRow) error
 }

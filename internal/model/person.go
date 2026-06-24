@@ -223,7 +223,11 @@ type PersonSearchResult struct {
 func (s *Service) FetchPersonByName(ctx context.Context, name string) ([]repository.GetPersonByNameRow, error) {
 	ps, err := s.store.GetPersonByName(ctx, name)
 	if err != nil {
-		return nil, err
+		if err == sql.ErrNoRows {
+			return nil, ErrPersonNameFound{name}
+		} else {
+			return nil, err
+		}
 	}
 
 	return ps, nil

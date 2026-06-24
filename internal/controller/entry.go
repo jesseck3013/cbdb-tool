@@ -54,26 +54,40 @@ func parsePersonByIDInput(id int64, flags *pflag.FlagSet) (model.PersonByIDInput
 	return input, nil
 }
 
+func (c *CLI) personByID(ctx context.Context, id int64, flags *pflag.FlagSet) error {
+	input, err := parsePersonByIDInput(id, flags)
+	if err != nil {
+		return err
+	}
+
+	person, err := c.Store.FetchPersonByID(ctx, input)
+
+	if err != nil {
+		return err
+	}
+	return c.Renderer.PersonByID(os.Stdout, person, input.Fileds)
+}
+
+func (c *CLI) personByName(ctx context.Context, name string) error {
+	ps, err := c.Store.FetchPersonByName(ctx, name)
+	if err != nil {
+		return err
+	}
+	c.Renderer.PersonByName(os.Stdout, ps)
+	return nil
+}
+
 // 1. process the input
 // 2. query data based on the input
 // 3. render the input
 func (c *CLI) Person(ctx context.Context, args []string, flags *pflag.FlagSet) error {
 	if len(args) > 0 {
-		idStr := args[0]
-		id, err := strconv.Atoi(idStr)
+		arg := args[0]
+		id, err := strconv.Atoi(arg)
 		if err == nil {
-			input, err := parsePersonByIDInput(int64(id), flags)
-
-			if err != nil {
-				return err
-			}
-
-			person, err := c.Store.FetchPersonByID(ctx, input)
-
-			if err != nil {
-				return err
-			}
-			return c.Renderer.PersonByID(os.Stdout, person, input.Fileds)
+			return c.personByID(ctx, int64(id), flags)
+		} else {
+			return c.personByName(ctx, arg)
 		}
 	}
 

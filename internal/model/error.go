@@ -9,3 +9,11 @@ type ErrPersonNotFound struct {
 func (e ErrPersonNotFound) Error() string {
 	return fmt.Sprintf("Person with ID %d not found", e.ID)
 }
+
+type ErrPersonNameFound struct {
+	Name string
+}
+
+func (e ErrPersonNameFound) Error() string {
+	return fmt.Sprintf("Person name %s not found", e.Name)
+}
