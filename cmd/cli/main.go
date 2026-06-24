@@ -13,8 +13,10 @@ import (
 )
 
 func main() {
-	// TODO: handle the DB path
-	sqlite, err := sql.Open("sqlite", "./data/cbdb.sqlite3")
+	// TODO: embed sqlite
+	dsn := "file:./data/cbdb.sqlite3?mode=ro"
+	sqlite, err := sql.Open("sqlite", dsn)
+
 	if err != nil {
 		log.Fatalf("Failed to open DB: %v", err)
 	}
