@@ -10,15 +10,15 @@ import (
 type TextRenderer struct {
 }
 
-func (t TextRenderer) PersonByID(w io.Writer, p *model.Person) error {
-	PrintPerson(w, p)
+func (t TextRenderer) PersonByID(w io.Writer, p *model.Person, fields []model.PersonField) error {
+	PrintPerson(w, p, fields)
 	return nil
 }
 
 type JSONRenderer struct {
 }
 
-func (t JSONRenderer) PersonByID(w io.Writer, p *model.Person) error {
+func (t JSONRenderer) PersonByID(w io.Writer, p *model.Person, fields []model.PersonField) error {
 	en := json.NewEncoder(w)
 	return en.Encode(p)
 }

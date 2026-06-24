@@ -73,7 +73,7 @@ func (c *CLI) Person(ctx context.Context, args []string, flags *pflag.FlagSet) e
 			if err != nil {
 				return err
 			}
-			return c.Renderer.PersonByID(os.Stdout, person)
+			return c.Renderer.PersonByID(os.Stdout, person, input.Fileds)
 		}
 	}
 

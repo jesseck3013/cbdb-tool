@@ -74,17 +74,13 @@ func printBasicInfo(info repository.GetPersonBasicInfoByIDRow) {
 	fmt.Println(profileBlock)
 }
 
-func PrintPerson(w io.Writer, person *model.Person) {
-	printBasicInfo(person.BasicInfo)
-	printAltNames(person.AltNames)
-	printStatus(person.Status)
-	printKinships(person.KinShips)
-	printAssociations(removeDupliate(person.Associations))
-	printPlaces(person.Places)
-	printEntries(person.Entries)
-	printPostings(person.Postings)
-	printInstitutions(person.Institutions)
-
+func PrintPerson(w io.Writer, person *model.Person, fields []model.PersonField) {
+	for _, field := range fields {
+		fn, ok := personByIDRegistry[field]
+		if ok {
+			fn(person)
+		}
+	}
 }
 
 func newTable(headers []string, rows [][]string) *table.Table {
@@ -248,6 +244,21 @@ func printInstitutions(insts []repository.GetInstitutionByPersonIDRow) {
 	printTable([]string{"Institution", "Role", "Period"}, rows)
 }
 
+func printTexts(insts []repository.GetTextByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Texts"))
+	rows := [][]string{}
+
+	for _, v := range insts {
+		rows = append(rows,
+			[]string{
+				safeValue(v.CTitleChn),
+				safeValue(v.CTextYear),
+			})
+	}
+
+	printTable([]string{"Title", "Year"}, rows)
+}
+
 // TODO: build a generic version
 func removeDupliate(s []repository.GetAssociationByPersonIDRow) []repository.GetAssociationByPersonIDRow {
 	set := make(map[int64]*repository.GetAssociationByPersonIDRow)
@@ -262,4 +273,37 @@ func removeDupliate(s []repository.GetAssociationByPersonIDRow) []repository.Get
 	}
 
 	return res
+}
+
+var personByIDRegistry = map[model.PersonField]func(*model.Person){
+	model.BasicInfo: func(p *model.Person) {
+		printBasicInfo(p.BasicInfo)
+	},
+	model.AltName: func(p *model.Person) {
+		printAltNames(p.AltNames)
+	},
+	model.Entry: func(p *model.Person) {
+		printEntries(p.Entries)
+	},
+	model.Institution: func(p *model.Person) {
+		printInstitutions(p.Institutions)
+	},
+	model.Posting: func(p *model.Person) {
+		printPostings(p.Postings)
+	},
+	model.Status: func(p *model.Person) {
+		printStatus(p.Status)
+	},
+	model.Text: func(p *model.Person) {
+		printTexts(p.Texts)
+	},
+	model.KinShip: func(p *model.Person) {
+		printKinships(p.KinShips)
+	},
+	model.Association: func(p *model.Person) {
+		printAssociations(removeDupliate(p.Associations))
+	},
+	model.Place: func(p *model.Person) {
+		printPlaces(p.Places)
+	},
 }
