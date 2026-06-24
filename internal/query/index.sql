@@ -1,0 +1,21 @@
+-- ALTNAME
+CREATE INDEX idx_altname_personid ON ALTNAME_DATA(c_personid);
+
+-- ENTRY
+CREATE INDEX person_idx_ENTRY_DATA ON ENTRY_DATA(c_personid);
+CREATE INDEX entry_codex_ENTRY_DATA ON ENTRY_DATA(c_entry_code);
+CREATE INDEX entry_codex_ENTRY_CODE_TYPE_REL ON ENTRY_CODE_TYPE_REL(c_entry_code);
+CREATE INDEX entry_typex_ENTRY_CODE_TYPE_REL ON ENTRY_CODE_TYPE_REL(c_entry_type);
+
+-- POSTING
+CREATE INDEX posting_person_idx_POSTING_DATA ON POSTING_DATA(c_personid);
+CREATE INDEX posting_person_idx_POSTED_TO_OFFICE_DATA ON POSTED_TO_OFFICE_DATA(c_personid);
+
+-- KINSHIP
+CREATE INDEX person_idx_KIN_DATA ON KIN_DATA(c_personid);
+
+-- ASSOCIATION
+CREATE INDEX person_idx_ASSOC_DATA ON ASSOC_DATA(c_personid);
+
+-- BIOG_MAIN
+CREATE INDEX bm_name_chnx_BIOG_MAIN ON BIOG_MAIN(c_name_chn);
