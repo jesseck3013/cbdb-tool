@@ -26,6 +26,16 @@ func NewController(store model.Store, Renderer Renderer) *CLI {
 func parsePersonByIDInput(id int64, flags *pflag.FlagSet) (model.PersonByIDInput, error) {
 	input := model.PersonByIDInput{ID: id}
 
+	all, err := flags.GetBool(string(model.All))
+	if err != nil {
+		return model.PersonByIDInput{}, err
+	}
+
+	if all {
+		input.Fileds = model.ALLPersonFileds
+		return input, nil
+	}
+
 	for _, field := range model.ALLPersonFileds {
 		v, err := flags.GetBool(string(field))
 		if err != nil {
@@ -33,6 +43,10 @@ func parsePersonByIDInput(id int64, flags *pflag.FlagSet) (model.PersonByIDInput
 		}
 
 		if v {
+			if field == model.All {
+				input.Fileds = model.ALLPersonFileds
+				break
+			}
 			input.Fileds = append(input.Fileds, field)
 		}
 	}

@@ -26,16 +26,17 @@ var personCmd = &cobra.Command{
 }
 
 func init() {
-	personCmd.Flags().Bool(string(model.AltName), false, "select basic info")
-	personCmd.Flags().Bool(string(model.Association), false, "select basic info")
-	personCmd.Flags().Bool(string(model.BasicInfo), true, "select basic info")
-	personCmd.Flags().Bool(string(model.Entry), false, "select basic info")
-	personCmd.Flags().Bool(string(model.Institution), false, "select basic info")
-	personCmd.Flags().Bool(string(model.KinShip), false, "select basic info")
-	personCmd.Flags().Bool(string(model.Place), false, "select basic info")
-	personCmd.Flags().Bool(string(model.Posting), false, "select basic info")
-	personCmd.Flags().Bool(string(model.Status), false, "select basic info")
-	personCmd.Flags().Bool(string(model.Text), false, "select basic info")
+	personCmd.Flags().Bool(string(model.All), false, "select all fields")
+	personCmd.Flags().Bool(string(model.AltName), false, "alternative names")
+	personCmd.Flags().Bool(string(model.Association), false, "non-kinship association")
+	personCmd.Flags().Bool(string(model.BasicInfo), true, "basic info")
+	personCmd.Flags().Bool(string(model.Entry), false, "modes of entry")
+	personCmd.Flags().Bool(string(model.Institution), false, "institution")
+	personCmd.Flags().Bool(string(model.KinShip), false, "kinship")
+	personCmd.Flags().Bool(string(model.Place), false, "biographical places")
+	personCmd.Flags().Bool(string(model.Posting), false, "postings and offices")
+	personCmd.Flags().Bool(string(model.Status), false, "social status")
+	personCmd.Flags().Bool(string(model.Text), false, "text")
 
 	rootCmd.AddCommand(personCmd)
 

@@ -13,6 +13,7 @@ type PersonFieldFunc func(context.Context, int64, *Person) error
 type PersonField string
 
 const (
+	All         PersonField = "all"
 	BasicInfo   PersonField = "info"
 	AltName     PersonField = "altname"
 	Entry       PersonField = "entry"
