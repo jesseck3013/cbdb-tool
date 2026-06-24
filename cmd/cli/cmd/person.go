@@ -26,9 +26,9 @@ var personCmd = &cobra.Command{
 }
 
 func init() {
-	personCmd.Flags().Bool(string(model.AltName), true, "select basic info")
+	personCmd.Flags().Bool(string(model.AltName), false, "select basic info")
 	personCmd.Flags().Bool(string(model.Association), false, "select basic info")
-	personCmd.Flags().Bool(string(model.BasicInfo), false, "select basic info")
+	personCmd.Flags().Bool(string(model.BasicInfo), true, "select basic info")
 	personCmd.Flags().Bool(string(model.Entry), false, "select basic info")
 	personCmd.Flags().Bool(string(model.Institution), false, "select basic info")
 	personCmd.Flags().Bool(string(model.KinShip), false, "select basic info")
