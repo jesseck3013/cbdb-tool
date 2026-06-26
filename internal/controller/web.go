@@ -101,3 +101,28 @@ func (web *WEB) PersonByID(w http.ResponseWriter, r *http.Request) {
 
 	w.Write(b)
 }
+
+func parseWEBPersonByNameInput(r *http.Request) string {
+	queryParams := r.URL.Query()
+	value := queryParams.Get("name")
+	return value
+}
+
+func (web *WEB) PersonByName(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+
+	input := parseWEBPersonByNameInput(r)
+	b, err := web.controller.personByName(r.Context(), input)
+
+	if err != nil {
+		if errors.As(err, &model.ErrPersonNameFound{}) {
+			w.WriteHeader(http.StatusNotFound)
+			writeMsgJson(w, err.Error())
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+			log.Println(err)
+		}
+	}
+
+	w.Write(b)
+}

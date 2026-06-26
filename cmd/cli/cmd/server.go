@@ -20,6 +20,7 @@ var serverCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		c := controller.NewWEB(db, view.JSONRenderer{})
 		http.HandleFunc("/person/{id}", c.PersonByID)
+		http.HandleFunc("/person/", c.PersonByName)
 		log.Fatal(http.ListenAndServe(":8080", nil))
 	},
 }
