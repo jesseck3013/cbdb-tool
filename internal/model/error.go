@@ -7,7 +7,7 @@ type ErrPersonNotFound struct {
 }
 
 func (e ErrPersonNotFound) Error() string {
-	return fmt.Sprintf("Person with ID %d not found", e.ID)
+	return fmt.Sprintf("Person with ID %d is not found", e.ID)
 }
 
 type ErrPersonNameFound struct {

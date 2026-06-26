@@ -1,8 +1,9 @@
 package controller
 
 import (
-	"database/sql"
+	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -77,24 +78,26 @@ func parseWEBPersonByIDInput(r *http.Request) (model.PersonByIDInput, error) {
 }
 
 func (web *WEB) PersonByID(w http.ResponseWriter, r *http.Request) {
-	input, err := parseWEBPersonByIDInput(r)
+	w.Header().Set("content-type", "application/json")
 
+	input, err := parseWEBPersonByIDInput(r)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
+		writeMsgJson(w, err.Error())
 		return
 	}
 
 	b, err := web.controller.personByID(r.Context(), input)
 	if err != nil {
-		switch err {
-		case sql.ErrNoRows:
+		if errors.As(err, &model.ErrPersonNotFound{}) {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte(err.Error()))
-		default:
+			writeMsgJson(w, err.Error())
+		} else {
 			w.WriteHeader(http.StatusInternalServerError)
+			log.Println(err)
 		}
+		return
 	}
-	w.Header().Set("content-type", "application/json")
+
 	w.Write(b)
 }
