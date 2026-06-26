@@ -3,7 +3,6 @@ package model
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/jesseck3013/cbdb-tool/internal/repository"
 )
@@ -225,8 +224,7 @@ func (s *Service) FetchPersonByID(ctx context.Context, input PersonByIDInput) (*
 				}
 			}
 		} else {
-			err := fmt.Sprintf("Developer Error: %v func is not registerd in personByIDRegistry", field)
-			panic(err)
+			return nil, ErrFieldsNotRegistered{Field: string(field)}
 		}
 	}
 
