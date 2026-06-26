@@ -258,17 +258,14 @@ func printTexts(insts []repository.GetTextByPersonIDRow) {
 	printTable([]string{"Title", "Year"}, rows)
 }
 
-// TODO: build a generic version
 func removeDupliate(s []repository.GetAssociationByPersonIDRow) []repository.GetAssociationByPersonIDRow {
-	set := make(map[int64]*repository.GetAssociationByPersonIDRow)
-	for _, v := range s {
-		set[v.AssocID] = &v
-	}
-
+	set := make(map[int64]bool)
 	res := make([]repository.GetAssociationByPersonIDRow, 0)
-
-	for _, v := range set {
-		res = append(res, *v)
+	for _, v := range s {
+		if !set[v.AssocID] {
+			set[v.AssocID] = true
+			res = append(res, v)
+		}
 	}
 
 	return res
