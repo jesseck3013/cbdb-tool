@@ -78,14 +78,14 @@ func parseWEBPersonByIDInput(r *http.Request) (model.PersonByIDInput, error) {
 
 func (web *WEB) PersonByID(w http.ResponseWriter, r *http.Request) {
 	input, err := parseWEBPersonByIDInput(r)
-	//	fmt.Println(input)
+
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
 		return
 	}
 
-	err = web.controller.personByID(r.Context(), w, input)
+	b, err := web.controller.personByID(r.Context(), input)
 	if err != nil {
 		switch err {
 		case sql.ErrNoRows:
@@ -95,4 +95,6 @@ func (web *WEB) PersonByID(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 	}
+	w.Header().Set("content-type", "application/json")
+	w.Write(b)
 }

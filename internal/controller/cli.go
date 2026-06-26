@@ -54,11 +54,22 @@ func (c *CLI) personByID(ctx context.Context, id int64, flags *pflag.FlagSet) er
 		return err
 	}
 
-	return c.controller.personByID(ctx, os.Stdout, input)
+	b, err := c.controller.personByID(ctx, input)
+	if err != nil {
+		return err
+	}
+
+	os.Stdout.Write(b)
+	return nil
 }
 
 func (c *CLI) personByName(ctx context.Context, name string) error {
-	return c.controller.personByName(ctx, os.Stdout, name)
+	b, err := c.controller.personByName(ctx, name)
+	if err != nil {
+		return err
+	}
+	os.Stdout.Write(b)
+	return nil
 }
 
 // entry point for the CLI's person command

@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"fmt"
-	"io"
 
 	"github.com/jesseck3013/cbdb-tool/internal/model"
 	"github.com/longbridgeapp/opencc"
@@ -30,13 +29,13 @@ func newController(store model.Store, Renderer Renderer) *controller {
 	return c
 }
 
-func (c *controller) personByID(ctx context.Context, w io.Writer, input model.PersonByIDInput) error {
+func (c *controller) personByID(ctx context.Context, input model.PersonByIDInput) ([]byte, error) {
 	person, err := c.Store.FetchPersonByID(ctx, input)
 
 	if err != nil {
-		return err
+		return []byte{}, err
 	}
-	return c.Renderer.PersonByID(w, person, input.Fileds)
+	return c.Renderer.PersonByID(person, input.Fileds)
 }
 
 func (c *controller) simplifiedToTraditional(in string) (string, error) {
@@ -47,16 +46,16 @@ func (c *controller) simplifiedToTraditional(in string) (string, error) {
 	return out, nil
 }
 
-func (c *controller) personByName(ctx context.Context, w io.Writer, name string) error {
+func (c *controller) personByName(ctx context.Context, name string) ([]byte, error) {
 	name, err := c.simplifiedToTraditional(name)
+	// TODO: make a custom error, because this error should not expose to client
 	if err != nil {
-		return err
+		return []byte{}, err
 	}
 
 	ps, err := c.Store.FetchPersonByName(ctx, name)
 	if err != nil {
-		return err
+		return []byte{}, err
 	}
-	c.Renderer.PersonByName(w, ps)
-	return nil
+	return c.Renderer.PersonByName(ps)
 }
