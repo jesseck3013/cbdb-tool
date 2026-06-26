@@ -28,9 +28,9 @@ var personCmd = &cobra.Command{
 		var c *controller.CLI
 		switch isJSONOutput {
 		case true:
-			c = controller.NewController(db, view.JSONRenderer{})
+			c = controller.NewCLI(db, view.JSONRenderer{})
 		default:
-			c = controller.NewController(db, view.TextRenderer{})
+			c = controller.NewCLI(db, view.TextRenderer{})
 		}
 		err = c.Person(cmd.Context(), args, cmd.Flags())
 		if err != nil {

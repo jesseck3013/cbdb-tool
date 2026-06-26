@@ -3,7 +3,7 @@ package controller
 import (
 	"context"
 	"fmt"
-	"os"
+	"io"
 
 	"github.com/jesseck3013/cbdb-tool/internal/model"
 	"github.com/longbridgeapp/opencc"
@@ -30,13 +30,13 @@ func newController(store model.Store, Renderer Renderer) *controller {
 	return c
 }
 
-func (c *controller) personByID(ctx context.Context, input model.PersonByIDInput) error {
+func (c *controller) personByID(ctx context.Context, w io.Writer, input model.PersonByIDInput) error {
 	person, err := c.Store.FetchPersonByID(ctx, input)
 
 	if err != nil {
 		return err
 	}
-	return c.Renderer.PersonByID(os.Stdout, person, input.Fileds)
+	return c.Renderer.PersonByID(w, person, input.Fileds)
 }
 
 func (c *controller) simplifiedToTraditional(in string) (string, error) {
@@ -47,7 +47,7 @@ func (c *controller) simplifiedToTraditional(in string) (string, error) {
 	return out, nil
 }
 
-func (c *controller) personByName(ctx context.Context, name string) error {
+func (c *controller) personByName(ctx context.Context, w io.Writer, name string) error {
 	name, err := c.simplifiedToTraditional(name)
 	if err != nil {
 		return err
@@ -57,6 +57,6 @@ func (c *controller) personByName(ctx context.Context, name string) error {
 	if err != nil {
 		return err
 	}
-	c.Renderer.PersonByName(os.Stdout, ps)
+	c.Renderer.PersonByName(w, ps)
 	return nil
 }

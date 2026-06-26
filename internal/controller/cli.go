@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"os"
 	"strconv"
 
 	"github.com/jesseck3013/cbdb-tool/internal/model"
@@ -20,7 +21,7 @@ func NewCLI(store model.Store, renderer Renderer) *CLI {
 	}
 }
 
-func parsePersonByIDInput(id int64, flags *pflag.FlagSet) (model.PersonByIDInput, error) {
+func parseCLIPersonByIDInput(id int64, flags *pflag.FlagSet) (model.PersonByIDInput, error) {
 	input := model.PersonByIDInput{ID: id}
 
 	all, err := flags.GetBool(string(model.All))
@@ -29,21 +30,17 @@ func parsePersonByIDInput(id int64, flags *pflag.FlagSet) (model.PersonByIDInput
 	}
 
 	if all {
-		input.Fileds = model.ALLPersonFileds
+		input.Fileds = model.GetAllPersonFieldsSlice()
 		return input, nil
 	}
 
-	for _, field := range model.ALLPersonFileds {
+	for field, _ := range model.ALLPersonFileds {
 		v, err := flags.GetBool(string(field))
 		if err != nil {
 			return model.PersonByIDInput{}, err
 		}
 
 		if v {
-			if field == model.All {
-				input.Fileds = model.ALLPersonFileds
-				break
-			}
 			input.Fileds = append(input.Fileds, field)
 		}
 	}
@@ -52,20 +49,20 @@ func parsePersonByIDInput(id int64, flags *pflag.FlagSet) (model.PersonByIDInput
 }
 
 func (c *CLI) personByID(ctx context.Context, id int64, flags *pflag.FlagSet) error {
-	input, err := parsePersonByIDInput(id, flags)
+	input, err := parseCLIPersonByIDInput(id, flags)
 	if err != nil {
 		return err
 	}
 
-	return c.controller.personByID(ctx, input)
+	return c.controller.personByID(ctx, os.Stdout, input)
 }
 
 func (c *CLI) personByName(ctx context.Context, name string) error {
-	return c.controller.personByName(ctx, name)
+	return c.controller.personByName(ctx, os.Stdout, name)
 }
 
 // entry point for the CLI's person command
-func (c *CLI) Person(ctx context.Context, args []string, flags *pflag.FlagSet) error {
+func (c *CLI) Person(ctx context.Context, args []string, flags *pflag.FlagSet) error { //
 	if len(args) > 0 {
 		arg := args[0]
 		id, err := strconv.Atoi(arg)

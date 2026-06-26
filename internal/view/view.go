@@ -36,10 +36,6 @@ func printPersonList(ps []repository.GetPersonByNameRow) {
 	printTable([]string{"ID", "Name", "Lifespan", "Dynasty", "Dynasty Years"}, rows)
 }
 
-func PrintPersonByName(w io.Writer, ps []repository.GetPersonByNameRow) {
-
-}
-
 func (t TextRenderer) PersonByName(w io.Writer, ps []repository.GetPersonByNameRow) error {
 	printPersonList(ps)
 	return nil

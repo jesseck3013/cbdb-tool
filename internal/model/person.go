@@ -26,17 +26,42 @@ const (
 	Place       PersonField = "place"
 )
 
-var ALLPersonFileds = []PersonField{
-	BasicInfo,
-	AltName,
-	Entry,
-	Institution,
-	Posting,
-	Status,
-	Text,
-	KinShip,
-	Association,
-	Place,
+var ALLPersonFileds = map[PersonField]struct{}{
+	BasicInfo:   {},
+	AltName:     {},
+	Entry:       {},
+	Institution: {},
+	Posting:     {},
+	Status:      {},
+	Text:        {},
+	KinShip:     {},
+	Association: {},
+	Place:       {},
+}
+
+func GetAllPersonFieldsSlice() []PersonField {
+	fields := make([]PersonField, 0)
+
+	for field, _ := range ALLPersonFileds {
+		fields = append(fields, field)
+	}
+
+	return fields
+}
+
+func SelectFields(fields []string) []PersonField {
+	set := make(map[PersonField]struct{}, 0)
+	set[BasicInfo] = struct{}{}
+	for _, field := range fields {
+		set[PersonField(field)] = struct{}{}
+	}
+
+	res := make([]PersonField, 0)
+	for field, _ := range set {
+		res = append(res, field)
+	}
+
+	return res
 }
 
 type PersonByIDInput struct {
