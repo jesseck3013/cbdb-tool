@@ -21,6 +21,7 @@ var serverCmd = &cobra.Command{
 		c := controller.NewWEB(db, view.JSONRenderer{})
 		http.HandleFunc("/person/{id}", c.PersonByID)
 		http.HandleFunc("/person/", c.PersonByName)
+		log.Printf("API server starts listening to port :8080")
 		log.Fatal(http.ListenAndServe(":8080", nil))
 	},
 }
