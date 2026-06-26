@@ -2,7 +2,9 @@ package view
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
+	"strconv"
 
 	"github.com/jesseck3013/cbdb-tool/internal/model"
 	"github.com/jesseck3013/cbdb-tool/internal/repository"
@@ -16,8 +18,26 @@ func (t TextRenderer) PersonByID(w io.Writer, p *model.Person, fields []model.Pe
 	return nil
 }
 
+func printPersonList(ps []repository.GetPersonByNameRow) {
+	fmt.Println(headerStyle.Render("# Found Persons"))
+	rows := [][]string{}
+
+	for _, v := range ps {
+		rows = append(rows,
+			[]string{
+				strconv.FormatInt(v.PersonID, 10),
+				joinTwoLang(safeValue(v.NameCh), safeValue(v.NameEn)),
+				joinTwoYear(safeValue(v.BirthYear), safeValue(v.DeathYear)),
+				joinTwoLang(safeValue(v.DynastyCh), safeValue(v.DynastyEn)),
+				joinTwoYear(strconv.FormatInt(int64(v.DynastyStart), 10), strconv.FormatInt(int64(v.DynastyEnd), 10)),
+			})
+	}
+
+	printTable([]string{"ID", "Name", "Lifespan", "Dynasty", "Dynasty Years"}, rows)
+}
+
 func (t TextRenderer) PersonByName(w io.Writer, ps []repository.GetPersonByNameRow) error {
-	printPersonList(w, ps)
+	printPersonList(ps)
 	return nil
 }
 

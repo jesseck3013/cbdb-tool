@@ -58,8 +58,8 @@ func joinTwoYear(lang1, lang2 string) string {
 	return fmt.Sprintf("%s - %s", lang1, lang2)
 }
 
-func printBasicInfo(w io.Writer, info repository.GetPersonBasicInfoByIDRow) {
-	fmt.Fprintln(w, headerStyle.Render("# Profile"))
+func printBasicInfo(info repository.GetPersonBasicInfoByIDRow) {
+	fmt.Println(headerStyle.Render("# Profile"))
 	rows := []string{
 		renderLine(" ID:", strconv.FormatInt(info.PersonID, 10)),
 		renderLine(" Name:", joinTwoLang(safeValue(info.NameCh), safeValue(info.NameEn))),
@@ -71,14 +71,14 @@ func printBasicInfo(w io.Writer, info repository.GetPersonBasicInfoByIDRow) {
 
 	profileBlock := lipgloss.JoinVertical(lipgloss.Left, rows...)
 
-	fmt.Fprintln(w, profileBlock)
+	fmt.Println(profileBlock)
 }
 
 func PrintPerson(w io.Writer, person *model.Person, fields []model.PersonField) {
 	for _, field := range fields {
 		fn, ok := personByIDRegistry[field]
 		if ok {
-			fn(w, person)
+			fn(person)
 		}
 	}
 }
@@ -102,19 +102,23 @@ func newTable(headers []string, rows [][]string) *table.Table {
 	return t
 }
 
-func printTable(w io.Writer, headers []string, rows [][]string) {
+func printTable(headers []string, rows [][]string) {
 	if len(rows) == 0 {
-		fmt.Fprintln(w, valueStyle.Render("Data not found"))
-		fmt.Fprintln(w, "")
+		// t := newTable(headers, [][]string{
+		// 	{"No data found in the database"},
+		// })
+		// lipgloss.Println(t)
+		fmt.Println(valueStyle.Render("Data not found"))
+		fmt.Println("")
 		return
 	}
 
 	t := newTable(headers, rows)
-	lipgloss.Fprintln(w, t)
+	lipgloss.Println(t)
 }
 
-func printAltNames(w io.Writer, names []repository.GetAltnamesByPersonIDRow) {
-	fmt.Fprintln(w, headerStyle.Render("# Alternative Names"))
+func printAltNames(names []repository.GetAltnamesByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Alternative Names"))
 	rows := [][]string{}
 
 	for _, name := range names {
@@ -125,11 +129,11 @@ func printAltNames(w io.Writer, names []repository.GetAltnamesByPersonIDRow) {
 			})
 	}
 
-	printTable(w, []string{"Type", "Alternative Name"}, rows)
+	printTable([]string{"Type", "Alternative Name"}, rows)
 }
 
-func printKinships(w io.Writer, kinships []repository.GetPersonKinShipByPersonIDRow) {
-	fmt.Fprintln(w, headerStyle.Render("# Kinship"))
+func printKinships(kinships []repository.GetPersonKinShipByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Kinship"))
 	rows := [][]string{}
 
 	for _, kinship := range kinships {
@@ -141,11 +145,11 @@ func printKinships(w io.Writer, kinships []repository.GetPersonKinShipByPersonID
 			})
 	}
 
-	printTable(w, []string{"ID", "Name", "Type"}, rows)
+	printTable([]string{"ID", "Name", "Type"}, rows)
 }
 
-func printAssociations(w io.Writer, associations []repository.GetAssociationByPersonIDRow) {
-	fmt.Fprintln(w, headerStyle.Render("# Associations"))
+func printAssociations(associations []repository.GetAssociationByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Associations"))
 	rows := [][]string{}
 
 	for _, association := range associations {
@@ -157,11 +161,11 @@ func printAssociations(w io.Writer, associations []repository.GetAssociationByPe
 			})
 	}
 
-	printTable(w, []string{"ID", "Name", "Type"}, rows)
+	printTable([]string{"ID", "Name", "Type"}, rows)
 }
 
-func printStatus(w io.Writer, status []repository.GetStatusByPersonIDRow) {
-	fmt.Fprintln(w, headerStyle.Render("# Status"))
+func printStatus(status []repository.GetStatusByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Status"))
 	rows := [][]string{}
 
 	for _, v := range status {
@@ -171,11 +175,11 @@ func printStatus(w io.Writer, status []repository.GetStatusByPersonIDRow) {
 			})
 	}
 
-	printTable(w, []string{"Status"}, rows)
+	printTable([]string{"Status"}, rows)
 }
 
-func printPlaces(w io.Writer, places []repository.GetPlaceByPersonIDRow) {
-	fmt.Fprintln(w, headerStyle.Render("# Biographical Place Information"))
+func printPlaces(places []repository.GetPlaceByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Biographical Place Information"))
 	rows := [][]string{}
 
 	for _, v := range places {
@@ -187,11 +191,11 @@ func printPlaces(w io.Writer, places []repository.GetPlaceByPersonIDRow) {
 			})
 	}
 
-	printTable(w, []string{"Place", "Type", "Period"}, rows)
+	printTable([]string{"Place", "Type", "Period"}, rows)
 }
 
-func printEntries(w io.Writer, entries []repository.GetEntryByPersonIDRow) {
-	fmt.Fprintln(w, headerStyle.Render("# Modes of Entry"))
+func printEntries(entries []repository.GetEntryByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Modes of Entry"))
 	rows := [][]string{}
 
 	for _, v := range entries {
@@ -204,11 +208,11 @@ func printEntries(w io.Writer, entries []repository.GetEntryByPersonIDRow) {
 			})
 	}
 
-	printTable(w, []string{"Mode of Entry", "Year", "Age", "Exam Rank"}, rows)
+	printTable([]string{"Mode of Entry", "Year", "Age", "Exam Rank"}, rows)
 }
 
-func printPostings(w io.Writer, postings []repository.GetPostingByPersonIDRow) {
-	fmt.Fprintln(w, headerStyle.Render("# Offices and Postings"))
+func printPostings(postings []repository.GetPostingByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Offices and Postings"))
 	rows := [][]string{}
 
 	for _, v := range postings {
@@ -220,11 +224,11 @@ func printPostings(w io.Writer, postings []repository.GetPostingByPersonIDRow) {
 			})
 	}
 
-	printTable(w, []string{"Office", "Type", "Period"}, rows)
+	printTable([]string{"Office", "Type", "Period"}, rows)
 }
 
-func printInstitutions(w io.Writer, insts []repository.GetInstitutionByPersonIDRow) {
-	fmt.Fprintln(w, headerStyle.Render("# Social Institutions"))
+func printInstitutions(insts []repository.GetInstitutionByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Social Institutions"))
 	rows := [][]string{}
 
 	for _, v := range insts {
@@ -236,11 +240,11 @@ func printInstitutions(w io.Writer, insts []repository.GetInstitutionByPersonIDR
 			})
 	}
 
-	printTable(w, []string{"Institution", "Role", "Period"}, rows)
+	printTable([]string{"Institution", "Role", "Period"}, rows)
 }
 
-func printTexts(w io.Writer, insts []repository.GetTextByPersonIDRow) {
-	fmt.Fprintln(w, headerStyle.Render("# Texts"))
+func printTexts(insts []repository.GetTextByPersonIDRow) {
+	fmt.Println(headerStyle.Render("# Texts"))
 	rows := [][]string{}
 
 	for _, v := range insts {
@@ -251,7 +255,7 @@ func printTexts(w io.Writer, insts []repository.GetTextByPersonIDRow) {
 			})
 	}
 
-	printTable(w, []string{"Title", "Year"}, rows)
+	printTable([]string{"Title", "Year"}, rows)
 }
 
 // TODO: build a generic version
@@ -270,35 +274,35 @@ func removeDupliate(s []repository.GetAssociationByPersonIDRow) []repository.Get
 	return res
 }
 
-var personByIDRegistry = map[model.PersonField]func(io.Writer, *model.Person){
-	model.BasicInfo: func(w io.Writer, p *model.Person) {
-		printBasicInfo(w, p.BasicInfo)
+var personByIDRegistry = map[model.PersonField]func(*model.Person){
+	model.BasicInfo: func(p *model.Person) {
+		printBasicInfo(p.BasicInfo)
 	},
-	model.AltName: func(w io.Writer, p *model.Person) {
-		printAltNames(w, p.AltNames)
+	model.AltName: func(p *model.Person) {
+		printAltNames(p.AltNames)
 	},
-	model.Entry: func(w io.Writer, p *model.Person) {
-		printEntries(w, p.Entries)
+	model.Entry: func(p *model.Person) {
+		printEntries(p.Entries)
 	},
-	model.Institution: func(w io.Writer, p *model.Person) {
-		printInstitutions(w, p.Institutions)
+	model.Institution: func(p *model.Person) {
+		printInstitutions(p.Institutions)
 	},
-	model.Posting: func(w io.Writer, p *model.Person) {
-		printPostings(w, p.Postings)
+	model.Posting: func(p *model.Person) {
+		printPostings(p.Postings)
 	},
-	model.Status: func(w io.Writer, p *model.Person) {
-		printStatus(w, p.Status)
+	model.Status: func(p *model.Person) {
+		printStatus(p.Status)
 	},
-	model.Text: func(w io.Writer, p *model.Person) {
-		printTexts(w, p.Texts)
+	model.Text: func(p *model.Person) {
+		printTexts(p.Texts)
 	},
-	model.KinShip: func(w io.Writer, p *model.Person) {
-		printKinships(w, p.KinShips)
+	model.KinShip: func(p *model.Person) {
+		printKinships(p.KinShips)
 	},
-	model.Association: func(w io.Writer, p *model.Person) {
-		printAssociations(w, removeDupliate(p.Associations))
+	model.Association: func(p *model.Person) {
+		printAssociations(removeDupliate(p.Associations))
 	},
-	model.Place: func(w io.Writer, p *model.Person) {
-		printPlaces(w, p.Places)
+	model.Place: func(p *model.Person) {
+		printPlaces(p.Places)
 	},
 }
