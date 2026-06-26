@@ -48,7 +48,6 @@ func (c *controller) simplifiedToTraditional(in string) (string, error) {
 
 func (c *controller) personByName(ctx context.Context, name string) ([]byte, error) {
 	name, err := c.simplifiedToTraditional(name)
-	// TODO: make a custom error, because this error should not expose to client
 	if err != nil {
 		return []byte{}, err
 	}
