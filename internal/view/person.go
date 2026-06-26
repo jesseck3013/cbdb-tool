@@ -105,11 +105,11 @@ func newTable(headers []string, rows [][]string) *table.Table {
 
 func printTable(headers []string, rows [][]string) string {
 	if len(rows) == 0 {
-		return valueStyle.Render("Data not found")
+		return valueStyle.Render("No data is found\n")
 	}
 
 	t := newTable(headers, rows)
-	return t.String()
+	return t.String() + "\n"
 }
 
 func printAltNames(names []repository.GetAltnamesByPersonIDRow) string {
