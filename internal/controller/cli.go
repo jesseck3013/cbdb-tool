@@ -2,34 +2,22 @@ package controller
 
 import (
 	"context"
-	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/jesseck3013/cbdb-tool/internal/model"
-	"github.com/longbridgeapp/opencc"
 	"github.com/spf13/pflag"
 )
 
 type CLI struct {
-	Store    *model.Service
-	Renderer Renderer
-	cc       *opencc.OpenCC
+	controller *controller
 }
 
-func NewController(store model.Store, Renderer Renderer) *CLI {
-	cc, err := opencc.New("s2t")
-	if err != nil {
-		msg := fmt.Sprintf("Failed to initialized opencc: %v", err)
-		panic(msg)
-	}
-	c := &CLI{
-		Store:    model.NewSerice(store),
-		Renderer: Renderer,
-		cc:       cc,
-	}
+func NewCLI(store model.Store, renderer Renderer) *CLI {
+	ctrl := newController(store, renderer)
 
-	return c
+	return &CLI{
+		controller: ctrl,
+	}
 }
 
 func parsePersonByIDInput(id int64, flags *pflag.FlagSet) (model.PersonByIDInput, error) {
@@ -69,39 +57,14 @@ func (c *CLI) personByID(ctx context.Context, id int64, flags *pflag.FlagSet) er
 		return err
 	}
 
-	person, err := c.Store.FetchPersonByID(ctx, input)
-
-	if err != nil {
-		return err
-	}
-	return c.Renderer.PersonByID(os.Stdout, person, input.Fileds)
-}
-
-func simplifiedToTraditional(cc *opencc.OpenCC, in string) (string, error) {
-	out, err := cc.Convert(in)
-	if err != nil {
-		return "", err
-	}
-	return out, nil
+	return c.controller.personByID(ctx, input)
 }
 
 func (c *CLI) personByName(ctx context.Context, name string) error {
-	name, err := simplifiedToTraditional(c.cc, name)
-	if err != nil {
-		return err
-	}
-
-	ps, err := c.Store.FetchPersonByName(ctx, name)
-	if err != nil {
-		return err
-	}
-	c.Renderer.PersonByName(os.Stdout, ps)
-	return nil
+	return c.controller.personByName(ctx, name)
 }
 
-// 1. process the input
-// 2. query data based on the input
-// 3. render the input
+// entry point for the CLI's person command
 func (c *CLI) Person(ctx context.Context, args []string, flags *pflag.FlagSet) error {
 	if len(args) > 0 {
 		arg := args[0]
