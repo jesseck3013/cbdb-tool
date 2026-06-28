@@ -12,23 +12,21 @@ import (
 )
 
 type WEB struct {
-	controller *controller
+	controller Controller
 }
 
-func NewWEB(store model.Store, renderer Renderer) *WEB {
-	ctrl := newController(store, renderer)
-
+func NewWEB(c Controller) *WEB {
 	return &WEB{
-		controller: ctrl,
+		controller: c,
 	}
 }
 
-type errInvalidID struct {
-	id string
+type ErrInvalidID struct {
+	ID string
 }
 
-func (e errInvalidID) Error() string {
-	return fmt.Sprintf("Person ID should be integer, received input: %s", e.id)
+func (e ErrInvalidID) Error() string {
+	return fmt.Sprintf("Person ID should be integer, received input: %s", e.ID)
 }
 
 type errInvalidField struct {
@@ -43,7 +41,7 @@ func parseWEBPersonByIDInput(r *http.Request) (model.PersonByIDInput, error) {
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		return model.PersonByIDInput{}, errInvalidID{id: idStr}
+		return model.PersonByIDInput{}, ErrInvalidID{ID: idStr}
 	}
 
 	queryParams := r.URL.Query()
@@ -58,9 +56,8 @@ func parseWEBPersonByIDInput(r *http.Request) (model.PersonByIDInput, error) {
 				ID:     int64(id),
 				Fileds: model.GetAllPersonFieldsSlice(),
 			}, nil
-
-		} else if field == "" || field == " " {
-
+		} else if field == "" {
+			continue
 		} else {
 			_, ok := model.ALLPersonFileds[model.PersonField(field)]
 			if !ok {

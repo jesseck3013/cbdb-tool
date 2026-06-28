@@ -10,14 +10,12 @@ import (
 )
 
 type CLI struct {
-	controller *controller
+	controller Controller
 }
 
-func NewCLI(store model.Store, renderer Renderer) *CLI {
-	ctrl := newController(store, renderer)
-
+func NewCLI(c Controller) *CLI {
 	return &CLI{
-		controller: ctrl,
+		controller: c,
 	}
 }
 

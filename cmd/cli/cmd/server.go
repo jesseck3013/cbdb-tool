@@ -18,7 +18,8 @@ var serverCmd = &cobra.Command{
 	Short: "start the web API server",
 	Long:  `start the web API server`,
 	Run: func(cmd *cobra.Command, args []string) {
-		c := controller.NewWEB(db, view.JSONRenderer{})
+		ps := controller.NewPersonService(db, view.JSONRenderer{})
+		c := controller.NewWEB(ps)
 		http.HandleFunc("/person/{id}", c.PersonByID)
 		http.HandleFunc("/person/", c.PersonByName)
 		log.Printf("API server starts listening to port :8080")
