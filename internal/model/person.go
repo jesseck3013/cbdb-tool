@@ -233,12 +233,12 @@ func (s *Service) FetchPersonByID(ctx context.Context, input PersonByIDInput) (*
 
 type PersonSearchResult struct {
 	ID         int64  `json:"id"`
-	Name       string `json:name,omitempty`
-	NameChn    string `json:"nameChn,omitempty"`
-	BirthYear  int16  `json:"birthYear,omitempty"`
-	DeathYear  int16  `json:"deathYear,omitempty"`
-	Dynasty    string `json:"dynasty,omitempty"`
-	DynastyChn string `json:"dynastyChn,omitempty"`
+	Name       string `json:"name"`
+	NameChn    string `json:"nameChn"`
+	BirthYear  int16  `json:"birthYear"`
+	DeathYear  int16  `json:"deathYear"`
+	Dynasty    string `json:"dynasty"`
+	DynastyChn string `json:"dynastyChn"`
 	Start      int16  `json:"start"`
 	End        int16  `json:"end"`
 }
