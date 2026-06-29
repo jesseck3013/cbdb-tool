@@ -29,12 +29,12 @@ func (e ErrInvalidID) Error() string {
 	return fmt.Sprintf("Person ID should be integer, received input: %s", e.ID)
 }
 
-type errInvalidField struct {
-	field string
+type ErrInvalidField struct {
+	Field string
 }
 
-func (e errInvalidField) Error() string {
-	return fmt.Sprintf("Invalid field %s", e.field)
+func (e ErrInvalidField) Error() string {
+	return fmt.Sprintf("Invalid field %s", e.Field)
 }
 
 func parseWEBPersonByIDInput(r *http.Request) (model.PersonByIDInput, error) {
@@ -61,7 +61,7 @@ func parseWEBPersonByIDInput(r *http.Request) (model.PersonByIDInput, error) {
 		} else {
 			_, ok := model.ALLPersonFileds[model.PersonField(field)]
 			if !ok {
-				return model.PersonByIDInput{}, errInvalidField{field: field}
+				return model.PersonByIDInput{}, ErrInvalidField{Field: field}
 			} else {
 				validFields = append(validFields, field)
 			}
@@ -84,7 +84,7 @@ func (web *WEB) PersonByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	b, err := web.controller.personByID(r.Context(), input)
+	b, err := web.controller.PersonByID(r.Context(), input)
 	if err != nil {
 		if errors.As(err, &model.ErrPersonNotFound{}) {
 			w.WriteHeader(http.StatusNotFound)
@@ -109,7 +109,7 @@ func (web *WEB) PersonByName(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 
 	input := parseWEBPersonByNameInput(r)
-	b, err := web.controller.personByName(r.Context(), input)
+	b, err := web.controller.PersonByName(r.Context(), input)
 
 	if err != nil {
 		if errors.As(err, &model.ErrPersonNameFound{}) {

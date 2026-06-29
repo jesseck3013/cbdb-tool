@@ -52,7 +52,7 @@ func (c *CLI) personByID(ctx context.Context, id int64, flags *pflag.FlagSet) er
 		return err
 	}
 
-	b, err := c.controller.personByID(ctx, input)
+	b, err := c.controller.PersonByID(ctx, input)
 	if err != nil {
 		return err
 	}
@@ -62,7 +62,7 @@ func (c *CLI) personByID(ctx context.Context, id int64, flags *pflag.FlagSet) er
 }
 
 func (c *CLI) personByName(ctx context.Context, name string) error {
-	b, err := c.controller.personByName(ctx, name)
+	b, err := c.controller.PersonByName(ctx, name)
 	if err != nil {
 		return err
 	}
