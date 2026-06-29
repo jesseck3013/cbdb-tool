@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -23,6 +24,9 @@ func (m *MockController) PersonByID(ctx context.Context, input model.PersonByIDI
 }
 
 func (m *MockController) PersonByName(ctx context.Context, name string) ([]byte, error) {
+	if name == "invalid" {
+		return []byte{}, model.ErrPersonNameFound{Name: name}
+	}
 	return []byte{}, nil
 }
 
@@ -99,6 +103,32 @@ func TestPersonByIDHandler(t *testing.T) {
 		field := "all"
 		invalidPath := path + "?fields=" + field
 		resp := makeRequest(t, server.PersonByID, invalidPath, pathValueName, "100")
+		assertStatsCode(t, http.StatusOK, resp.Code)
+	})
+}
+
+func TestPersonByIDName(t *testing.T) {
+	server := controller.NewWEB(&MockController{})
+	path := "/person"
+
+	t.Run("Expect not found", func(t *testing.T) {
+		name := "invalid"
+		queryParams := fmt.Sprintf("?name=%s", name)
+		pathWithParams := path + queryParams
+
+		resp := makeRequest(t, server.PersonByName, pathWithParams, "", "")
+		assertStatsCode(t, http.StatusNotFound, resp.Code)
+
+		want := model.ErrPersonNameFound{Name: name}
+		assertError(t, want, resp.Body)
+	})
+
+	t.Run("Expect ok", func(t *testing.T) {
+		name := "valid"
+		queryParams := fmt.Sprintf("?name=%s", name)
+		pathWithParams := path + queryParams
+
+		resp := makeRequest(t, server.PersonByName, pathWithParams, "", "")
 		assertStatsCode(t, http.StatusOK, resp.Code)
 	})
 }
