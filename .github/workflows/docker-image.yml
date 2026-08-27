@@ -37,9 +37,9 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v7
       with:
-        push: false
+        push: true
         context: .
-        provenance: false
+        file: ./Dockerfile
         tags: |
           ${{ vars.FREEKICK_REGISTRY_DOMAIN }}/temp:latest
           ${{ vars.FREEKICK_REGISTRY_DOMAIN }}/temp:${{ github.sha }}
