@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
     - name: Download SQLite Database
       run: |
           mkdir -p data
@@ -41,5 +44,5 @@ jobs:
         context: .
         file: ./Dockerfile
         tags: |
-          ${{ vars.FREEKICK_REGISTRY_DOMAIN }}/temp:latest
-          ${{ vars.FREEKICK_REGISTRY_DOMAIN }}/temp:${{ github.sha }}
+          ${{ vars.FREEKICK_REGISTRY_DOMAIN }}/cbdb:latest
+          ${{ vars.FREEKICK_REGISTRY_DOMAIN }}/cbdb:${{ github.sha }}
