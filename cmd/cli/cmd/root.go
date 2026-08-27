@@ -25,6 +25,10 @@ var rootCmd = &cobra.Command{
 	Long: `A query tool for the sqlite databse of China Biographical
 Database Project`,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		if cmd.Annotations["skip-db"] == "true" {
+			return nil
+		}
+
 		dsn := "file:" + dbPath + "?mode=ro"
 
 		var err error
