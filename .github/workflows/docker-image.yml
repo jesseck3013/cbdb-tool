@@ -23,10 +23,6 @@ jobs:
           rm data/latest.zip
           mv data/*.sqlite3 data/cbdb.sqlite3
 
-    - name: unzip
-      run: |
-        curl -L https://huggingface.co/datasets/cbdb/cbdb-sqlite/resolve/main/latest.zip -o data/cbdb.sqlite3
-
     - name: Login to Registry
       uses: docker/login-action@v4
       with:
