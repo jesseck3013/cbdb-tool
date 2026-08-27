@@ -3,7 +3,6 @@ package model
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/jesseck3013/cbdb-tool/internal/repository"
 )
@@ -26,17 +25,42 @@ const (
 	Place       PersonField = "place"
 )
 
-var ALLPersonFileds = []PersonField{
-	BasicInfo,
-	AltName,
-	Entry,
-	Institution,
-	Posting,
-	Status,
-	Text,
-	KinShip,
-	Association,
-	Place,
+var ALLPersonFileds = map[PersonField]struct{}{
+	BasicInfo:   {},
+	AltName:     {},
+	Entry:       {},
+	Institution: {},
+	Posting:     {},
+	Status:      {},
+	Text:        {},
+	KinShip:     {},
+	Association: {},
+	Place:       {},
+}
+
+func GetAllPersonFieldsSlice() []PersonField {
+	fields := make([]PersonField, 0)
+
+	for field, _ := range ALLPersonFileds {
+		fields = append(fields, field)
+	}
+
+	return fields
+}
+
+func SelectFields(fields []string) []PersonField {
+	set := make(map[PersonField]struct{}, 0)
+	set[BasicInfo] = struct{}{}
+	for _, field := range fields {
+		set[PersonField(field)] = struct{}{}
+	}
+
+	res := make([]PersonField, 0)
+	for field, _ := range set {
+		res = append(res, field)
+	}
+
+	return res
 }
 
 type PersonByIDInput struct {
@@ -200,8 +224,7 @@ func (s *Service) FetchPersonByID(ctx context.Context, input PersonByIDInput) (*
 				}
 			}
 		} else {
-			err := fmt.Sprintf("Developer Error: %v func is not registerd in personByIDRegistry", field)
-			panic(err)
+			return nil, ErrFieldsNotRegistered{Field: string(field)}
 		}
 	}
 
@@ -210,12 +233,12 @@ func (s *Service) FetchPersonByID(ctx context.Context, input PersonByIDInput) (*
 
 type PersonSearchResult struct {
 	ID         int64  `json:"id"`
-	Name       string `json:name,omitempty`
-	NameChn    string `json:"nameChn,omitempty"`
-	BirthYear  int16  `json:"birthYear,omitempty"`
-	DeathYear  int16  `json:"deathYear,omitempty"`
-	Dynasty    string `json:"dynasty,omitempty"`
-	DynastyChn string `json:"dynastyChn,omitempty"`
+	Name       string `json:"name"`
+	NameChn    string `json:"nameChn"`
+	BirthYear  int16  `json:"birthYear"`
+	DeathYear  int16  `json:"deathYear"`
+	Dynasty    string `json:"dynasty"`
+	DynastyChn string `json:"dynastyChn"`
 	Start      int16  `json:"start"`
 	End        int16  `json:"end"`
 }

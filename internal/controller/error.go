@@ -1,11 +1,27 @@
 package controller
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	"io"
+	"log"
+)
 
-type ErrPersonNotFound struct {
-	ID int64
+type ErrMsg struct {
+	Msg string `json:"error"`
 }
 
-func (e ErrPersonNotFound) Error() string {
-	return fmt.Sprintf("Person with ID %d not found", e.ID)
+func NewErrMsg(msg string) ErrMsg {
+	return ErrMsg{
+		Msg: msg,
+	}
+}
+
+func writeMsgJson(w io.Writer, msg string) {
+	enc := json.NewEncoder(w)
+	err := enc.Encode(NewErrMsg(msg))
+	if err != nil {
+		m := fmt.Sprintf("Failed to encode error msg into json: %v", err)
+		log.Println(m)
+	}
 }

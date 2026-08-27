@@ -2,7 +2,6 @@ package view
 
 import (
 	"fmt"
-	"io"
 	"strconv"
 
 	"charm.land/lipgloss/v2"
@@ -58,8 +57,8 @@ func joinTwoYear(lang1, lang2 string) string {
 	return fmt.Sprintf("%s - %s", lang1, lang2)
 }
 
-func printBasicInfo(info repository.GetPersonBasicInfoByIDRow) {
-	fmt.Println(headerStyle.Render("# Profile"))
+func printBasicInfo(info repository.GetPersonBasicInfoByIDRow) string {
+	header := headerStyle.Render("# Profile")
 	rows := []string{
 		renderLine(" ID:", strconv.FormatInt(info.PersonID, 10)),
 		renderLine(" Name:", joinTwoLang(safeValue(info.NameCh), safeValue(info.NameEn))),
@@ -71,16 +70,18 @@ func printBasicInfo(info repository.GetPersonBasicInfoByIDRow) {
 
 	profileBlock := lipgloss.JoinVertical(lipgloss.Left, rows...)
 
-	fmt.Println(profileBlock)
+	return lipgloss.JoinVertical(lipgloss.Left, header, profileBlock)
 }
 
-func PrintPerson(w io.Writer, person *model.Person, fields []model.PersonField) {
+func PrintPerson(person *model.Person, fields []model.PersonField) string {
+	var res = ""
 	for _, field := range fields {
 		fn, ok := personByIDRegistry[field]
 		if ok {
-			fn(person)
+			res = lipgloss.JoinVertical(lipgloss.Left, res, fn(person))
 		}
 	}
+	return res
 }
 
 func newTable(headers []string, rows [][]string) *table.Table {
@@ -102,23 +103,17 @@ func newTable(headers []string, rows [][]string) *table.Table {
 	return t
 }
 
-func printTable(headers []string, rows [][]string) {
+func printTable(headers []string, rows [][]string) string {
 	if len(rows) == 0 {
-		// t := newTable(headers, [][]string{
-		// 	{"No data found in the database"},
-		// })
-		// lipgloss.Println(t)
-		fmt.Println(valueStyle.Render("Data not found"))
-		fmt.Println("")
-		return
+		return valueStyle.Render("No data is found\n")
 	}
 
 	t := newTable(headers, rows)
-	lipgloss.Println(t)
+	return t.String() + "\n"
 }
 
-func printAltNames(names []repository.GetAltnamesByPersonIDRow) {
-	fmt.Println(headerStyle.Render("# Alternative Names"))
+func printAltNames(names []repository.GetAltnamesByPersonIDRow) string {
+	header := headerStyle.Render("# Alternative Names")
 	rows := [][]string{}
 
 	for _, name := range names {
@@ -129,11 +124,12 @@ func printAltNames(names []repository.GetAltnamesByPersonIDRow) {
 			})
 	}
 
-	printTable([]string{"Type", "Alternative Name"}, rows)
+	t := printTable([]string{"Type", "Alternative Name"}, rows)
+	return lipgloss.JoinVertical(lipgloss.Left, header, t)
 }
 
-func printKinships(kinships []repository.GetPersonKinShipByPersonIDRow) {
-	fmt.Println(headerStyle.Render("# Kinship"))
+func printKinships(kinships []repository.GetPersonKinShipByPersonIDRow) string {
+	header := headerStyle.Render("# Kinship")
 	rows := [][]string{}
 
 	for _, kinship := range kinships {
@@ -145,11 +141,12 @@ func printKinships(kinships []repository.GetPersonKinShipByPersonIDRow) {
 			})
 	}
 
-	printTable([]string{"ID", "Name", "Type"}, rows)
+	t := printTable([]string{"ID", "Name", "Type"}, rows)
+	return lipgloss.JoinVertical(lipgloss.Left, header, t)
 }
 
-func printAssociations(associations []repository.GetAssociationByPersonIDRow) {
-	fmt.Println(headerStyle.Render("# Associations"))
+func printAssociations(associations []repository.GetAssociationByPersonIDRow) string {
+	header := headerStyle.Render("# Associations")
 	rows := [][]string{}
 
 	for _, association := range associations {
@@ -161,11 +158,12 @@ func printAssociations(associations []repository.GetAssociationByPersonIDRow) {
 			})
 	}
 
-	printTable([]string{"ID", "Name", "Type"}, rows)
+	t := printTable([]string{"ID", "Name", "Type"}, rows)
+	return lipgloss.JoinVertical(lipgloss.Left, header, t)
 }
 
-func printStatus(status []repository.GetStatusByPersonIDRow) {
-	fmt.Println(headerStyle.Render("# Status"))
+func printStatus(status []repository.GetStatusByPersonIDRow) string {
+	header := headerStyle.Render("# Status")
 	rows := [][]string{}
 
 	for _, v := range status {
@@ -175,11 +173,12 @@ func printStatus(status []repository.GetStatusByPersonIDRow) {
 			})
 	}
 
-	printTable([]string{"Status"}, rows)
+	t := printTable([]string{"Status"}, rows)
+	return lipgloss.JoinVertical(lipgloss.Left, header, t)
 }
 
-func printPlaces(places []repository.GetPlaceByPersonIDRow) {
-	fmt.Println(headerStyle.Render("# Biographical Place Information"))
+func printPlaces(places []repository.GetPlaceByPersonIDRow) string {
+	header := headerStyle.Render("# Biographical Place Information")
 	rows := [][]string{}
 
 	for _, v := range places {
@@ -191,11 +190,12 @@ func printPlaces(places []repository.GetPlaceByPersonIDRow) {
 			})
 	}
 
-	printTable([]string{"Place", "Type", "Period"}, rows)
+	t := printTable([]string{"Place", "Type", "Period"}, rows)
+	return lipgloss.JoinVertical(lipgloss.Left, header, t)
 }
 
-func printEntries(entries []repository.GetEntryByPersonIDRow) {
-	fmt.Println(headerStyle.Render("# Modes of Entry"))
+func printEntries(entries []repository.GetEntryByPersonIDRow) string {
+	header := headerStyle.Render("# Modes of Entry")
 	rows := [][]string{}
 
 	for _, v := range entries {
@@ -208,11 +208,12 @@ func printEntries(entries []repository.GetEntryByPersonIDRow) {
 			})
 	}
 
-	printTable([]string{"Mode of Entry", "Year", "Age", "Exam Rank"}, rows)
+	t := printTable([]string{"Mode of Entry", "Year", "Age", "Exam Rank"}, rows)
+	return lipgloss.JoinVertical(lipgloss.Left, header, t)
 }
 
-func printPostings(postings []repository.GetPostingByPersonIDRow) {
-	fmt.Println(headerStyle.Render("# Offices and Postings"))
+func printPostings(postings []repository.GetPostingByPersonIDRow) string {
+	header := headerStyle.Render("# Offices and Postings")
 	rows := [][]string{}
 
 	for _, v := range postings {
@@ -224,11 +225,12 @@ func printPostings(postings []repository.GetPostingByPersonIDRow) {
 			})
 	}
 
-	printTable([]string{"Office", "Type", "Period"}, rows)
+	t := printTable([]string{"Office", "Type", "Period"}, rows)
+	return lipgloss.JoinVertical(lipgloss.Left, header, t)
 }
 
-func printInstitutions(insts []repository.GetInstitutionByPersonIDRow) {
-	fmt.Println(headerStyle.Render("# Social Institutions"))
+func printInstitutions(insts []repository.GetInstitutionByPersonIDRow) string {
+	header := headerStyle.Render("# Social Institutions")
 	rows := [][]string{}
 
 	for _, v := range insts {
@@ -240,11 +242,12 @@ func printInstitutions(insts []repository.GetInstitutionByPersonIDRow) {
 			})
 	}
 
-	printTable([]string{"Institution", "Role", "Period"}, rows)
+	t := printTable([]string{"Institution", "Role", "Period"}, rows)
+	return lipgloss.JoinVertical(lipgloss.Left, header, t)
 }
 
-func printTexts(insts []repository.GetTextByPersonIDRow) {
-	fmt.Println(headerStyle.Render("# Texts"))
+func printTexts(insts []repository.GetTextByPersonIDRow) string {
+	header := headerStyle.Render("# Texts")
 	rows := [][]string{}
 
 	for _, v := range insts {
@@ -255,54 +258,52 @@ func printTexts(insts []repository.GetTextByPersonIDRow) {
 			})
 	}
 
-	printTable([]string{"Title", "Year"}, rows)
+	t := printTable([]string{"Title", "Year"}, rows)
+	return lipgloss.JoinVertical(lipgloss.Left, header, t)
 }
 
-// TODO: build a generic version
 func removeDupliate(s []repository.GetAssociationByPersonIDRow) []repository.GetAssociationByPersonIDRow {
-	set := make(map[int64]*repository.GetAssociationByPersonIDRow)
-	for _, v := range s {
-		set[v.AssocID] = &v
-	}
-
+	set := make(map[int64]bool)
 	res := make([]repository.GetAssociationByPersonIDRow, 0)
-
-	for _, v := range set {
-		res = append(res, *v)
+	for _, v := range s {
+		if !set[v.AssocID] {
+			set[v.AssocID] = true
+			res = append(res, v)
+		}
 	}
 
 	return res
 }
 
-var personByIDRegistry = map[model.PersonField]func(*model.Person){
-	model.BasicInfo: func(p *model.Person) {
-		printBasicInfo(p.BasicInfo)
+var personByIDRegistry = map[model.PersonField]func(*model.Person) string{
+	model.BasicInfo: func(p *model.Person) string {
+		return printBasicInfo(p.BasicInfo)
 	},
-	model.AltName: func(p *model.Person) {
-		printAltNames(p.AltNames)
+	model.AltName: func(p *model.Person) string {
+		return printAltNames(p.AltNames)
 	},
-	model.Entry: func(p *model.Person) {
-		printEntries(p.Entries)
+	model.Entry: func(p *model.Person) string {
+		return printEntries(p.Entries)
 	},
-	model.Institution: func(p *model.Person) {
-		printInstitutions(p.Institutions)
+	model.Institution: func(p *model.Person) string {
+		return printInstitutions(p.Institutions)
 	},
-	model.Posting: func(p *model.Person) {
-		printPostings(p.Postings)
+	model.Posting: func(p *model.Person) string {
+		return printPostings(p.Postings)
 	},
-	model.Status: func(p *model.Person) {
-		printStatus(p.Status)
+	model.Status: func(p *model.Person) string {
+		return printStatus(p.Status)
 	},
-	model.Text: func(p *model.Person) {
-		printTexts(p.Texts)
+	model.Text: func(p *model.Person) string {
+		return printTexts(p.Texts)
 	},
-	model.KinShip: func(p *model.Person) {
-		printKinships(p.KinShips)
+	model.KinShip: func(p *model.Person) string {
+		return printKinships(p.KinShips)
 	},
-	model.Association: func(p *model.Person) {
-		printAssociations(removeDupliate(p.Associations))
+	model.Association: func(p *model.Person) string {
+		return printAssociations(removeDupliate(p.Associations))
 	},
-	model.Place: func(p *model.Person) {
-		printPlaces(p.Places)
+	model.Place: func(p *model.Person) string {
+		return printPlaces(p.Places)
 	},
 }
