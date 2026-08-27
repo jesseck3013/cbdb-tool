@@ -5,10 +5,11 @@ package cmd
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
+	"github.com/jesseck3013/cbdb-tool/internal/query"
 	"github.com/jesseck3013/cbdb-tool/internal/repository"
 	"github.com/spf13/cobra"
 )
@@ -29,17 +30,14 @@ Database Project`,
 			return nil
 		}
 
-		dsn := "file:" + dbPath + "?mode=ro"
-
-		var err error
-		sqlite, err := sql.Open("sqlite", dsn)
+		err := query.BuildIndex(dbPath)
 		if err != nil {
-			return fmt.Errorf("Failed to open DB: %w", err)
+			return err
 		}
 
-		err = sqlite.Ping()
+		sqlite, err := query.OpenDB(dbPath, true)
 		if err != nil {
-			return fmt.Errorf("Failed to connect to DB: %w", err)
+			return err
 		}
 
 		db = repository.New(sqlite)
@@ -77,6 +75,6 @@ func init() {
 	if err != nil {
 		log.Println(err)
 	}
-	path = path + "/cbdb-tools/cbdb.sqlite3"
+	path = filepath.Join(path, "/cbdb-tool/cbdb.sqlite3")
 	rootCmd.PersistentFlags().StringVar(&dbPath, "db", path, "Specify the sqlite file path")
 }

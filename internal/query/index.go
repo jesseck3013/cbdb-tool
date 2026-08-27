@@ -1,0 +1,59 @@
+package query
+
+import (
+	"database/sql"
+	"fmt"
+)
+
+func OpenDB(dbPath string, readonly bool) (*sql.DB, error) {
+	dsn := "file:" + dbPath
+	if readonly {
+		dsn += "?mode=ro"
+	}
+
+	var err error
+	sqlite, err := sql.Open("sqlite", dsn)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to open DB: %w", err)
+	}
+
+	err = sqlite.Ping()
+	if err != nil {
+		return nil, fmt.Errorf("Failed to connect to DB: %w", err)
+	}
+	return sqlite, nil
+}
+
+func BuildIndex(dbPath string) error {
+	db, err := OpenDB(dbPath, false)
+	if err != nil {
+		return nil
+	}
+
+	indexesSQL := `
+	-- ALTNAME
+	CREATE INDEX IF NOT EXISTS idx_altname_personid ON ALTNAME_DATA(c_personid);
+
+	-- ENTRY
+	CREATE INDEX IF NOT EXISTS person_idx_ENTRY_DATA ON ENTRY_DATA(c_personid);
+	CREATE INDEX IF NOT EXISTS entry_codex_ENTRY_DATA ON ENTRY_DATA(c_entry_code);
+	CREATE INDEX IF NOT EXISTS entry_codex_ENTRY_CODE_TYPE_REL ON ENTRY_CODE_TYPE_REL(c_entry_code);
+	CREATE INDEX IF NOT EXISTS entry_typex_ENTRY_CODE_TYPE_REL ON ENTRY_CODE_TYPE_REL(c_entry_type);
+
+	-- POSTING
+	CREATE INDEX IF NOT EXISTS posting_person_idx_POSTING_DATA ON POSTING_DATA(c_personid);
+	CREATE INDEX IF NOT EXISTS posting_person_idx_POSTED_TO_OFFICE_DATA ON POSTED_TO_OFFICE_DATA(c_personid);
+
+	-- KINSHIP
+	CREATE INDEX IF NOT EXISTS person_idx_KIN_DATA ON KIN_DATA(c_personid);
+
+	-- ASSOCIATION
+	CREATE INDEX IF NOT EXISTS person_idx_ASSOC_DATA ON ASSOC_DATA(c_personid);
+
+	-- BIOG_MAIN
+	CREATE INDEX IF NOT EXISTS bm_name_chnx_BIOG_MAIN ON BIOG_MAIN(c_name_chn);
+	`
+
+	_, err = db.Exec(indexesSQL)
+	return err
+}
