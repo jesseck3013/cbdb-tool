@@ -4,6 +4,7 @@ Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -22,23 +23,18 @@ var serverCmd = &cobra.Command{
 		c := controller.NewWEB(ps)
 		http.HandleFunc("/person/{id}", c.PersonByID)
 		http.HandleFunc("/person/", c.PersonByName)
-		log.Printf("API server starts listening to port :8080")
-		log.Fatal(http.ListenAndServe(":8080", nil))
+
+		port, err := cmd.Flags().GetString("port")
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("API server starts listening to port :%v", port)
+		addr := fmt.Sprintf(":%v", port)
+		log.Fatal(http.ListenAndServe(addr, nil))
 	},
 }
 
 func init() {
-	serverCmd.Flags().String("port", "8080", "specify a tcp port: --port=8080")
-
+	serverCmd.Flags().String("port", "8080", "specify an http port: --port=8080")
 	rootCmd.AddCommand(serverCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// serverCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// serverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
