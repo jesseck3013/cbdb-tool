@@ -7,6 +7,8 @@ import (
 	"log"
 )
 
+const INTERNAL_SERVER_ERROR = "Internal Server Error"
+
 type ErrMsg struct {
 	Msg string `json:"error"`
 }
