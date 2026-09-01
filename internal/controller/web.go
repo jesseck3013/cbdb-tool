@@ -91,6 +91,7 @@ func (web *WEB) PersonByID(w http.ResponseWriter, r *http.Request) {
 			writeMsgJson(w, err.Error())
 		} else {
 			w.WriteHeader(http.StatusInternalServerError)
+			writeMsgJson(w, INTERNAL_SERVER_ERROR)
 			log.Println(err)
 		}
 		return
@@ -117,8 +118,10 @@ func (web *WEB) PersonByName(w http.ResponseWriter, r *http.Request) {
 			writeMsgJson(w, err.Error())
 		} else {
 			w.WriteHeader(http.StatusInternalServerError)
+			writeMsgJson(w, INTERNAL_SERVER_ERROR)
 			log.Println(err)
 		}
+		return
 	}
 
 	w.Write(b)
