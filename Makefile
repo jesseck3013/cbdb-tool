@@ -13,3 +13,6 @@ test:
 build: sql test
 	@echo "Compiling Go binary..."
 	go build -o bin/cbdb ./cmd/cli/main.go
+
+build-frontend:
+	cd frontend && npm install && npm run build
